@@ -17,7 +17,6 @@ The first gameplay foundation is a server-authoritative objective system. Object
 - Realistic movement and maneuver over arcade mechanics.
 - Objectives should create fights across terrain, not just inside one marker.
 - Defensive positions should matter without making the match static.
-- Clients receive state from the server; they do not decide captures, score, tickets, respawns, or restricted actions.
 
 ## Development
 

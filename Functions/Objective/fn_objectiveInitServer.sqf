@@ -22,8 +22,15 @@ FLO_ObjectiveMinCapturePlayers = 1;
 FLO_ObjectiveCellCaptureRate = 0.035;
 FLO_ObjectiveCellDecayRate = 0.01;
 FLO_ObjectivePerfLogThresholdMs = 20;
+FLO_ObjectiveGeneratedMaxObjectives = 8;
+FLO_ObjectiveGeneratedMinSpacing = 2200;
+FLO_ObjectiveGeneratedSupportOffset = 250;
+FLO_ObjectiveGeneratedAnchorRadius = 140;
+FLO_ObjectiveGeneratedSupportRadius = 120;
+FLO_ObjectiveGeneratedSupportWeight = 0.35;
+FLO_ObjectiveGeneratedRequiredWeightRatio = 0.55;
 
-private _definitions = [] call FLO_fnc_objectiveDefinitions;
+private _definitions = [] call FLO_fnc_objectiveGenerateDefinitions;
 
 {
     [_x] call FLO_fnc_objectiveRegister;
