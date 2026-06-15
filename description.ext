@@ -1,0 +1,11 @@
+author = "Angel";
+onLoadName = "FOOF";
+onLoadMission = "PvP-focused Arma 3 milsim gamemode.";
+
+class CfgFunctions {
+    class FLO {
+        tag = "FLO";
+
+        #include "Functions\Objective\CfgFunctions.hpp"
+    };
+};
