@@ -16,62 +16,66 @@ private _activeMarkers = createHashMap;
         "_totalWeight",
         "_cells",
         "_resourceWeight",
-        "_locationType"
+        "_locationType",
+        "_displayRadius",
+        "_level",
+        "_levelName",
+        "_incomePer15",
+        "_upgradeCost",
+        "_maxLevel"
     ];
 
     private _objectiveMarkerId = format ["FLO_obj_%1_icon", _objectiveId];
-    private _valueMarkerId = format ["FLO_obj_%1_value", _objectiveId];
+    private _haloMarkerId = format ["FLO_obj_%1_halo", _objectiveId];
+    private _resourceMarkerId = format ["FLO_obj_%1_resource", _objectiveId];
     private _objectiveColor = [_ownerKey, _objectiveState, "NONE"] call FLO_fnc_objectiveMarkerColor;
-    private _objectiveText = switch (_objectiveState) do {
-        case "contested": { format ["AO %1", toUpper _name] };
-        case "capturing": { format ["AO %1", toUpper _name] };
-        default { "" };
-    };
+    private _objectiveText = format ["L%1", _level];
 
     private _markerType = switch (_locationType) do {
         case "Airport": { "mil_triangle" };
         case "Strategic": { "mil_box" };
         default { "mil_dot" };
     };
+    private _iconAlpha = switch (_objectiveState) do {
+        case "contested": { 0.84 };
+        case "capturing": { 0.78 };
+        case "held": { 0.64 };
+        default { 0.50 };
+    };
     private _markerSize = switch (_resourceWeight) do {
         case 5: { [0.40, 0.40] };
         case 4: { [0.36, 0.36] };
-        default { [0.28, 0.28] };
+        case 3: { [0.32, 0.32] };
+        default { [0.24, 0.24] };
     };
-    private _valueHaloSize = switch (_resourceWeight) do {
-        case 5: { [220, 220] };
-        case 4: { [170, 170] };
-        default { [0, 0] };
+    private _haloAlpha = switch (_objectiveState) do {
+        case "contested": { 0.34 };
+        case "capturing": { 0.30 };
+        case "held": { 0.16 };
+        default { 0.12 };
     };
+    private _haloBrush = ["Border", "DiagGrid"] select (_objectiveState in ["contested", "capturing"]);
 
-    if ((_resourceWeight >= 4) || {_objectiveState in ["contested", "capturing"]}) then {
-        private _haloSize = _valueHaloSize;
+    [
+        _haloMarkerId,
+        _position,
+        "ELLIPSE",
+        "",
+        _objectiveColor,
+        _haloAlpha,
+        [_displayRadius, _displayRadius],
+        _haloBrush,
+        "",
+        0,
+        FLO_ObjectiveClientMarkers
+    ] call FLO_fnc_objectiveUpsertMapMarker;
+    _activeMarkers set [_haloMarkerId, true];
 
-        if (_resourceWeight < 4) then {
-            _haloSize = [130, 130];
-        };
+    if (_resourceMarkerId in FLO_ObjectiveClientMarkers) then {
+        private _resourceMarker = FLO_ObjectiveClientMarkers get _resourceMarkerId;
 
-        [
-            _valueMarkerId,
-            _position,
-            "ELLIPSE",
-            "",
-            _objectiveColor,
-            [0.20, 0.36] select (_objectiveState in ["contested", "capturing"]),
-            _haloSize,
-            ["Border", "DiagGrid"] select (_objectiveState in ["contested", "capturing"]),
-            "",
-            0,
-            FLO_ObjectiveClientMarkers
-        ] call FLO_fnc_objectiveUpsertMapMarker;
-        _activeMarkers set [_valueMarkerId, true];
-    } else {
-        if (_valueMarkerId in FLO_ObjectiveClientMarkers) then {
-            private _valueMarker = FLO_ObjectiveClientMarkers get _valueMarkerId;
-
-            deleteMarkerLocal _valueMarker;
-            FLO_ObjectiveClientMarkers deleteAt _valueMarkerId;
-        };
+        deleteMarkerLocal _resourceMarker;
+        FLO_ObjectiveClientMarkers deleteAt _resourceMarkerId;
     };
 
     [
@@ -80,7 +84,7 @@ private _activeMarkers = createHashMap;
         "ICON",
         _markerType,
         _objectiveColor,
-        0.45,
+        _iconAlpha,
         _markerSize,
         "",
         _objectiveText

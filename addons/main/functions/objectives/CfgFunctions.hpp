@@ -3,13 +3,15 @@ class Objective {
 
     class objectiveApplyGridSnapshot {};
     class objectiveApplySnapshot {};
+    class objectiveAddAreaWebEventHandler {};
+    class objectiveAreaClientInit {};
+    class objectiveAreaWebAction {};
     class objectiveBuildGridSnapshot {};
     class objectiveBuildNeutralGridSnapshot {};
     class objectiveBuildSnapshot {};
     class objectiveBuildDeploymentCandidate {};
     class objectiveClientInit {};
     class objectiveCollectPresence {};
-    class objectiveCreateCell {};
     class objectiveDeploymentEntryCells {};
     class objectiveEvaluate {};
     class objectiveEvaluateCell {};
@@ -20,8 +22,13 @@ class Objective {
     class objectiveGridCellAtPosition {};
     class objectiveGridCellIdAtPosition {};
     class objectiveGridCellId {};
+    class objectiveHandleAreaUiEvent {};
+    class objectiveIncomePer15 {};
+    class objectiveIncomePerTick {};
     class objectiveInitServer {};
+    class objectiveLevelName {};
     class objectiveMarkerColor {};
+    class objectiveOpenAreaDialog {};
     class objectivePassiveTargetSide {};
     class objectivePostInit {
         postInit = 1;
@@ -34,6 +41,7 @@ class Objective {
     class objectiveReceiveSnapshot {};
     class objectiveRegister {};
     class objectiveRequestSnapshot {};
+    class objectiveRequestUpgrade {};
     class objectiveResolveObjective {};
     class objectiveSanitizeId {};
     class objectiveScoreDeploymentPair {};
@@ -41,8 +49,10 @@ class Objective {
     class objectiveSendFullSnapshot {};
     class objectiveSideKey {};
     class objectiveStartLoop {};
+    class objectiveUpdateAreaDialog {};
     class objectiveUpdatePresenceCounts {};
     class objectiveUpdateGridMapMarkers {};
     class objectiveUpdateMapMarkers {};
+    class objectiveUpgradeCost {};
     class objectiveUpsertMapMarker {};
 };

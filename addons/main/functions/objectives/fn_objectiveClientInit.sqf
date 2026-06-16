@@ -3,14 +3,19 @@ if (!hasInterface) exitWith {};
 FLO_ObjectiveClientMarkers = createHashMap;
 FLO_ObjectiveClientGridMarkers = createHashMap;
 FLO_ObjectiveClientGridMarkerKeys = createHashMap;
+FLO_ObjectiveClientObjectiveRecords = createHashMap;
 FLO_ObjectiveClientLastSnapshot = [];
 FLO_ObjectiveClientLastGridSnapshot = [];
+FLO_ObjectiveAreaActiveId = "";
+FLO_ObjectiveAreaClosedId = "";
+FLO_ObjectiveAreaBrowserReady = false;
 
 [
     { !isNull player },
     {
         FLO_ObjectiveClientNeutralGridSnapshot = [] call FLO_fnc_objectiveBuildNeutralGridSnapshot;
         [FLO_ObjectiveClientNeutralGridSnapshot] call FLO_fnc_objectiveApplyGridSnapshot;
+        [] call FLO_fnc_objectiveAreaClientInit;
         [player] remoteExecCall ["FLO_fnc_objectiveRequestSnapshot", 2];
 
         diag_log format [

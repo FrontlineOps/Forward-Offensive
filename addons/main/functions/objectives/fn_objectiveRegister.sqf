@@ -6,6 +6,7 @@ private _position = _definition get "position";
 private _locationType = _definition get "locationType";
 private _requiredWeightRatio = _definition get "requiredWeightRatio";
 private _resourceWeight = _definition get "resourceWeight";
+private _displayRadius = _definition get "displayRadius";
 private _cellIds = +(_definition get "cellIds");
 private _anchorCellId = _definition get "anchorCellId";
 
@@ -25,15 +26,18 @@ FLO_Objectives set [
         ["position", _position],
         ["locationType", _locationType],
         ["resourceWeight", _resourceWeight],
+        ["displayRadius", _displayRadius],
         ["requiredWeightRatio", _requiredWeightRatio],
         ["cellIds", _cellIds],
         ["anchorCellId", _anchorCellId],
         ["owner", sideUnknown],
         ["state", "neutral"],
+        ["level", 0],
         ["eastWeight", 0],
         ["westWeight", 0],
         ["totalWeight", 0],
-        ["lastChanged", 0]
+        ["lastChanged", 0],
+        ["lastLevelChanged", 0]
     ]
 ];
 

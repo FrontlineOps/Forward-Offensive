@@ -36,6 +36,7 @@ class CfgFunctions {
 #include "ui\command\CommandVoteDialog.hpp"
 #include "ui\deploy\DeployDialog.hpp"
 #include "ui\intel\IntelDialog.hpp"
+#include "ui\objective\ObjectiveAreaDialog.hpp"
 #include "ui\store\StoreDialog.hpp"
 
 class CfgRemoteExec {
@@ -58,12 +59,22 @@ class CfgRemoteExec {
             jip = 0;
         };
 
+        class FLO_fnc_objectiveRequestUpgrade {
+            allowedTargets = 2;
+            jip = 0;
+        };
+
         class FLO_fnc_resourceReceiveSnapshot {
             allowedTargets = 0;
             jip = 0;
         };
 
         class FLO_fnc_resourceRequestSnapshot {
+            allowedTargets = 2;
+            jip = 0;
+        };
+
+        class FLO_fnc_resourceRequestSellVehicle {
             allowedTargets = 2;
             jip = 0;
         };

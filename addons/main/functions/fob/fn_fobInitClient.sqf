@@ -15,11 +15,11 @@ if (!hasInterface) exitWith {};
 
         [] call FLO_fnc_fobRefreshClientActions;
 
-        FLO_FOBClientActionLoopHandle = [
+        [
             { [] call FLO_fnc_fobRefreshClientActions; },
-            FLO_FOBClientActionRefreshInterval,
-            []
-        ] call CBA_fnc_addPerFrameHandler;
+            [],
+            FLO_FOBClientActionRefreshInterval
+        ] call CBA_fnc_waitAndExecute;
 
         diag_log "[FLO][FOB] Client base actions and deployment keybind initialized";
     }

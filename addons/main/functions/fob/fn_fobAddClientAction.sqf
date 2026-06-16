@@ -70,3 +70,33 @@ if ((_existingStoreAction isEqualTo -1) && {_fob getVariable ["FLO_FOB_StoreEnab
 
     _fob setVariable ["FLO_FOB_StoreActionId", _storeActionId];
 };
+
+private _existingRecoveryAction = _fob getVariable ["FLO_FOB_RecoveryActionId", -1];
+
+if (_existingRecoveryAction isEqualTo -1) then {
+    private _recoveryCondition = "
+        alive _this
+        && {alive _target}
+        && {(side group _this) in [west, east]}
+        && {(_target getVariable ['FLO_FOB_Id', '']) isNotEqualTo ''}
+        && {(_target getVariable ['FLO_FOB_SideKey', '']) isEqualTo ([side group _this] call FLO_fnc_resourceSideKey)}
+        && {(_this distance2D _target) <= (_target getVariable ['FLO_FOB_BuildRadius', FLO_FOBBuildRadius])}
+    ";
+
+    private _recoveryActionId = _fob addAction [
+        "<t size='1.35' color='#25D7FF' font='RobotoCondensedBold'>Recover Vehicle</t>",
+        {
+            params ["_target", "_caller"];
+
+            [_caller, netId _target] remoteExecCall ["FLO_fnc_resourceRequestSellVehicle", 2];
+        },
+        nil,
+        1.35,
+        true,
+        true,
+        "",
+        _recoveryCondition
+    ];
+
+    _fob setVariable ["FLO_FOB_RecoveryActionId", _recoveryActionId];
+};

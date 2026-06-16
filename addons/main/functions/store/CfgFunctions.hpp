@@ -16,7 +16,6 @@ class Store {
     class storeCheckout {};
     class storeCollectVehicleWeapons {};
     class storeFactionUsesVanillaGear {};
-    class storeFindVehicleSpawn {};
     class storeGearVisionTraits {};
     class storeHandleUiEvent {};
     class storeInitServer {};
@@ -35,12 +34,12 @@ class Store {
     class storeRequestCategory {};
     class storeRequestCheckout {};
     class storeRequestHydrate {};
+    class storeRegisterPurchasedVehicle {};
     class storeSavedKitsDelete {};
     class storeSavedKitsLoad {};
     class storeSavedKitsSave {};
     class storeSelectedFaction {};
     class storeSendResponse {};
-    class storeSpawnVehicle {};
     class storeStartVehiclePlacement {};
     class storeStringMatchesPatterns {};
     class storeSupportClassRejected {};

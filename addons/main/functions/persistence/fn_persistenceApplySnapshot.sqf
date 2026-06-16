@@ -206,6 +206,26 @@ if ("objectives" in _snapshot) then {
         [FLO_Objectives get _x] call FLO_fnc_objectiveResolveObjective;
     } forEach keys FLO_Objectives;
 
+    if ("levels" in _objectives) then {
+        {
+            private _record = createHashMapFromArray _x;
+            private _objectiveId = _record get "id";
+
+            if (_objectiveId in FLO_Objectives) then {
+                private _objective = FLO_Objectives get _objectiveId;
+                private _savedOwner = [_record get "owner"] call FLO_fnc_persistenceSideFromKey;
+
+                if ((_savedOwner in [west, east]) && {(_objective get "owner") isEqualTo _savedOwner}) then {
+                    _objective set ["level", ((_record get "level") min FLO_ObjectiveMaxLevel) max 0];
+
+                    if ("lastLevelChanged" in _record) then {
+                        _objective set ["lastLevelChanged", _record get "lastLevelChanged"];
+                    };
+                };
+            };
+        } forEach (_objectives get "levels");
+    };
+
     [true] call FLO_fnc_objectivePublishSnapshot;
 };
 
@@ -234,7 +254,7 @@ if ("fobs" in _snapshot) then {
                     private _type = ["FOB", _record get "type"] select ("type" in _record);
                     private _fob = createVehicle [_className, [0, 0, 0], [], 0, "CAN_COLLIDE"];
                     [_fob, _x] call FLO_fnc_persistenceRestoreObjectState;
-                    [_fob, _side, _record get "ownerUid", _record get "id", _record get "buildRadius", _type] call FLO_fnc_fobRegister;
+                    private _fobId = [_fob, _side, _record get "ownerUid", _record get "id", _record get "buildRadius", _type] call FLO_fnc_fobRegister;
                 };
             };
         } forEach (_fobs get "records");
@@ -282,6 +302,10 @@ if ("store" in _snapshot) then {
         FLO_StorePendingVehicleCounter = _store get "pendingVehicleCounter";
     };
 
+    if ("purchasedVehicleCounter" in _store) then {
+        FLO_StorePurchasedVehicleCounter = _store get "purchasedVehicleCounter";
+    };
+
     FLO_StorePendingVehicles = [];
 
     if ("pendingVehicles" in _store) then {
@@ -301,6 +325,7 @@ if ("store" in _snapshot) then {
                 ["className", _record get "className"],
                 ["name", _record get "name"],
                 ["category", _record get "category"],
+                ["priceValue", [0, _record get "priceValue"] select ("priceValue" in _record)],
                 ["side", [_sideKey] call FLO_fnc_persistenceSideFromKey],
                 ["sideKey", _sideKey],
                 ["owner", _record get "owner"],
@@ -322,12 +347,36 @@ if ("vehicles" in _snapshot) then {
             private _vehicle = createVehicle [_className, ASLToAGL (_record get "posASL"), [], 0, "CAN_COLLIDE"];
             [_vehicle, _x] call FLO_fnc_persistenceRestoreObjectState;
 
-            if ((_record get "storeSideKey") isNotEqualTo "") then {
+            if (("storeSideKey" in _record) && {(_record get "storeSideKey") isNotEqualTo ""}) then {
                 _vehicle setVariable ["FLO_Store_PurchasedSideKey", _record get "storeSideKey", true];
             };
 
-            if ((_record get "storeSourceFobId") isNotEqualTo "") then {
+            if (("storeSourceFobId" in _record) && {(_record get "storeSourceFobId") isNotEqualTo ""}) then {
                 _vehicle setVariable ["FLO_Store_SourceFobId", _record get "storeSourceFobId", true];
+            };
+
+            if (("storeAssetId" in _record) && {("storeSideKey" in _record) && {(_record get "storeSideKey") isNotEqualTo ""}}) then {
+                private _storeCategory = [_className] call FLO_fnc_storeCategoryForVehicle;
+                private _storeOriginalPrice = [_className, _storeCategory] call FLO_fnc_storePriceVehicle;
+                private _storeAssetId = _record get "storeAssetId";
+
+                if ("storeCategory" in _record) then {
+                    _storeCategory = _record get "storeCategory";
+                };
+
+                if ("storeOriginalPrice" in _record) then {
+                    _storeOriginalPrice = _record get "storeOriginalPrice";
+                };
+
+                [
+                    _vehicle,
+                    _record get "storeSideKey",
+                    _record get "storeSourceFobId",
+                    _className,
+                    _storeCategory,
+                    _storeOriginalPrice,
+                    _storeAssetId
+                ] call FLO_fnc_storeRegisterPurchasedVehicle;
             };
         };
     } forEach (_snapshot get "vehicles");

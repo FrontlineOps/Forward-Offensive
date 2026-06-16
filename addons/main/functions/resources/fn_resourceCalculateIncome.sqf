@@ -26,11 +26,10 @@ private _objectiveIncome = createHashMapFromArray [
 
     if ((_owner in [west, east]) && {_state isEqualTo "held"}) then {
         private _sideKey = [_owner] call FLO_fnc_resourceSideKey;
-        private _weight = _objective get "resourceWeight";
 
         _objectiveIncome set [
             _sideKey,
-            (_objectiveIncome get _sideKey) + (_weight * FLO_ResourceObjectiveWeightIncome)
+            (_objectiveIncome get _sideKey) + ([_objective] call FLO_fnc_objectiveIncomePerTick)
         ];
     };
 } forEach keys FLO_Objectives;

@@ -141,7 +141,8 @@ for "_i" from 0 to ((count _cart) - 1) do {
                                                         _vehicleJobs pushBack createHashMapFromArray [
                                                             ["className", _item get "className"],
                                                             ["name", _item get "name"],
-                                                            ["category", _item get "category"]
+                                                            ["category", _item get "category"],
+                                                            ["priceValue", _item get "priceValue"]
                                                         ];
                                                     };
                                                 };
@@ -212,6 +213,7 @@ private _pendingVehicles = [];
         ["className", _x get "className"],
         ["name", _x get "name"],
         ["category", _x get "category"],
+        ["priceValue", _x get "priceValue"],
         ["side", _side],
         ["sideKey", _sideKey],
         ["owner", _access get "owner"],

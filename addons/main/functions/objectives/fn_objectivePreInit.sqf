@@ -1,6 +1,12 @@
 FLO_ObjectiveGridCellSize = 1000;
 FLO_ObjectiveGridMinLandSamples = 1;
+FLO_ObjectiveAreaDialogIdd = 9500;
+FLO_ObjectiveAreaBrowserIdc = 9501;
+FLO_ObjectiveMaxLevel = 5;
+FLO_ObjectiveIncomePerWeightLevel15Min = 500;
+FLO_ObjectiveUpgradeCostPerWeightLevel = 1500;
 FLO_ObjectiveSnapshot = [];
 FLO_ObjectiveGridSnapshot = [];
 FLO_ObjectiveSnapshotDelta = [];
 FLO_ObjectiveGridSnapshotDelta = [];
+FLO_ObjectiveAreaWebActionInvoker = compile "params ['_control', '_args']; _control ctrlWebBrowserAction _args;";

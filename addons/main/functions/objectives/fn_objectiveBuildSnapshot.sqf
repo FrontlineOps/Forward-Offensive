@@ -43,7 +43,13 @@ private _snapshot = [];
         _objective get "totalWeight",
         _cellSnapshot,
         _objective get "resourceWeight",
-        _objective get "locationType"
+        _objective get "locationType",
+        _objective get "displayRadius",
+        _objective get "level",
+        [_objective get "level"] call FLO_fnc_objectiveLevelName,
+        [_objective] call FLO_fnc_objectiveIncomePer15,
+        [_objective] call FLO_fnc_objectiveUpgradeCost,
+        FLO_ObjectiveMaxLevel
     ];
 } forEach _objectiveIds;
 

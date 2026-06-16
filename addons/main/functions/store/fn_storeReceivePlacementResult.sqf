@@ -13,16 +13,16 @@ private _message = _payload get "message";
 private _purchaseId = _payload get "id";
 
 if (_success) then {
-    FLO_StorePendingVehicles = FLO_StorePendingVehicles select {
+    FLO_StoreClientPendingVehicles = FLO_StoreClientPendingVehicles select {
         (_x get "id") isNotEqualTo _purchaseId
     };
 };
 
 [_message, ["error", "success"] select _success, "Vehicle Placement"] call FLO_fnc_notify;
 
-if (_success && {FLO_StorePendingVehicles isNotEqualTo []}) then {
+if (_success && {FLO_StoreClientPendingVehicles isNotEqualTo []}) then {
     [{
-        private _next = FLO_StorePendingVehicles select 0;
+        private _next = FLO_StoreClientPendingVehicles select 0;
         [_next get "id"] call FLO_fnc_storeStartVehiclePlacement;
     }, [], 0.6] call CBA_fnc_waitAndExecute;
 };

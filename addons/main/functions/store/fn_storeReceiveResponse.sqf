@@ -11,7 +11,7 @@ if ((typeName _payload) isEqualTo "HASHMAP") then {
         private _pendingVehicles = _payload get "pendingVehicles";
 
         if ((typeName _pendingVehicles) isEqualTo "ARRAY") then {
-            FLO_StorePendingVehicles = _pendingVehicles;
+            FLO_StoreClientPendingVehicles = _pendingVehicles;
         };
     };
 };

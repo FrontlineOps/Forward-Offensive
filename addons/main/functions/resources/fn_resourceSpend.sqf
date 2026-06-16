@@ -27,7 +27,7 @@ if (_reason isNotEqualTo "") then {
     ];
 };
 
-[0] call FLO_fnc_resourceSendSnapshot;
+[] call FLO_fnc_resourceScheduleSnapshot;
 ["resourceSpend"] call FLO_fnc_persistenceScheduleSave;
 
 true

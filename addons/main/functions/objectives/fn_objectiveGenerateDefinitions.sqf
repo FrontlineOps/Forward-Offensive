@@ -128,6 +128,14 @@ private _index = 0;
                 ["position", _position],
                 ["locationType", _type],
                 ["resourceWeight", _resourceWeight],
+                ["displayRadius", switch (_type) do {
+                    case "NameCityCapital": { 360 };
+                    case "Airport": { 340 };
+                    case "NameCity": { 300 };
+                    case "Strategic": { 280 };
+                    case "NameVillage": { 220 };
+                    default { 150 };
+                }],
                 ["requiredWeightRatio", _requiredRatio],
                 ["anchorCellId", _anchorCellId],
                 ["cellIds", _cellIds]

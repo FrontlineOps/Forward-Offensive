@@ -1,7 +1,7 @@
 FLO_StoreDialogIdd = 9800;
 FLO_StoreBrowserIdc = 9801;
 FLO_StoreActiveFobNetId = "";
-FLO_StorePendingVehicles = [];
+FLO_StoreClientPendingVehicles = [];
 
 FLO_StoreCategories = [
     ["primary", "Primary"],

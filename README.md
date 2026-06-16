@@ -18,7 +18,7 @@ FOOF currently requires CBA_A3.
 - Generated land-only square control grid.
 - Player-facing map visualizer for sectors, ownership, contesting, and capture pressure.
 - Area objectives generated from capitals, cities, villages, local places, airfields, and strategic locations.
-- Small AO type/status markers instead of oversized city markers or dense city outlines.
+- Quiet AO map layer with ownership halos and level-only objective labels so Arma's native town labels stay readable.
 - Frontline-only sector capture: enemy sectors must be adjacent to friendly control before they can flip.
 - Randomized fair deployment zones choose opposing BLUFOR/OPFOR starts from valid generated grid cells each match.
 - Initial legal entry cells are derived from those deployment zones so the first frontline begins from the generated starts.
@@ -29,7 +29,9 @@ FOOF currently requires CBA_A3.
 - Respawn uses Arma `MenuPosition` with server-registered staging, FOB, and active COP positions; staging remains as a fallback whenever a side has no active base respawn.
 - Slow spearhead-style pressure from captured cells.
 - Slow encirclement pressure against isolated owned cells.
-- Server-owned BLUFOR/OPFOR currency generated from controlled grid cells and high-value objectives.
+- Server-owned BLUFOR/OPFOR currency starts at `$5000` and is generated from controlled grid cells and upgraded high-value objectives.
+- Captured AOs have levels from `0` to `5`; commander-authorized players can upgrade friendly uncontested AOs from inside the AO, and enemy capture resets the level.
+- A compact in-world AO panel shows owner, level, income per 15 minutes, upgrade cost, and upgrade availability when a player enters the AO radius.
 - Server-authoritative commander and faction voting for BLUFOR and OPFOR with timed startup and replacement commander vote windows.
 - Startup commander/faction votes resolve to a deterministic fallback on expiry so a side cannot leave opening votes without command or faction setup.
 - Simple HTML command vote dialog using Arma's web browser control.
@@ -45,6 +47,7 @@ FOOF currently requires CBA_A3.
 - Store catalogs also append optional support gear without player-edited definitions: reviewed vanilla GPS and cTab/NSWDG device classes plus source-filtered ACRE/TFAR radio and ACE/KAT/ACM medical support items when those mods are loaded.
 - Store uses a cinematic tactical armory UI with item previews, equipment/cart summaries, personal saved kits, and clickable cart targets for putting ammo/items into uniform, vest, or backpack during checkout.
 - Store vehicle checkout creates a pending vehicle placement; the player places the purchased vehicle with the IDS camera inside the purchase FOB build radius.
+- Empty Store-purchased friendly vehicles and captured enemy vehicles can be recovered at friendly bases for partial money returns.
 - Server-owned BLUFOR/OPFOR ticket pools control respawn allowance; respawns spend one side ticket.
 - Commanders can buy reinforcement ticket packs from the Store with faction currency; ticket packs are commander-only.
 - Native notification and announcement framework replaces ad hoc hints for player-facing feedback.
@@ -70,6 +73,7 @@ FOOF currently requires CBA_A3.
 - Deployment UI: `addons/main/ui/deploy/`
 - Intel UI: `addons/main/ui/intel/`
 - Store UI: `addons/main/ui/store/`
+- AO info UI: `addons/main/ui/objective/`
 - Startup: addon `postInit` during normal missions; Arma engine intro missions are skipped.
 - Dev test mission: `missions/FOOF_Test.Altis`
 

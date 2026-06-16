@@ -17,6 +17,12 @@ if (!isNull _fob) then {
         _fob removeAction _storeActionId;
         _fob setVariable ["FLO_FOB_StoreActionId", -1];
     };
+
+    private _recoveryActionId = _fob getVariable ["FLO_FOB_RecoveryActionId", -1];
+    if (_recoveryActionId isNotEqualTo -1) then {
+        _fob removeAction _recoveryActionId;
+        _fob setVariable ["FLO_FOB_RecoveryActionId", -1];
+    };
 };
 
 deleteMarkerLocal _markerId;

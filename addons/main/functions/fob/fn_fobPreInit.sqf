@@ -10,7 +10,6 @@ FLO_COPEnemyDisableRadius = 200;
 
 FLO_BaseRespawnCheckInterval = 10;
 FLO_FOBClientActionRefreshInterval = 5;
-FLO_FOBClientActionLoopHandle = -1;
 FLO_FOBRespawnLoopHandle = -1;
 FLO_FOBNextId = 0;
 FLO_FOBs = createHashMap;

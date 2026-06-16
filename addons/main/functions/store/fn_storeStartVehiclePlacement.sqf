@@ -9,7 +9,7 @@ private _entry = createHashMap;
     if ((_x get "id") isEqualTo _purchaseId) exitWith {
         _entry = _x;
     };
-} forEach FLO_StorePendingVehicles;
+} forEach FLO_StoreClientPendingVehicles;
 
 if ((count _entry) isEqualTo 0) exitWith {
     ["Vehicle placement is unavailable.", "error", "Vehicle Placement"] call FLO_fnc_notify;

@@ -11,6 +11,7 @@ class Persistence {
     class persistenceLoad {};
     class persistencePostInit { postInit = 1; };
     class persistencePreInit { preInit = 1; };
+    class persistenceRetryApplyPlayerToOwner {};
     class persistenceRestoreObjectState {};
     class persistenceSave {};
     class persistenceSavePlayer {};

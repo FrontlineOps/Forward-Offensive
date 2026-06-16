@@ -13,7 +13,6 @@ class IDS_Logistics {
         class placeEntity {};
         class receivePlacementResult {};
         class startPlacement {};
-        class testLoadEntities {};
         class updateEntityPlacement {};
     };
 
@@ -22,9 +21,7 @@ class IDS_Logistics {
 
         class deleteEntity {};
         class finalizeEntity {};
-        class loadEntities {};
         class onEntityKilled {};
-        class saveEntities {};
         class toggleEntityVisibility {};
     };
 

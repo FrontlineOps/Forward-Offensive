@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: transparent;
+            font-family: "Roboto Condensed", "Arial Narrow", Arial, sans-serif;
+            color: #F2F7FA;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .panel {
+            position: absolute;
+            inset: 0;
+            padding: 18px;
+            background:
+                linear-gradient(135deg, rgba(37, 215, 255, 0.12), transparent 46%),
+                linear-gradient(180deg, rgba(20, 34, 48, 0.92), rgba(3, 8, 14, 0.86));
+            box-shadow:
+                inset 0 0 0 1px rgba(103, 232, 255, 0.28),
+                0 22px 48px rgba(0, 0, 0, 0.42);
+            clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+        }
+
+        .top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(103, 232, 255, 0.22);
+        }
+
+        .overline {
+            color: #25D7FF;
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 0;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 3px 0 0;
+            font-size: 34px;
+            line-height: 1;
+            font-weight: 900;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .close {
+            width: 36px;
+            height: 32px;
+            border: 0;
+            color: #A7B7C8;
+            background: rgba(12, 22, 32, 0.8);
+            box-shadow: inset 0 0 0 1px rgba(103, 232, 255, 0.18);
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .stat {
+            min-height: 58px;
+            padding: 10px 12px;
+            background: rgba(12, 22, 32, 0.62);
+            box-shadow: inset 0 0 0 1px rgba(103, 232, 255, 0.13);
+        }
+
+        .label {
+            color: #66788A;
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .value {
+            margin-top: 3px;
+            color: #F2F7FA;
+            font-size: 19px;
+            line-height: 1.08;
+            font-weight: 900;
+        }
+
+        .amber {
+            color: #FFB84A;
+        }
+
+        .green {
+            color: #A7FF5A;
+        }
+
+        .wide {
+            grid-column: 1 / -1;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 120px;
+            gap: 10px;
+            margin-top: 14px;
+            align-items: stretch;
+        }
+
+        .hint {
+            min-height: 44px;
+            padding: 8px 10px;
+            color: #A7B7C8;
+            background: rgba(3, 8, 14, 0.42);
+            font-size: 13px;
+            line-height: 1.18;
+        }
+
+        .upgrade {
+            border: 0;
+            color: #031018;
+            background: linear-gradient(90deg, #25D7FF, #67E8FF);
+            box-shadow: 0 0 18px rgba(37, 215, 255, 0.28);
+            font-size: 15px;
+            font-weight: 900;
+            text-transform: uppercase;
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+        }
+
+        .upgrade:disabled {
+            color: #66788A;
+            background: rgba(12, 22, 32, 0.68);
+            box-shadow: inset 0 0 0 1px rgba(103, 232, 255, 0.14);
+        }
+    </style>
+</head>
+<body>
+    <section class="panel">
+        <div class="top">
+            <div>
+                <div class="overline">Area of Operations</div>
+                <h1 id="name">AO</h1>
+            </div>
+            <button class="close" id="close" type="button">X</button>
+        </div>
+
+        <div class="grid">
+            <div class="stat">
+                <div class="label">Owner</div>
+                <div class="value" id="owner">Neutral</div>
+            </div>
+            <div class="stat">
+                <div class="label">Level</div>
+                <div class="value green" id="level">0 Occupied</div>
+            </div>
+            <div class="stat">
+                <div class="label">Income</div>
+                <div class="value amber" id="income">$0 / 15 min</div>
+            </div>
+            <div class="stat">
+                <div class="label">Upgrade Cost</div>
+                <div class="value amber" id="cost">$0</div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <div class="hint" id="hint">Move inside a friendly AO to upgrade it.</div>
+            <button class="upgrade" id="upgrade" type="button">Upgrade</button>
+        </div>
+    </section>
+
+    <script>
+        (function () {
+            function send(event, data) {
+                var payload = JSON.stringify({ event: event, data: data || {} });
+
+                if (typeof A3API !== "undefined" && A3API.SendAlert) {
+                    A3API.SendAlert(payload);
+                }
+            }
+
+            function node(id) {
+                return document.getElementById(id);
+            }
+
+            function text(id, value) {
+                node(id).textContent = String(value);
+            }
+
+            function money(value) {
+                var n = Math.floor(Number(value) || 0);
+                var s = String(n);
+                var out = "";
+
+                while (s.length > 3) {
+                    out = "," + s.slice(-3) + out;
+                    s = s.slice(0, -3);
+                }
+
+                return "$" + s + out;
+            }
+
+            window.FOOFObjective = {
+                receive: function (payload) {
+                    payload = payload || {};
+
+                    text("name", payload.name || "AO");
+                    text("owner", payload.owner || "Neutral");
+                    text("level", String(payload.level || 0) + " " + (payload.levelName || ""));
+                    text("income", money(payload.incomePer15) + " / 15 min");
+                    text("cost", payload.level >= payload.maxLevel ? "Max" : money(payload.upgradeCost));
+                    text("hint", payload.canUpgrade ? ("Faction balance: " + money(payload.balance)) : (payload.upgradeReason || "Upgrade unavailable."));
+
+                    node("upgrade").disabled = !payload.canUpgrade;
+                }
+            };
+
+            node("upgrade").onclick = function () {
+                send("objective::upgrade", {});
+            };
+
+            node("close").onclick = function () {
+                send("objective::close", {});
+            };
+
+            window.addEventListener("load", function () {
+                send("objective::ready", {});
+            });
+        }());
+    </script>
+</body>
+</html>

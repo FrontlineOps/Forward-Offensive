@@ -1,6 +1,9 @@
 params ["_success", "_message"];
 
 if (!hasInterface) exitWith {};
+if (isMultiplayer && {remoteExecutedOwner isNotEqualTo 2} && {remoteExecutedOwner isNotEqualTo 0}) exitWith {
+    diag_log format ["[IDS_Logistics] Rejected placement result from owner %1", remoteExecutedOwner];
+};
 
 private _content = if (_success) then {
     _message

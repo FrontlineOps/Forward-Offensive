@@ -140,9 +140,16 @@ private _vehicle = createVehicle [_className, _finalPosAGL, [], 0, "CAN_COLLIDE"
 _vehicle setPosASL _finalPos;
 _vehicle setDir _finalDir;
 _vehicle setVectorUp _vectorUp;
-_vehicle setVariable ["FLO_Store_PurchasedSideKey", _sideKey, true];
-_vehicle setVariable ["FLO_Store_SourceFobId", _fob getVariable ["FLO_FOB_Id", ""], true];
 _vehicle lock 0;
+
+[
+    _vehicle,
+    _sideKey,
+    _fob getVariable ["FLO_FOB_Id", ""],
+    _className,
+    _pending get "category",
+    _pending get "priceValue"
+] call FLO_fnc_storeRegisterPurchasedVehicle;
 
 FLO_StorePendingVehicles deleteAt _index;
 ["storeVehiclePlaced"] call FLO_fnc_persistenceScheduleSave;

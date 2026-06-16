@@ -28,5 +28,5 @@ diag_log format [
     FLO_ResourceBalances get "EAST"
 ];
 
-[0] call FLO_fnc_resourceSendSnapshot;
+[] call FLO_fnc_resourceScheduleSnapshot;
 ["resourceTick"] call FLO_fnc_persistenceScheduleSave;

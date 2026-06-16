@@ -30,7 +30,7 @@ FLO_PersistencePlayerConnectedEh = addMissionEventHandler [
         [
             {
                 params ["_uid", "_owner"];
-                [_uid, _owner] call FLO_fnc_persistenceApplyPlayerToOwner;
+                [_uid, _owner, 0] call FLO_fnc_persistenceRetryApplyPlayerToOwner;
             },
             [_uid, _owner],
             4
@@ -38,17 +38,10 @@ FLO_PersistencePlayerConnectedEh = addMissionEventHandler [
     }
 ];
 
-FLO_PersistenceEntityKilledEh = addMissionEventHandler [
-    "EntityKilled",
-    {
-        ["entityKilled"] call FLO_fnc_persistenceScheduleSave;
-    }
-];
-
 [] call FLO_fnc_persistenceStartLoop;
 
 {
-    [getPlayerUID _x, owner _x] call FLO_fnc_persistenceApplyPlayerToOwner;
+    [getPlayerUID _x, owner _x, 0] call FLO_fnc_persistenceRetryApplyPlayerToOwner;
 } forEach allPlayers;
 
 diag_log format [

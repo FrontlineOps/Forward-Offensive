@@ -92,6 +92,19 @@ private _cellRecords = [];
     ];
 } forEach FLO_ObjectiveGridCellIds;
 
+private _objectiveLevelRecords = [];
+
+{
+    private _objective = FLO_Objectives get _x;
+
+    _objectiveLevelRecords pushBack [
+        ["id", _x],
+        ["owner", [_objective get "owner"] call FLO_fnc_persistenceSideKey],
+        ["level", _objective get "level"],
+        ["lastLevelChanged", _objective get "lastLevelChanged"]
+    ];
+} forEach keys FLO_Objectives;
+
 private _deploymentRecords = [];
 
 {
@@ -110,6 +123,7 @@ private _deploymentRecords = [];
 
 private _objectives = [
     ["cells", _cellRecords],
+    ["levels", _objectiveLevelRecords],
     ["deploymentZones", _deploymentRecords]
 ];
 
@@ -159,6 +173,7 @@ private _pendingVehicleRecords = [];
         ["className", _x get "className"],
         ["name", _x get "name"],
         ["category", _x get "category"],
+        ["priceValue", _x get "priceValue"],
         ["sideKey", _x get "sideKey"],
         ["owner", _x get "owner"],
         ["playerUid", _x get "playerUid"],
@@ -169,6 +184,7 @@ private _pendingVehicleRecords = [];
 
 private _store = [
     ["pendingVehicleCounter", FLO_StorePendingVehicleCounter],
+    ["purchasedVehicleCounter", FLO_StorePurchasedVehicleCounter],
     ["pendingVehicles", _pendingVehicleRecords]
 ];
 
@@ -183,8 +199,21 @@ private _vehicleRecords = [];
         && {(_x getVariable ["FLO_FOB_Id", ""]) isEqualTo ""}
     ) then {
         private _objectRecord = [_x] call FLO_fnc_persistenceSerializeObject;
-        _objectRecord pushBack ["storeSideKey", _x getVariable ["FLO_Store_PurchasedSideKey", ""]];
-        _objectRecord pushBack ["storeSourceFobId", _x getVariable ["FLO_Store_SourceFobId", ""]];
+
+        private _assetId = _x getVariable ["FLO_Store_AssetId", ""];
+
+        if ((_assetId isNotEqualTo "") && {_assetId in FLO_StorePurchasedVehicles}) then {
+            private _asset = FLO_StorePurchasedVehicles get _assetId;
+
+            if ((_asset get "object") isEqualTo _x) then {
+                _objectRecord pushBack ["storeAssetId", _assetId];
+                _objectRecord pushBack ["storeSideKey", _asset get "sideKey"];
+                _objectRecord pushBack ["storeSourceFobId", _asset get "fobId"];
+                _objectRecord pushBack ["storeCategory", _asset get "category"];
+                _objectRecord pushBack ["storeOriginalPrice", _asset get "originalPrice"];
+            };
+        };
+
         _vehicleRecords pushBack _objectRecord;
     };
 } forEach vehicles;
