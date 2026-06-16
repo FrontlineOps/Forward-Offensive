@@ -122,6 +122,7 @@ private _fobRecords = [];
     if ((!isNull _fob) && {alive _fob}) then {
         private _objectRecord = [_fob] call FLO_fnc_persistenceSerializeObject;
         _objectRecord pushBack ["id", _record get "id"];
+        _objectRecord pushBack ["type", _record get "type"];
         _objectRecord pushBack ["sideKey", _record get "sideKey"];
         _objectRecord pushBack ["ownerUid", _record get "ownerUid"];
         _objectRecord pushBack ["buildRadius", _record get "buildRadius"];

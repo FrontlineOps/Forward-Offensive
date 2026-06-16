@@ -6,23 +6,22 @@ FLO_FOBStarterUsed = createHashMapFromArray [
     ["WEST", false],
     ["EAST", false]
 ];
-FLO_FOBDeployCost = 1500;
-FLO_FOBBuildRadius = 100;
-FLO_FOBMinDistance = 500;
-FLO_FOBBuildClasses = [
-    "Land_Cargo_HQ_V1_F",
-    "Land_Cargo_HQ_V3_F",
-    "Land_Cargo_HQ_V4_F",
-    "Land_Medevac_HQ_V1_F"
-];
-FLO_FOBSideClasses = createHashMapFromArray [
-    ["WEST", "Land_Cargo_HQ_V1_F"],
-    ["EAST", "Land_Cargo_HQ_V3_F"]
-];
+
+FLO_FOBRespawnLoopHandle = [
+    {
+        {
+            [_x] call FLO_fnc_fobSyncRespawn;
+        } forEach keys FLO_FOBs;
+    },
+    FLO_BaseRespawnCheckInterval,
+    []
+] call CBA_fnc_addPerFrameHandler;
 
 diag_log format [
-    "[FLO][FOB] FOB system initialized deployCost=%1 buildRadius=%2 minDistance=%3 starterFobs=1PerSide",
+    "[FLO][FOB] Base system initialized fobCost=%1 copCost=%2 fobRadius=%3 copRadius=%4 starterFobs=1PerSide copMaxPerSide=%5",
     FLO_FOBDeployCost,
+    FLO_COPDeployCost,
     FLO_FOBBuildRadius,
-    FLO_FOBMinDistance
+    FLO_COPBuildRadius,
+    FLO_COPMaxPerSide
 ];

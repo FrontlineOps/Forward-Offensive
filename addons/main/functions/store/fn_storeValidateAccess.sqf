@@ -113,6 +113,14 @@ if (_registeredFob isNotEqualTo _fob) exitWith {
     ]
 };
 
+if !(_fobRecord get "storeEnabled") exitWith {
+    createHashMapFromArray [
+        ["success", false],
+        ["message", "Store is not available at this base."],
+        ["owner", _requestOwner]
+    ]
+};
+
 private _fobSideKey = _fobRecord get "sideKey";
 
 if (_fobSideKey isNotEqualTo _sideKey) exitWith {

@@ -213,14 +213,7 @@ if ("fobs" in _snapshot) then {
     private _fobs = createHashMapFromArray (_snapshot get "fobs");
 
     {
-        private _record = FLO_FOBs get _x;
-        private _fob = _record get "object";
-
-        deleteMarker (_record get "marker");
-
-        if (!isNull _fob) then {
-            deleteVehicle _fob;
-        };
+        [_x, true, false] call FLO_fnc_fobUnregister;
     } forEach keys FLO_FOBs;
 
     FLO_FOBs = createHashMap;
@@ -238,9 +231,10 @@ if ("fobs" in _snapshot) then {
                 private _side = [_record get "sideKey"] call FLO_fnc_persistenceSideFromKey;
 
                 if (_side in [west, east]) then {
+                    private _type = ["FOB", _record get "type"] select ("type" in _record);
                     private _fob = createVehicle [_className, [0, 0, 0], [], 0, "CAN_COLLIDE"];
                     [_fob, _x] call FLO_fnc_persistenceRestoreObjectState;
-                    [_fob, _side, _record get "ownerUid", _record get "id", _record get "buildRadius"] call FLO_fnc_fobRegister;
+                    [_fob, _side, _record get "ownerUid", _record get "id", _record get "buildRadius", _type] call FLO_fnc_fobRegister;
                 };
             };
         } forEach (_fobs get "records");

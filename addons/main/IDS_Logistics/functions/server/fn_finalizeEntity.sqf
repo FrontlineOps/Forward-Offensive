@@ -28,11 +28,13 @@ if !(_side in [west, east]) exitWith {
 };
 
 if (!([_player, "logistics"] call FLO_fnc_commandPlayerHasAuthority)) exitWith {
-    [false, "Only the elected side commander can use FOB logistics right now."] remoteExecCall ["IDS_Logistics_fnc_receivePlacementResult", _owner];
+    [false, "Only the elected side commander can use base logistics right now."] remoteExecCall ["IDS_Logistics_fnc_receivePlacementResult", _owner];
 };
 
-if (!([_side, getPosASL _player] call FLO_fnc_fobCanBuildAt)) exitWith {
-    [false, "You must be inside a friendly FOB build radius to place logistics objects."] remoteExecCall ["IDS_Logistics_fnc_receivePlacementResult", _owner];
+private _playerBase = [_side, getPosASL _player] call FLO_fnc_fobBuildBaseAt;
+
+if ((count _playerBase) isEqualTo 0) exitWith {
+    [false, "You must be inside a friendly base build radius to place logistics objects."] remoteExecCall ["IDS_Logistics_fnc_receivePlacementResult", _owner];
 };
 
 private _finalPosAGL = ASLToAGL _finalPos;
@@ -48,8 +50,16 @@ if ((count _entityConfig) isEqualTo 0) exitWith {
 
 _entityConfig params ["_entityClassName", "_entityCategory", "_entityCost"];
 
-if (!([_side, _finalPos] call FLO_fnc_fobCanBuildAt)) exitWith {
-    [false, "Logistics objects must be placed inside a friendly FOB build radius."] remoteExecCall ["IDS_Logistics_fnc_receivePlacementResult", _owner];
+private _placementBase = [_side, _finalPos] call FLO_fnc_fobBuildBaseAt;
+
+if ((count _placementBase) isEqualTo 0) exitWith {
+    [false, "Logistics objects must be placed inside a friendly base build radius."] remoteExecCall ["IDS_Logistics_fnc_receivePlacementResult", _owner];
+};
+
+private _allowedCategories = _placementBase get "logisticsCategories";
+
+if ((_allowedCategories isNotEqualTo []) && {!(_entityCategory in _allowedCategories)}) exitWith {
+    [false, format ["%1s can only build light logistics categories.", _placementBase get "type"]] remoteExecCall ["IDS_Logistics_fnc_receivePlacementResult", _owner];
 };
 
 private _sideKey = [_side] call FLO_fnc_resourceSideKey;

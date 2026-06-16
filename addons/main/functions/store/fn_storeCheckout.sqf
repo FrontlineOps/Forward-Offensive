@@ -31,6 +31,7 @@ if ((count _cart) > 60) exitWith {
 private _side = _access get "side";
 private _sideKey = _access get "sideKey";
 private _fob = _access get "fob";
+private _fobRecord = _access get "fobRecord";
 private _catalog = [
     _sideKey,
     _access get "factionClass",
@@ -117,22 +118,32 @@ for "_i" from 0 to ((count _cart) - 1) do {
                                             case "ticket": {
                                                 private _state = FLO_CommandSideState get _sideKey;
 
-                                                if ((_state get "commanderUid") isNotEqualTo (getPlayerUID (_access get "player"))) then {
+                                                if !(_fobRecord get "ticketStoreEnabled") then {
                                                     _ok = false;
-                                                    _message = "Only the commander can buy respawn tickets.";
+                                                    _message = "Respawn tickets can only be bought from a FOB.";
                                                 } else {
-                                                    _ticketCount = _ticketCount + ((_item get "ticketCount") * _quantity);
-                                                    _ticketLines = _ticketLines + _quantity;
+                                                    if ((_state get "commanderUid") isNotEqualTo (getPlayerUID (_access get "player"))) then {
+                                                        _ok = false;
+                                                        _message = "Only the commander can buy respawn tickets.";
+                                                    } else {
+                                                        _ticketCount = _ticketCount + ((_item get "ticketCount") * _quantity);
+                                                        _ticketLines = _ticketLines + _quantity;
+                                                    };
                                                 };
                                             };
 
                                             case "vehicle": {
-                                                for "_vehicleIndex" from 1 to _quantity do {
-                                                    _vehicleJobs pushBack createHashMapFromArray [
-                                                        ["className", _item get "className"],
-                                                        ["name", _item get "name"],
-                                                        ["category", _item get "category"]
-                                                    ];
+                                                if !(_fobRecord get "vehicleStoreEnabled") then {
+                                                    _ok = false;
+                                                    _message = "Vehicles can only be bought from a FOB.";
+                                                } else {
+                                                    for "_vehicleIndex" from 1 to _quantity do {
+                                                        _vehicleJobs pushBack createHashMapFromArray [
+                                                            ["className", _item get "className"],
+                                                            ["name", _item get "name"],
+                                                            ["category", _item get "category"]
+                                                        ];
+                                                    };
                                                 };
                                             };
 

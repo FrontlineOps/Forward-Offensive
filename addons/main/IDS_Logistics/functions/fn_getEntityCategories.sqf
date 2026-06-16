@@ -22,6 +22,7 @@
 params [["_useConfig", false, [false]]];
 
 private _categories = [];
+private _allowedCategories = missionNamespace getVariable ["FLO_LogisticsActiveCategories", []];
 
 // If direct config lookup is requested
 if (_useConfig) then {
@@ -33,7 +34,7 @@ if (_useConfig) then {
         if (isClass _entityClass) then {
             private _category = getText (_entityClass >> "category");
             
-            if !(_category in _categories) then {
+            if (((_allowedCategories isEqualTo []) || {_category in _allowedCategories}) && {!(_category in _categories)}) then {
                 _categories pushBack _category;
             };
         };
@@ -42,7 +43,7 @@ if (_useConfig) then {
     {
         private _category = _x select 1;
         
-        if !(_category in _categories) then {
+        if (((_allowedCategories isEqualTo []) || {_category in _allowedCategories}) && {!(_category in _categories)}) then {
             _categories pushBack _category;
         };
     } forEach IDS_Logistics_Entities;

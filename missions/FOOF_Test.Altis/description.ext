@@ -1,3 +1,6 @@
 author = "Angel";
 onLoadName = "FOOF";
 onLoadMission = "PvP-focused Arma 3 milsim gamemode.";
+respawn = 3;
+respawnDelay = 10;
+respawnTemplates[] = {"MenuPosition"};

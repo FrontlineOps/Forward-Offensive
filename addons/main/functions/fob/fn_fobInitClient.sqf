@@ -1,14 +1,5 @@
 if (!hasInterface) exitWith {};
 
-FLO_FOBDeployCost = 1500;
-FLO_FOBBuildRadius = 100;
-FLO_FOBBuildClasses = [
-    "Land_Cargo_HQ_V1_F",
-    "Land_Cargo_HQ_V3_F",
-    "Land_Cargo_HQ_V4_F",
-    "Land_Medevac_HQ_V1_F"
-];
-
 [
     { !isNull player },
     {
@@ -17,6 +8,17 @@ FLO_FOBBuildClasses = [
             { [player] remoteExecCall ["FLO_fnc_fobRequestDeploy", 2]; },
             nil,
             1.5,
+            true,
+            true,
+            "",
+            "alive _this && {[_this, 'fob'] call FLO_fnc_commandPlayerHasAuthority}"
+        ];
+
+        player addAction [
+            "<t size='1.5' color='#25D7FF' font='RobotoCondensedBold'>Deploy COP</t>",
+            { [player, "COP"] remoteExecCall ["FLO_fnc_fobRequestDeploy", 2]; },
+            nil,
+            1.45,
             true,
             true,
             "",

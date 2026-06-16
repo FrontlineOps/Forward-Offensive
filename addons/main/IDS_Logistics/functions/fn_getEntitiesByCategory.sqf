@@ -28,6 +28,10 @@ params [
 // Return empty array if no valid category provided
 if (_category == "") exitWith {[]};
 
+private _allowedCategories = missionNamespace getVariable ["FLO_LogisticsActiveCategories", []];
+
+if ((_allowedCategories isNotEqualTo []) && {!(_category in _allowedCategories)}) exitWith {[]};
+
 private _entities = [];
 
 // If direct config lookup is requested

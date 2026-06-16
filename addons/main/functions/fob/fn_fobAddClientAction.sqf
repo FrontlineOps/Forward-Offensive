@@ -35,12 +35,13 @@ if (_existingAction isEqualTo -1) then {
 
 private _existingStoreAction = _fob getVariable ["FLO_FOB_StoreActionId", -1];
 
-if (_existingStoreAction isEqualTo -1) then {
+if ((_existingStoreAction isEqualTo -1) && {_fob getVariable ["FLO_FOB_StoreEnabled", false]}) then {
     private _storeCondition = "
         alive _this
         && {alive _target}
         && {(side group _this) in [west, east]}
         && {[_this, 'store'] call FLO_fnc_commandPlayerHasAuthority}
+        && {_target getVariable ['FLO_FOB_StoreEnabled', false]}
         && {(_target getVariable ['FLO_FOB_SideKey', '']) isEqualTo ([side group _this] call FLO_fnc_resourceSideKey)}
         && {(_this distance2D _target) <= (_target getVariable ['FLO_FOB_BuildRadius', FLO_FOBBuildRadius])}
     ";

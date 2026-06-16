@@ -111,6 +111,10 @@ if ((_fobRecord get "sideKey") isNotEqualTo _sideKey) exitWith {
     ["The purchase FOB belongs to another side."] call _fail;
 };
 
+if !(_fobRecord get "vehicleStoreEnabled") exitWith {
+    ["Purchased vehicles can only be placed from a FOB purchase."] call _fail;
+};
+
 private _finalPosAGL = ASLToAGL _finalPos;
 private _buildRadius = _fobRecord get "buildRadius";
 

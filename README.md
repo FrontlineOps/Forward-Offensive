@@ -28,8 +28,9 @@ FOOF currently requires CBA_A3.
 - Server-authoritative commander and faction voting for BLUFOR and OPFOR with timed startup and replacement commander vote windows.
 - Simple HTML command vote dialog using Arma's web browser control.
 - First FOB per BLUFOR/OPFOR side is placed by the elected side commander; later FOBs spend faction currency.
-- IDS Logistics build menu attached to friendly FOB buildings for commander-authorized construction.
-- Server-validated logistics placement, movement, and deletion inside friendly FOB build areas.
+- Commander-deployed COPs provide cheaper forward combat outposts with limited build categories and conditional respawn support.
+- IDS Logistics build menu attached to friendly base buildings for commander-authorized construction.
+- Server-validated logistics placement, movement, and deletion inside friendly base build areas.
 - Store attached to friendly FOB buildings for commander-authorized faction equipment and vehicle purchases.
 - Store catalogs are generated from the selected faction's loaded config classes; no player-edited store definition files are required.
 - Store uses a cinematic tactical armory UI with item previews, equipment/cart summaries, personal saved kits, and clickable cart targets for putting ammo/items into uniform, vest, or backpack during checkout.
@@ -45,7 +46,7 @@ FOOF currently requires CBA_A3.
 - Command/faction voting: `addons/main/functions/command/`
 - Objective system: `addons/main/functions/objectives/`
 - Resource system: `addons/main/functions/resources/`
-- FOB system: `addons/main/functions/fob/`
+- FOB/COP base system: `addons/main/functions/fob/`
 - Spawn/deployment system: `addons/main/functions/spawns/`
 - Store system: `addons/main/functions/store/`
 - Ticket system: `addons/main/functions/tickets/`
