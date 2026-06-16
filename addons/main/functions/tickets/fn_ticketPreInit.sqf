@@ -1,0 +1,8 @@
+FLO_TicketInitialBalance = 50;
+FLO_TicketRespawnCost = 1;
+FLO_TicketRespawnDelay = 10;
+FLO_TicketNoTicketRespawnDelay = 999999;
+FLO_TicketBalances = createHashMap;
+FLO_TicketPurchasedTotal = createHashMap;
+FLO_TicketConsumedTotal = createHashMap;
+FLO_TicketRevision = 0;

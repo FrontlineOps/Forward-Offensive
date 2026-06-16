@@ -1,0 +1,13 @@
+FLO_CommandSnapshot = createHashMap;
+FLO_CommandLastVotePromptId = "";
+FLO_CommandVoteDismissedPromptId = "";
+FLO_CommandVoteCloseRevision = -1;
+FLO_CommandVoteBrowserReady = false;
+FLO_CommandVoteRenderKey = "";
+FLO_CommandBroadcastPending = createHashMap;
+FLO_CommandSnapshotRequestTimes = createHashMap;
+FLO_CommandWebActionInvoker = compile "params ['_control', '_args']; _control ctrlWebBrowserAction _args;";
+FLO_CommandInitialVoteDuration = 180;
+FLO_CommandReplacementVoteDuration = 120;
+FLO_CommandVoteDialogIdd = 9700;
+FLO_CommandVoteBrowserIdc = 9701;

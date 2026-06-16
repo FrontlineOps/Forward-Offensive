@@ -1,0 +1,10 @@
+FLO_PersistenceVersion = 1;
+FLO_PersistenceEnabled = true;
+FLO_PersistenceSaveInterval = 60;
+FLO_PersistenceEventSaveDelay = 8;
+FLO_PersistenceKey = format ["FOOF_Persistence_%1_v1", worldName];
+FLO_PersistenceDirty = false;
+FLO_PersistenceSaveScheduled = false;
+FLO_PersistenceLoaded = false;
+FLO_PersistenceLastSaveAt = 0;
+FLO_PersistencePlayerRecords = createHashMap;
