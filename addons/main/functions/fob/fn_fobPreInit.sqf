@@ -9,6 +9,15 @@ FLO_COPMaxPerSide = 4;
 FLO_COPEnemyDisableRadius = 200;
 
 FLO_BaseRespawnCheckInterval = 10;
+FLO_FOBClientActionRefreshInterval = 5;
+FLO_FOBClientActionLoopHandle = -1;
+FLO_FOBRespawnLoopHandle = -1;
+FLO_FOBNextId = 0;
+FLO_FOBs = createHashMap;
+FLO_FOBStarterUsed = createHashMapFromArray [
+    ["WEST", false],
+    ["EAST", false]
+];
 
 FLO_FOBSideClasses = createHashMapFromArray [
     ["WEST", "Land_Cargo_HQ_V1_F"],
@@ -40,3 +49,4 @@ FLO_FOBDeployBrowserIdc = 9901;
 FLO_FOBDeployBrowserReady = false;
 FLO_FOBDeployRenderKey = "";
 FLO_FOBDeployWebActionInvoker = compile "params ['_control', '_args']; _control ctrlWebBrowserAction _args;";
+FLO_FOBClientMarkers = createHashMap;

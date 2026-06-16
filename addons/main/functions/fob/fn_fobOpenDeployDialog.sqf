@@ -3,7 +3,7 @@ if (!hasInterface) exitWith { false };
 private _side = side group player;
 
 if !(_side in [west, east]) exitWith {
-    hint "Deployment is only available to BLUFOR and OPFOR.";
+    ["Deployment is only available to BLUFOR and OPFOR.", "warning", "Deployment"] call FLO_fnc_notify;
     false
 };
 

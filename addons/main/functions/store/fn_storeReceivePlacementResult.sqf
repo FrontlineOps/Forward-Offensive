@@ -18,7 +18,7 @@ if (_success) then {
     };
 };
 
-hint _message;
+[_message, ["error", "success"] select _success, "Vehicle Placement"] call FLO_fnc_notify;
 
 if (_success && {FLO_StorePendingVehicles isNotEqualTo []}) then {
     [{

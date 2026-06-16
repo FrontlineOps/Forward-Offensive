@@ -3,6 +3,10 @@ params [["_fob", objNull, [objNull]]];
 if (!hasInterface) exitWith {};
 if (isNull _fob) exitWith {};
 
+[_fob] call FLO_fnc_fobSyncClientMarker;
+
+if (!alive _fob) exitWith {};
+
 private _existingAction = _fob getVariable ["FLO_FOB_IDSActionId", -1];
 
 if (_existingAction isEqualTo -1) then {
@@ -10,7 +14,7 @@ if (_existingAction isEqualTo -1) then {
         alive _this
         && {alive _target}
         && {(side group _this) in [west, east]}
-        && {[_this, 'logistics'] call FLO_fnc_commandPlayerHasAuthority}
+        && {(_target getVariable ['FLO_FOB_Id', '']) isNotEqualTo ''}
         && {(_target getVariable ['FLO_FOB_SideKey', '']) isEqualTo ([side group _this] call FLO_fnc_resourceSideKey)}
         && {(_this distance2D _target) <= (_target getVariable ['FLO_FOB_BuildRadius', FLO_FOBBuildRadius])}
     ";
@@ -40,7 +44,7 @@ if ((_existingStoreAction isEqualTo -1) && {_fob getVariable ["FLO_FOB_StoreEnab
         alive _this
         && {alive _target}
         && {(side group _this) in [west, east]}
-        && {[_this, 'store'] call FLO_fnc_commandPlayerHasAuthority}
+        && {(_target getVariable ['FLO_FOB_Id', '']) isNotEqualTo ''}
         && {_target getVariable ['FLO_FOB_StoreEnabled', false]}
         && {(_target getVariable ['FLO_FOB_SideKey', '']) isEqualTo ([side group _this] call FLO_fnc_resourceSideKey)}
         && {(_this distance2D _target) <= (_target getVariable ['FLO_FOB_BuildRadius', FLO_FOBBuildRadius])}

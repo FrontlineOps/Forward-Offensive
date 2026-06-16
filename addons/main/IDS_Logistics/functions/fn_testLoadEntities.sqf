@@ -19,20 +19,22 @@
  */
 
 if (!isServer) exitWith {
-    hint "Run IDS logistics load testing on the server.";
+    ["Run IDS logistics load testing on the server.", "warning", "Logistics Test"] call FLO_fnc_notify;
 };
 
-hint "Starting entity load test...";
-systemChat "IDS_Logistics: Starting entity load test...";
+diag_log "[IDS_Logistics] Starting entity load test";
 
 private _savedData = missionProfileNamespace getVariable ["IDS_Logistics_SavedEntities", []];
-systemChat format ["IDS_Logistics: Found %1 entities in saved data", count _savedData];
+diag_log format ["[IDS_Logistics] Found %1 entities in saved data", count _savedData];
 
 [] call IDS_Logistics_fnc_loadEntities;
 
 // Wait a short time to allow server processing
 [{
     // Display completion message with count of loaded entities
-    systemChat format ["IDS_Logistics: Loaded %1 entities", count IDS_Logistics_PlacedEntities];
-    hint format ["Entity load test complete.\n\nLoaded: %1 entities", count IDS_Logistics_PlacedEntities];
+    diag_log format ["[IDS_Logistics] Loaded %1 entities", count IDS_Logistics_PlacedEntities];
+
+    if (hasInterface) then {
+        [format ["Entity load test complete. Loaded: %1 entities.", count IDS_Logistics_PlacedEntities], "success", "Logistics Test"] call FLO_fnc_notify;
+    };
 }, [], 2] call CBA_fnc_waitAndExecute; 

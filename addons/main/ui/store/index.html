@@ -534,6 +534,12 @@
             background: rgba(37, 215, 255, 0.08);
         }
 
+        .tag.amber {
+            color: #FFB84A;
+            border-color: rgba(255, 184, 74, 0.38);
+            background: rgba(255, 184, 74, 0.08);
+        }
+
         .card-actions {
             display: grid;
             grid-template-columns: minmax(96px, 1fr) auto auto;
@@ -590,6 +596,13 @@
                 linear-gradient(135deg, rgba(37, 215, 255, 0.36), rgba(36, 124, 255, 0.28)),
                 rgba(24, 58, 82, 0.98);
             box-shadow: inset 0 0 0 1px rgba(103, 232, 255, 0.82), 0 0 24px rgba(37, 215, 255, 0.2);
+        }
+
+        .action-btn:disabled,
+        .action-btn:disabled:hover {
+            color: #66788A;
+            background: rgba(20, 34, 48, 0.46);
+            box-shadow: inset 0 0 0 1px rgba(103, 232, 255, 0.08);
         }
 
         .action-btn.secondary {
@@ -1143,6 +1156,7 @@
                 activeContainer: "auto",
                 balance: 0,
                 tickets: 0,
+                canBuyTickets: false,
                 query: ""
             };
 
@@ -1915,6 +1929,7 @@
                         var actions = document.createElement("div");
                         var price = document.createElement("div");
                         var add = document.createElement("button");
+                        var ticketLocked = item.entryKind === "ticket" && !state.canBuyTickets;
 
                         card.className = "armory-card" + (sameItem(item, state.selectedItem) ? " selected" : "");
                         card.onclick = function () {
@@ -1929,6 +1944,9 @@
                         meta.appendChild(createTag(categoryLabel(item.category), "blue"));
                         meta.appendChild(createTag(previewTarget(item), "green"));
                         meta.appendChild(createTag(item.entryKind === "ticket" ? "Tickets" : (isVehicle(item) ? "Vehicle" : "Equipment"), ""));
+                        if (ticketLocked) {
+                            meta.appendChild(createTag("Commander", "amber"));
+                        }
 
                         body.appendChild(name);
                         body.appendChild(meta);
@@ -1939,9 +1957,13 @@
 
                         add.className = "action-btn";
                         add.type = "button";
-                        add.textContent = item.entryKind === "ticket" ? "Buy" : (isVehicle(item) ? "Queue" : "Add");
+                        add.textContent = ticketLocked ? "Locked" : (item.entryKind === "ticket" ? "Buy" : (isVehicle(item) ? "Queue" : "Add"));
+                        add.disabled = ticketLocked;
                         add.onclick = function (event) {
                             event.stopPropagation();
+                            if (ticketLocked) {
+                                return;
+                            }
                             state.selectedItem = item;
                             FOOFStore.add(item);
                             renderItems();
@@ -2162,6 +2184,7 @@
                         state.pendingVehicles = payload.pendingVehicles || state.pendingVehicles;
                         state.balance = typeof payload.balance === "number" ? payload.balance : 0;
                         state.tickets = typeof payload.tickets === "number" ? payload.tickets : state.tickets;
+                        state.canBuyTickets = typeof payload.canBuyTickets === "boolean" ? payload.canBuyTickets : false;
                         state.currentCategory = payload.firstCategory || state.currentCategory;
                         text("sideName", payload.sideName || "");
                         text("factionName", payload.factionName || "");
@@ -2187,6 +2210,7 @@
                         state.selectedItem = state.items.length > 0 ? state.items[0] : null;
                         state.balance = typeof payload.balance === "number" ? payload.balance : state.balance;
                         state.tickets = typeof payload.tickets === "number" ? payload.tickets : state.tickets;
+                        state.canBuyTickets = typeof payload.canBuyTickets === "boolean" ? payload.canBuyTickets : state.canBuyTickets;
                         text("categoryTitle", payload.label || "Items");
                         updateSummary();
                         renderCategories();

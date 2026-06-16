@@ -9,5 +9,5 @@ if (isMultiplayer && {remoteExecutedOwner isNotEqualTo 2} && {remoteExecutedOwne
 setPlayerRespawnTime ([_respawnDelay, _lockDelay] select _locked);
 
 if (_message isNotEqualTo "") then {
-    hint _message;
+    [_message, ["success", "warning"] select _locked, "Tickets"] call FLO_fnc_notify;
 };

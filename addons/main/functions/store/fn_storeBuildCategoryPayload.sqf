@@ -26,6 +26,8 @@ private _catalog = [
     _access get "factionName"
 ] call FLO_fnc_storeBuildCatalog;
 private _itemsByCategory = _catalog get "itemsByCategory";
+private _state = FLO_CommandSideState get (_access get "sideKey");
+private _canBuyTickets = (_state get "commanderUid") isEqualTo (getPlayerUID (_access get "player"));
 
 createHashMapFromArray [
     ["success", true],
@@ -34,5 +36,6 @@ createHashMapFromArray [
     ["label", _label],
     ["items", _itemsByCategory get _category],
     ["balance", FLO_ResourceBalances get (_access get "sideKey")],
-    ["tickets", FLO_TicketBalances get (_access get "sideKey")]
+    ["tickets", FLO_TicketBalances get (_access get "sideKey")],
+    ["canBuyTickets", _canBuyTickets]
 ]

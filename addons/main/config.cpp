@@ -15,6 +15,8 @@ class CfgFunctions {
     class FLO {
         tag = "FLO";
 
+        #include "functions\notifications\CfgFunctions.hpp"
+        #include "functions\intel\CfgFunctions.hpp"
         #include "functions\tickets\CfgFunctions.hpp"
         #include "functions\command\CfgFunctions.hpp"
         #include "functions\objectives\CfgFunctions.hpp"
@@ -30,13 +32,15 @@ class CfgFunctions {
 
 #include "IDS_Logistics\CfgLogistics.hpp"
 #include "IDS_Logistics\dialogs\BuildMenuDialog.hpp"
+#include "ui\notifications\NotificationTitles.hpp"
 #include "ui\command\CommandVoteDialog.hpp"
 #include "ui\deploy\DeployDialog.hpp"
+#include "ui\intel\IntelDialog.hpp"
 #include "ui\store\StoreDialog.hpp"
 
 class CfgRemoteExec {
     class Functions {
-        mode = 1;
+        mode = 2;
         jip = 0;
 
         class FLO_fnc_objectiveReceiveGridSnapshot {
@@ -60,6 +64,26 @@ class CfgRemoteExec {
         };
 
         class FLO_fnc_resourceRequestSnapshot {
+            allowedTargets = 2;
+            jip = 0;
+        };
+
+        class FLO_fnc_notificationReceive {
+            allowedTargets = 1;
+            jip = 0;
+        };
+
+        class FLO_fnc_intelAddClientAction {
+            allowedTargets = 0;
+            jip = 1;
+        };
+
+        class FLO_fnc_intelReceiveResult {
+            allowedTargets = 1;
+            jip = 0;
+        };
+
+        class FLO_fnc_intelRequestSearch {
             allowedTargets = 2;
             jip = 0;
         };
@@ -94,6 +118,11 @@ class CfgRemoteExec {
             jip = 1;
         };
 
+        class FLO_fnc_fobRemoveClientMarker {
+            allowedTargets = 0;
+            jip = 0;
+        };
+
         class FLO_fnc_fobReceiveDeployResult {
             allowedTargets = 0;
             jip = 0;
@@ -105,7 +134,7 @@ class CfgRemoteExec {
         };
 
         class FLO_fnc_spawnApplyAssignment {
-            allowedTargets = 0;
+            allowedTargets = 1;
             jip = 0;
         };
 

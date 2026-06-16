@@ -29,7 +29,9 @@ private _entitiesList = _display displayCtrl 9503;
 private _selectedIndex = lbCurSel _entitiesList;
 
 // Check if something is selected
-if (_selectedIndex < 0) exitWith { hint "No entity selected"; };
+if (_selectedIndex < 0) exitWith {
+    ["No entity selected.", "warning", "Build Menu"] call FLO_fnc_notify;
+};
 
 // Get the selected class
 private _className = _entitiesList lbData _selectedIndex;

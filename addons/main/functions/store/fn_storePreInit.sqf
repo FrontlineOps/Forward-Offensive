@@ -61,3 +61,46 @@ FLO_StoreTicketPacks = [
     ["foof_ticket_10", "Reinforcement Tickets x10", 10, 850],
     ["foof_ticket_25", "Reinforcement Tickets x25", 25, 1900]
 ];
+
+FLO_StoreSupportModSources = [
+    ["acre", ["acre_main"], ["acre_"], ["acre_"], ["acre_"], ["misc", "backpacks"]],
+    ["tfar", ["task_force_radio", "tfar_core"], ["tfar_", "tf_"], ["tfar_", "tf_"], ["tfar_", "tf_"], ["misc", "backpacks"]],
+    ["ace", ["ace_main"], ["ace_"], ["ace_", "ace3_"], ["ace_", "ace3_"], ["misc"]],
+    ["kat", ["kat_main"], ["kat_"], ["kat_"], ["kat_"], ["misc"]],
+    ["acm", ["acm_main", "ACM_Core"], ["acm_"], ["acm_"], ["acm_"], ["misc"]]
+];
+
+FLO_StoreSupportRejectPatterns = [
+    "admin",
+    "arsenal",
+    "base",
+    "curator",
+    "deprecated",
+    "debug",
+    "dummy",
+    "helper",
+    "module",
+    "placeholder",
+    "programmer",
+    "rack",
+    "test",
+    "vehicle",
+    "zeus"
+];
+
+FLO_StoreSupportCatalogItems = [
+    ["FirstAidKit", "gear", "misc"],
+    ["Medikit", "gear", "misc"],
+
+    ["ItemGPS", "gear", "misc"],
+    ["ItemcTab", "gear", "misc"],
+    ["ItemAndroid", "gear", "misc"],
+    ["ItemcTabHCam", "gear", "misc"],
+    ["ItemMicroDAGR", "gear", "misc"],
+    ["ItemcTabMisc", "gear", "misc"],
+    ["ItemAndroidMisc", "gear", "misc"],
+    ["ItemMicroDAGRMisc", "gear", "misc"],
+    ["ItemcTabMISC", "gear", "misc"],
+    ["ItemAndroidMISC", "gear", "misc"],
+    ["ItemMicroDAGRMISC", "gear", "misc"]
+];

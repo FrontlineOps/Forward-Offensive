@@ -2,7 +2,7 @@ params [["_fob", objNull, [objNull]]];
 
 if (!hasInterface) exitWith { false };
 if (isNull _fob) exitWith {
-    hint "Store is unavailable.";
+    ["Store is unavailable.", "error", "Store"] call FLO_fnc_notify;
     false
 };
 

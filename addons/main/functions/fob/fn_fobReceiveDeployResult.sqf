@@ -2,7 +2,7 @@ params ["_success", "_message"];
 
 if (!hasInterface) exitWith {};
 
-hint _message;
+[_message, ["error", "success"] select _success, "Deployment"] call FLO_fnc_notify;
 
 private _control = uiNamespace getVariable ["FLO_DeployControl", controlNull];
 

@@ -16,9 +16,12 @@ class FOB {
     class fobPostInit { postInit = 1; };
     class fobPreInit { preInit = 1; };
     class fobReceiveDeployResult {};
+    class fobRefreshClientActions {};
     class fobRegister {};
+    class fobRemoveClientMarker {};
     class fobRemoveRespawn {};
     class fobRequestDeploy {};
+    class fobSyncClientMarker {};
     class fobSyncRespawn {};
     class fobTypeConfig {};
     class fobUnregister {};

@@ -2,6 +2,8 @@ params ["_player", ["_schedule", true, [false]]];
 
 if (!isServer) exitWith { [] };
 if (isNull _player) exitWith { [] };
+if (!alive _player) exitWith { [] };
+if ((lifeState _player) in ["DEAD", "DEAD-RESPAWN", "INCAPACITATED"]) exitWith { [] };
 
 private _uid = getPlayerUID _player;
 
@@ -9,6 +11,13 @@ if (_uid isEqualTo "") exitWith { [] };
 
 private _sideKey = [side group _player] call FLO_fnc_persistenceSideKey;
 private _assignedCellId = _player getVariable ["FLO_Spawn_AssignedCellId", ""];
+private _spawnAssigned = _player getVariable ["FLO_Spawn_Assigned", false];
+private _persistenceLoaded = _player getVariable ["FLO_Persistence_Loaded", false];
+
+if (!_spawnAssigned && {!_persistenceLoaded} && {_assignedCellId isEqualTo ""}) exitWith {
+    []
+};
+
 private _vehicleNetId = "";
 
 if ((vehicle _player) isNotEqualTo _player) then {

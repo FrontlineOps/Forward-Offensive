@@ -1,6 +1,8 @@
 params ["_access"];
 
 private _sideKey = _access get "sideKey";
+private _state = FLO_CommandSideState get _sideKey;
+private _canBuyTickets = (_state get "commanderUid") isEqualTo (getPlayerUID (_access get "player"));
 private _catalog = [
     _sideKey,
     _access get "factionClass",
@@ -35,6 +37,7 @@ createHashMapFromArray [
     ["factionName", _catalog get "factionName"],
     ["balance", FLO_ResourceBalances get _sideKey],
     ["tickets", FLO_TicketBalances get _sideKey],
+    ["canBuyTickets", _canBuyTickets],
     ["categories", _categories],
     ["firstCategory", _firstCategory],
     ["fobNetId", _access get "fobNetId"],

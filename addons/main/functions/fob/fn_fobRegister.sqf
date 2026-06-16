@@ -7,7 +7,6 @@ if (isNull _fob) then {
 
 private _config = [_baseType] call FLO_fnc_fobTypeConfig;
 private _type = _config get "type";
-private _label = _config get "label";
 private _sideKey = [_side] call FLO_fnc_resourceSideKey;
 private _id = _forcedId;
 
@@ -21,11 +20,6 @@ if (_buildRadius < 0) then {
 };
 
 private _markerId = format ["FLO_FOB_%1", _id];
-private _marker = createMarker [_markerId, getPos _fob];
-_marker setMarkerShapeLocal "ICON";
-_marker setMarkerTypeLocal (["b_installation", "o_installation"] select (_side isEqualTo east));
-_marker setMarkerColorLocal (["ColorWEST", "ColorEAST"] select (_side isEqualTo east));
-_marker setMarkerText format ["%1 %2", ["BLUFOR", "OPFOR"] select (_side isEqualTo east), _label];
 
 _fob setVariable ["FLO_FOB_Id", _id, true];
 _fob setVariable ["FLO_FOB_Type", _type, true];
@@ -63,6 +57,7 @@ FLO_FOBs set [
 
 [_fob] remoteExecCall ["FLO_fnc_fobAddClientAction", 0, _fob];
 [_id] call FLO_fnc_fobSyncRespawn;
+[_side] call FLO_fnc_spawnEnsureSideRespawn;
 
 _fob addEventHandler [
     "Killed",

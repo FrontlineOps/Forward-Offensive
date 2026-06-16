@@ -42,6 +42,7 @@ private _voteCounts = createHashMap;
 private _winnerClass = "";
 private _winnerVotes = 0;
 private _winnerTied = false;
+private _fallback = false;
 
 {
     if (_y > _winnerVotes) then {
@@ -55,8 +56,33 @@ private _winnerTied = false;
     };
 } forEach _voteCounts;
 
+if (_winnerTied && {_allowPlurality}) then {
+    private _tiedClasses = [];
+
+    {
+        if (_y isEqualTo _winnerVotes) then {
+            _tiedClasses pushBack _x;
+        };
+    } forEach _voteCounts;
+
+    _tiedClasses sort true;
+    _winnerClass = _tiedClasses # 0;
+    _winnerTied = false;
+    _fallback = true;
+};
+
+if ((_winnerClass isEqualTo "") && {_allowPlurality} && {(count _players) > 0}) then {
+    private _options = FLO_CommandFactionOptions get _sideKey;
+
+    if ((count _options) > 0) then {
+        _winnerClass = (_options # 0) get "class";
+        _winnerVotes = 0;
+        _fallback = true;
+    };
+};
+
 if (_winnerClass isEqualTo "") exitWith { false };
-if ((_winnerVotes < _requiredVotes) && {!_allowPlurality || {_winnerTied}}) exitWith { false };
+if ((_winnerVotes < _requiredVotes) && {!_allowPlurality}) exitWith { false };
 
 private _winner = _optionsByClass get _winnerClass;
 _state set ["factionClass", _winnerClass];
@@ -70,13 +96,14 @@ FLO_CommandRevision = FLO_CommandRevision + 1;
 ["factionResolved"] call FLO_fnc_persistenceScheduleSave;
 
 diag_log format [
-    "[FLO][Command] %1 faction selected class=%2 name=%3 votes=%4 required=%5 plurality=%6",
+    "[FLO][Command] %1 faction selected class=%2 name=%3 votes=%4 required=%5 plurality=%6 fallback=%7",
     _sideKey,
     _winnerClass,
     _winner get "displayName",
     _winnerVotes,
     _requiredVotes,
-    _allowPlurality
+    _allowPlurality,
+    _fallback
 ];
 
 true

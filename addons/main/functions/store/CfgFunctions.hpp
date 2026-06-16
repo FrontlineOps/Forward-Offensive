@@ -5,6 +5,8 @@ class Store {
     class storeAddInventoryItem {};
     class storeApplyKit {};
     class storeAppendCatalogItem {};
+    class storeAppendSupportModItems {};
+    class storeAppendSupportItems {};
     class storeBuildCatalog {};
     class storeBuildCatalogItem {};
     class storeBuildHydratePayload {};
@@ -33,6 +35,10 @@ class Store {
     class storeSendResponse {};
     class storeSpawnVehicle {};
     class storeStartVehiclePlacement {};
+    class storeStringMatchesPatterns {};
+    class storeSupportClassRejected {};
+    class storeSupportConfigMatchesSource {};
+    class storeSupportSourceLoaded {};
     class storeUpdateDialog {};
     class storeValidateAccess {};
     class storeWebAction {};

@@ -13,15 +13,13 @@ if (!hasInterface) exitWith {};
             false
         ] call CBA_fnc_addKeybind;
 
-        {
-            private _className = _x;
+        [] call FLO_fnc_fobRefreshClientActions;
 
-            {
-                if ((_x getVariable ["FLO_FOB_Id", ""]) isNotEqualTo "") then {
-                    [_x] call FLO_fnc_fobAddClientAction;
-                };
-            } forEach allMissionObjects _className;
-        } forEach FLO_FOBBuildClasses;
+        FLO_FOBClientActionLoopHandle = [
+            { [] call FLO_fnc_fobRefreshClientActions; },
+            FLO_FOBClientActionRefreshInterval,
+            []
+        ] call CBA_fnc_addPerFrameHandler;
 
         diag_log "[FLO][FOB] Client base actions and deployment keybind initialized";
     }

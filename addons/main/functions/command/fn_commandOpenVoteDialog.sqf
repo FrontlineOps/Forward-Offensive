@@ -1,8 +1,10 @@
 if (!hasInterface) exitWith { false };
 if !((side group player) in [west, east]) exitWith {
-    hint "Command voting is only available to BLUFOR and OPFOR.";
+    ["Command voting is only available to BLUFOR and OPFOR.", "warning", "Command"] call FLO_fnc_notify;
     false
 };
+
+if !([] call FLO_fnc_commandCanOpenVoteDialog) exitWith { false };
 
 private _display = findDisplay FLO_CommandVoteDialogIdd;
 

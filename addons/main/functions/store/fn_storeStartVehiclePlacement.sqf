@@ -12,14 +12,14 @@ private _entry = createHashMap;
 } forEach FLO_StorePendingVehicles;
 
 if ((count _entry) isEqualTo 0) exitWith {
-    hint "Vehicle placement is unavailable.";
+    ["Vehicle placement is unavailable.", "error", "Vehicle Placement"] call FLO_fnc_notify;
     false
 };
 
 private _fob = objectFromNetId (_entry get "fobNetId");
 
 if (isNull _fob) exitWith {
-    hint "Vehicle placement FOB is unavailable.";
+    ["Vehicle placement FOB is unavailable.", "error", "Vehicle Placement"] call FLO_fnc_notify;
     false
 };
 
@@ -35,6 +35,6 @@ if (isNull _activeCamera) then {
 
 [_entry get "className", _purchaseId] call IDS_Logistics_fnc_startPlacement;
 
-hint format ["Placing %1.", _entry get "name"];
+[format ["Placing %1.", _entry get "name"], "info", "Vehicle Placement"] call FLO_fnc_notify;
 
 true

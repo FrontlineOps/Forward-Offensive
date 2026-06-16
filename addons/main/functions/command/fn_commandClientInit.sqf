@@ -1,19 +1,22 @@
 if (!hasInterface) exitWith {};
 
 [
-    { !isNull player && {(side group player) in [west, east]} },
+    { [] call FLO_fnc_commandCanOpenVoteDialog },
     {
         [player] remoteExecCall ["FLO_fnc_commandRequestSnapshot", 2];
 
-        [
+        FLO_CommandClientSnapshotRetryHandle = [
             {
-                if !("sideKey" in FLO_CommandSnapshot) then {
+                if ([] call FLO_fnc_commandClientNeedsSnapshot) then {
                     [player] remoteExecCall ["FLO_fnc_commandRequestSnapshot", 2];
+                } else {
+                    [FLO_CommandClientSnapshotRetryHandle] call CBA_fnc_removePerFrameHandler;
+                    FLO_CommandClientSnapshotRetryHandle = -1;
                 };
             },
-            [],
-            1
-        ] call CBA_fnc_waitAndExecute;
+            2,
+            []
+        ] call CBA_fnc_addPerFrameHandler;
 
         diag_log "[FLO][Command] Client command voting initialized";
     }

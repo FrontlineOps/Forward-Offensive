@@ -39,6 +39,22 @@ FLO_CommandFactionOptions = createHashMapFromArray [
     ];
 } forEach ["WEST", "EAST"];
 
+FLO_CommandPlayerConnectedEh = addMissionEventHandler [
+    "PlayerConnected",
+    {
+        params ["_id", "_uid", "_name", "_jip", "_owner"];
+
+        [
+            {
+                params ["_uid", "_owner"];
+                [_uid, _owner] call FLO_fnc_commandSyncConnectedPlayer;
+            },
+            [_uid, _owner],
+            3
+        ] call CBA_fnc_waitAndExecute;
+    }
+];
+
 FLO_CommandPlayerDisconnectedEh = addMissionEventHandler [
     "PlayerDisconnected",
     {

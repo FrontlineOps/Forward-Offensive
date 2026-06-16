@@ -34,6 +34,7 @@ if ("assignedCellId" in _record) then {
     player setVariable ["FLO_Spawn_AssignedCellId", _record get "assignedCellId", true];
 };
 
+FLO_SpawnClientAssigned = true;
 player setVariable ["FLO_Persistence_Loaded", true, true];
 
 diag_log format [

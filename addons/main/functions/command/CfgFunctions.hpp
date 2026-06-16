@@ -5,7 +5,9 @@ class Command {
     class commandBroadcastSide {};
     class commandBuildFactionOptions {};
     class commandBuildSideSnapshot {};
+    class commandCanOpenVoteDialog {};
     class commandClientInit {};
+    class commandClientNeedsSnapshot {};
     class commandEnsureInitialVoteWindow {};
     class commandExpireVoteWindow {};
     class commandHandleVoteUiEvent {};
@@ -22,6 +24,7 @@ class Command {
     class commandSendSnapshot {};
     class commandSidePlayers {};
     class commandStartVoteWindow {};
+    class commandSyncConnectedPlayer {};
     class commandUpdateVoteDialog {};
     class commandVoteCommander {};
     class commandVoteFaction {};

@@ -100,4 +100,4 @@ if ((typeName _gearEntries) isNotEqualTo "ARRAY") exitWith {};
     } forEach _gearEntries;
 } forEach ["uniforms", "vests", "backpacks", "headgear", "facewear", "primary", "handgun", "secondary", "attachments", "misc", "ammo"];
 
-hint "Purchased kit applied.";
+["Purchased kit applied.", "success", "Store"] call FLO_fnc_notify;

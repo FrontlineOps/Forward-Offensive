@@ -22,22 +22,34 @@ FOOF currently requires CBA_A3.
 - Frontline-only sector capture: enemy sectors must be adjacent to friendly control before they can flip.
 - Randomized fair deployment zones choose opposing BLUFOR/OPFOR starts from valid generated grid cells each match.
 - Initial legal entry cells are derived from those deployment zones so the first frontline begins from the generated starts.
+- Initial player deployment waits for generated deployment zones to be ready on the server before teleporting clients.
+- Deployment assignment searches for a dry position inside the generated staging cell, so editor-placed playable units are only temporary mission placeholders.
+- Dedicated clients retry initial deployment until the server assignment or persisted player restore is actually applied, and the server also resyncs spawn assignment after player connect.
+- Generated BLUFOR/OPFOR staging cells are registered as temporary respawn positions until that side places its first FOB/COP.
+- Respawn uses Arma `MenuPosition` with server-registered staging, FOB, and active COP positions; staging remains as a fallback whenever a side has no active base respawn.
 - Slow spearhead-style pressure from captured cells.
 - Slow encirclement pressure against isolated owned cells.
 - Server-owned BLUFOR/OPFOR currency generated from controlled grid cells and high-value objectives.
 - Server-authoritative commander and faction voting for BLUFOR and OPFOR with timed startup and replacement commander vote windows.
+- Startup commander/faction votes resolve to a deterministic fallback on expiry so a side cannot leave opening votes without command or faction setup.
 - Simple HTML command vote dialog using Arma's web browser control.
+- Command voting opens after players enter the mission view, not during the post-lobby Continue screen.
+- Dedicated clients retry command snapshot requests until their real BLUFOR/OPFOR side snapshot arrives, and the server resyncs command state after player connect so initial votes open reliably for both sides.
 - First FOB per BLUFOR/OPFOR side is placed by the elected side commander; later FOBs spend faction currency.
 - Commander-deployed COPs provide cheaper forward combat outposts with limited build categories and conditional respawn support.
 - Custom deployment panel for FOB/COP placement opens through the CBA keybind `Ctrl+Shift+D` by default.
 - IDS Logistics build menu attached to friendly base buildings for commander-authorized construction.
 - Server-validated logistics placement, movement, and deletion inside friendly base build areas.
-- Store attached to friendly FOB buildings for commander-authorized faction equipment and vehicle purchases.
+- Store attached to friendly FOB buildings for same-side faction equipment and vehicle purchases.
 - Store catalogs are generated from the selected faction's loaded config classes; no player-edited store definition files are required.
+- Store catalogs also append optional support gear without player-edited definitions: reviewed vanilla GPS and cTab/NSWDG device classes plus source-filtered ACRE/TFAR radio and ACE/KAT/ACM medical support items when those mods are loaded.
 - Store uses a cinematic tactical armory UI with item previews, equipment/cart summaries, personal saved kits, and clickable cart targets for putting ammo/items into uniform, vest, or backpack during checkout.
 - Store vehicle checkout creates a pending vehicle placement; the player places the purchased vehicle with the IDS camera inside the purchase FOB build radius.
 - Server-owned BLUFOR/OPFOR ticket pools control respawn allowance; respawns spend one side ticket.
-- Commanders can buy reinforcement ticket packs from the Store with faction currency.
+- Commanders can buy reinforcement ticket packs from the Store with faction currency; ticket packs are commander-only.
+- Native notification and announcement framework replaces ad hoc hints for player-facing feedback.
+- Dead enemy player bodies can be searched through a compact HTML intel panel; the server decides whether the body has no intel, enemy movement intel, or rare FOB/COP radius intel.
+- Recovered intel creates temporary local map-radius markers instead of exact enemy positions.
 - Server-authenticated objective updates for normal play, with full snapshots for startup and reconnects.
 
 ## Development
@@ -51,9 +63,12 @@ FOOF currently requires CBA_A3.
 - Spawn/deployment system: `addons/main/functions/spawns/`
 - Store system: `addons/main/functions/store/`
 - Ticket system: `addons/main/functions/tickets/`
+- Notification system: `addons/main/functions/notifications/`
+- Intel system: `addons/main/functions/intel/`
 - IDS Logistics: `addons/main/IDS_Logistics/`
 - Command vote UI: `addons/main/ui/command/`
 - Deployment UI: `addons/main/ui/deploy/`
+- Intel UI: `addons/main/ui/intel/`
 - Store UI: `addons/main/ui/store/`
 - Startup: addon `postInit` during normal missions; Arma engine intro missions are skipped.
 - Dev test mission: `missions/FOOF_Test.Altis`
@@ -61,6 +76,8 @@ FOOF currently requires CBA_A3.
 ## Building and Testing
 
 Use HEMTT to build or launch the FOOF addon with CBA_A3. The default launch profile opens the included Altis test mission shell, but the addon systems are registered from `addons/main` and are not tied to root mission files.
+
+Any playable mission shell used to host FOOF needs respawn configured as custom positions with `MenuPosition`, respawn dialog enabled, and respawn on start disabled; the included test shell and root dev shell both include those settings.
 
 HEMTT project config is included for local addon checks and launch workflow.
 

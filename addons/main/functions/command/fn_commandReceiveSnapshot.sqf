@@ -20,15 +20,42 @@ if (_snapshot get "shouldPromptVote") then {
         FLO_CommandVoteRenderKey = "";
 
         if ((_snapshot get "commanderVoteReason") isEqualTo "commanderDisconnected") then {
-            hint format [
-                "%1 commander left. Vote for a replacement in the next 2 minutes.",
-                _snapshot get "sideName"
-            ];
+            [
+                "Commander Replacement Vote",
+                format [
+                    "%1 commander left. Vote for a replacement in the next 2 minutes.",
+                    _snapshot get "sideName"
+                ],
+                "announcement",
+                7
+            ] call FLO_fnc_announce;
         };
     };
 
     if ((isNull _display) && {FLO_CommandVoteDismissedPromptId isNotEqualTo _promptId}) then {
-        [] call FLO_fnc_commandOpenVoteDialog;
+        if ([] call FLO_fnc_commandCanOpenVoteDialog) then {
+            [] call FLO_fnc_commandOpenVoteDialog;
+        } else {
+            if (!FLO_CommandVoteOpenWhenReady) then {
+                FLO_CommandVoteOpenWhenReady = true;
+
+                [
+                    { [] call FLO_fnc_commandCanOpenVoteDialog },
+                    {
+                        FLO_CommandVoteOpenWhenReady = false;
+
+                        if (("shouldPromptVote" in FLO_CommandSnapshot) && {FLO_CommandSnapshot get "shouldPromptVote"}) then {
+                            private _promptId = FLO_CommandSnapshot get "votePromptId";
+
+                            if (FLO_CommandVoteDismissedPromptId isNotEqualTo _promptId) then {
+                                [] call FLO_fnc_commandOpenVoteDialog;
+                            };
+                        };
+                    },
+                    []
+                ] call CBA_fnc_waitUntilAndExecute;
+            };
+        };
     };
 } else {
     private _display = findDisplay FLO_CommandVoteDialogIdd;
@@ -60,6 +87,7 @@ if (_snapshot get "shouldPromptVote") then {
 };
 
 [] call FLO_fnc_commandUpdateVoteDialog;
+[] call FLO_fnc_fobRefreshClientActions;
 
 if (!isNull (uiNamespace getVariable ["FLO_DeployControl", controlNull])) then {
     FLO_FOBDeployRenderKey = "";

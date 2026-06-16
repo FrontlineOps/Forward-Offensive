@@ -78,6 +78,8 @@ private _factionLower = toLower _factionClass;
     [_itemsByCategory, _seen, _vehicleClass, "vehicle", _category] call FLO_fnc_storeAppendCatalogItem;
 } forEach ("true" configClasses (configFile >> "CfgVehicles"));
 
+[_itemsByCategory, _seen] call FLO_fnc_storeAppendSupportItems;
+
 {
     _x params ["_className", "_name", "_ticketCount", "_price"];
 

@@ -58,14 +58,6 @@ if !(_side in [west, east]) exitWith {
 
 private _sideKey = [_side] call FLO_fnc_resourceSideKey;
 
-if !([_player, "store"] call FLO_fnc_commandPlayerHasAuthority) exitWith {
-    createHashMapFromArray [
-        ["success", false],
-        ["message", "You do not have store authority."],
-        ["owner", _requestOwner]
-    ]
-};
-
 private _fob = objectFromNetId _fobNetId;
 
 if (isNull _fob) exitWith {

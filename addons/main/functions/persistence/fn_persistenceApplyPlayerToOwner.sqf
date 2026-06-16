@@ -15,9 +15,32 @@ if (isNull _unit) exitWith { false };
 
 private _recordData = FLO_PersistencePlayerRecords get _uid;
 private _record = createHashMapFromArray _recordData;
+private _assignedCellId = "";
 
 if ("assignedCellId" in _record) then {
-    _unit setVariable ["FLO_Spawn_AssignedCellId", _record get "assignedCellId", true];
+    _assignedCellId = _record get "assignedCellId";
+};
+
+if (_assignedCellId isEqualTo "") exitWith {
+    diag_log format [
+        "[FLO][Persistence] Ignored saved player state uid=%1 because it has no assigned deployment cell",
+        _uid
+    ];
+
+    false
+};
+
+if (("damage" in _record) && {(_record get "damage") >= 1}) exitWith {
+    diag_log format [
+        "[FLO][Persistence] Ignored saved player state uid=%1 because saved damage is lethal",
+        _uid
+    ];
+
+    false
+};
+
+if ("assignedCellId" in _record) then {
+    _unit setVariable ["FLO_Spawn_AssignedCellId", _assignedCellId, true];
 };
 
 if (_owner <= 0) then {

@@ -37,6 +37,7 @@ private _voteCounts = createHashMap;
 private _winnerUid = "";
 private _winnerVotes = 0;
 private _winnerTied = false;
+private _fallback = false;
 
 {
     if (_y > _winnerVotes) then {
@@ -50,8 +51,32 @@ private _winnerTied = false;
     };
 } forEach _voteCounts;
 
+if (_winnerTied && {_allowPlurality}) then {
+    private _tiedUids = [];
+
+    {
+        if (_y isEqualTo _winnerVotes) then {
+            _tiedUids pushBack _x;
+        };
+    } forEach _voteCounts;
+
+    _tiedUids sort true;
+    _winnerUid = _tiedUids # 0;
+    _winnerTied = false;
+    _fallback = true;
+};
+
+if ((_winnerUid isEqualTo "") && {_allowPlurality} && {(count _players) > 0}) then {
+    private _fallbackUids = keys _activeUids;
+    _fallbackUids sort true;
+
+    _winnerUid = _fallbackUids # 0;
+    _winnerVotes = 0;
+    _fallback = true;
+};
+
 if (_winnerUid isEqualTo "") exitWith { false };
-if ((_winnerVotes < _requiredVotes) && {!_allowPlurality || {_winnerTied}}) exitWith { false };
+if ((_winnerVotes < _requiredVotes) && {!_allowPlurality}) exitWith { false };
 
 private _winner = _activeUids get _winnerUid;
 _state set ["commanderUid", _winnerUid];
@@ -65,13 +90,14 @@ FLO_CommandRevision = FLO_CommandRevision + 1;
 ["commanderResolved"] call FLO_fnc_persistenceScheduleSave;
 
 diag_log format [
-    "[FLO][Command] %1 commander elected uid=%2 name=%3 votes=%4 required=%5 plurality=%6",
+    "[FLO][Command] %1 commander elected uid=%2 name=%3 votes=%4 required=%5 plurality=%6 fallback=%7",
     _sideKey,
     _winnerUid,
     name _winner,
     _winnerVotes,
     _requiredVotes,
-    _allowPlurality
+    _allowPlurality,
+    _fallback
 ];
 
 true

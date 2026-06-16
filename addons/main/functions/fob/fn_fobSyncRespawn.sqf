@@ -36,7 +36,17 @@ if (_active) then {
         private _sideName = ["BLUFOR", "OPFOR"] select (_side isEqualTo east);
         private _label = format ["%1 %2", _sideName, _record get "type"];
         _record set ["respawnHandle", [_side, _object, _label] call BIS_fnc_addRespawnPosition];
+
+        diag_log format [
+            "[FLO][FOB] Added %1 respawn id=%2 side=%3 pos=%4",
+            _record get "type",
+            _record get "id",
+            _record get "sideKey",
+            getPosATL _object
+        ];
     };
 } else {
     [_record] call FLO_fnc_fobRemoveRespawn;
 };
+
+[_side] call FLO_fnc_spawnEnsureSideRespawn;

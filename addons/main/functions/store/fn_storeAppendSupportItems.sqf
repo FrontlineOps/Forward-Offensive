@@ -1,0 +1,9 @@
+params ["_itemsByCategory", "_seen"];
+
+{
+    _x params ["_className", "_entryKind", "_category"];
+
+    [_itemsByCategory, _seen, _className, _entryKind, _category] call FLO_fnc_storeAppendCatalogItem;
+} forEach FLO_StoreSupportCatalogItems;
+
+[_itemsByCategory, _seen] call FLO_fnc_storeAppendSupportModItems;
