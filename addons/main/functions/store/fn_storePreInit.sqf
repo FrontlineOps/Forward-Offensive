@@ -63,11 +63,11 @@ FLO_StoreTicketPacks = [
 ];
 
 FLO_StoreSupportModSources = [
-    ["acre", ["acre_main"], ["acre_"], ["acre_"], ["acre_"], ["misc", "backpacks"]],
+    ["acre", ["acre_main", "acre_sys_radio"], ["acre_"], ["acre_"], ["acre_"], ["misc", "backpacks"]],
     ["tfar", ["task_force_radio", "tfar_core"], ["tfar_", "tf_"], ["tfar_", "tf_"], ["tfar_", "tf_"], ["misc", "backpacks"]],
-    ["ace", ["ace_main"], ["ace_"], ["ace_", "ace3_"], ["ace_", "ace3_"], ["misc"]],
-    ["kat", ["kat_main"], ["kat_"], ["kat_"], ["kat_"], ["misc"]],
-    ["acm", ["acm_main", "ACM_Core"], ["acm_"], ["acm_"], ["acm_"], ["misc"]]
+    ["ace", ["ace_main"], ["ace_"], ["ace_", "ace3_"], ["ace_", "ace3_"], ["misc", "ammo"]],
+    ["kat", ["kat_main"], ["kat_"], ["kat_"], ["kat_"], ["misc", "ammo"]],
+    ["acm", ["ACM_main", "ACM_core", "ACM_breathing", "ACM_circulation"], ["acm_"], ["acm_"], ["acm_"], ["misc", "ammo"]]
 ];
 
 FLO_StoreSupportRejectPatterns = [
@@ -91,6 +91,15 @@ FLO_StoreSupportRejectPatterns = [
 FLO_StoreSupportCatalogItems = [
     ["FirstAidKit", "gear", "misc"],
     ["Medikit", "gear", "misc"],
+
+    ["ACRE_PRC343", "gear", "misc"],
+    ["ACRE_PRC148", "gear", "misc"],
+    ["ACRE_PRC152", "gear", "misc"],
+    ["ACRE_PRC77", "gear", "misc"],
+    ["ACRE_PRC117F", "gear", "misc"],
+    ["ACRE_SEM52SL", "gear", "misc"],
+    ["ACRE_SEM70", "gear", "misc"],
+    ["ACRE_BF888S", "gear", "misc"],
 
     ["ItemGPS", "gear", "misc"],
     ["ItemcTab", "gear", "misc"],
