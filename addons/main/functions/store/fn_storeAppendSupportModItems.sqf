@@ -12,11 +12,17 @@ if (_sources isEqualTo []) exitWith {};
     private _scope = getNumber (_cfg >> "scope");
     private _scopeArsenal = getNumber (_cfg >> "scopeArsenal");
 
-    if ((_scope < 2) && {_scopeArsenal < 2}) then { continue };
+    if ((_scope < 1) && {_scopeArsenal < 1}) then { continue };
     if ((getText (_cfg >> "displayName")) isEqualTo "") then { continue };
     if ([_className] call FLO_fnc_storeSupportClassRejected) then { continue };
 
     private _category = [_className] call FLO_fnc_storeCategoryForWeapon;
+    private _isMedicalItem = (getNumber (_cfg >> "ACE_isMedicalItem")) isEqualTo 1;
+
+    if ((_category isEqualTo "") && {_isMedicalItem}) then {
+        _category = "misc";
+    };
+
     if (_category isNotEqualTo "misc") then { continue };
 
     private _sourceIndex = _sources findIf {
@@ -33,14 +39,12 @@ if (_sources isEqualTo []) exitWith {};
     private _className = configName _cfg;
     private _scope = getNumber (_cfg >> "scope");
     private _scopeArsenal = getNumber (_cfg >> "scopeArsenal");
-    private _category = "ammo";
-    private _isMedicalItem = (getNumber (_cfg >> "ACE_isMedicalItem")) isEqualTo 1;
-    private _isItemBackedMagazine = (getNumber (_cfg >> "ACE_asItem")) isEqualTo 1;
+    private _category = "misc";
 
-    if ((_scope < 2) && {_scopeArsenal < 2}) then { continue };
+    if ((_scope < 1) && {_scopeArsenal < 1}) then { continue };
     if ((getText (_cfg >> "displayName")) isEqualTo "") then { continue };
-    if (!(_isMedicalItem || {_isItemBackedMagazine})) then { continue };
     if ([_className] call FLO_fnc_storeSupportClassRejected) then { continue };
+    if !([_cfg] call FLO_fnc_storeIsItemBackedMagazine) then { continue };
 
     private _sourceIndex = _sources findIf {
         (_category in (_x select 5)) && {[_cfg, _x] call FLO_fnc_storeSupportConfigMatchesSource}

@@ -67,7 +67,7 @@ FLO_StoreSupportModSources = [
     ["tfar", ["task_force_radio", "tfar_core"], ["tfar_", "tf_"], ["tfar_", "tf_"], ["tfar_", "tf_"], ["misc", "backpacks"]],
     ["ace", ["ace_main"], ["ace_"], ["ace_", "ace3_"], ["ace_", "ace3_"], ["misc", "ammo"]],
     ["kat", ["kat_main"], ["kat_"], ["kat_"], ["kat_"], ["misc", "ammo"]],
-    ["acm", ["ACM_main", "ACM_core", "ACM_breathing", "ACM_circulation"], ["acm_"], ["acm_"], ["acm_"], ["misc", "ammo"]]
+    ["acm", ["ACM_main", "ACM_core", "ACM_airway", "ACM_breathing", "ACM_cbrn", "ACM_circulation", "ACM_damage", "ACM_disability"], ["acm_"], ["acm_"], ["acm_"], ["misc", "ammo"]]
 ];
 
 FLO_StoreSupportRejectPatterns = [

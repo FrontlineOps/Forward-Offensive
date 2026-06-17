@@ -58,7 +58,10 @@ private _factionUsesVanillaGear = [_factionClass] call FLO_fnc_storeFactionUsesV
 
     {
         if (isClass (configFile >> "CfgMagazines" >> _x)) then {
-            [_itemsByCategory, _seen, _x, "gear", "ammo"] call FLO_fnc_storeAppendCatalogItem;
+            private _magazineCfg = configFile >> "CfgMagazines" >> _x;
+            private _category = ["ammo", "misc"] select ([_magazineCfg] call FLO_fnc_storeIsItemBackedMagazine);
+
+            [_itemsByCategory, _seen, _x, "gear", _category] call FLO_fnc_storeAppendCatalogItem;
         };
     } forEach _magazines;
 

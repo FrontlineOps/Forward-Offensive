@@ -13,8 +13,7 @@ switch (_event) do {
         [player, FLO_ObjectiveAreaActiveId] remoteExecCall ["FLO_fnc_objectiveRequestUpgrade", 2];
     };
     case "objective::close": {
-        FLO_ObjectiveAreaClosedId = FLO_ObjectiveAreaActiveId;
-        closeDialog 0;
+        (ctrlParent _control) closeDisplay 0;
     };
     default {
         diag_log format ["[FLO][Objective] Unhandled objective area UI event: %1", _event];

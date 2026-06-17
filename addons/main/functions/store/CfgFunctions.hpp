@@ -19,6 +19,7 @@ class Store {
     class storeGearVisionTraits {};
     class storeHandleUiEvent {};
     class storeInitServer {};
+    class storeIsItemBackedMagazine {};
     class storeIsVanillaConfig {};
     class storeIsVanillaDefaultNvg {};
     class storeOpenDialog {};

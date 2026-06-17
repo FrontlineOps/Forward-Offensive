@@ -29,9 +29,10 @@ FOOF currently requires CBA_A3.
 - Respawn uses Arma `MenuPosition` with server-registered staging, FOB, and active COP positions; staging remains as a fallback whenever a side has no active base respawn.
 - Slow spearhead-style pressure from captured cells.
 - Slow encirclement pressure against isolated owned cells.
+- Player-driven sector capture is tuned around one minute under uncontested pressure; natural spread and encirclement are deliberately slower so players remain the primary way to move the frontline.
 - Server-owned BLUFOR/OPFOR currency starts at `$5000` and is generated from controlled grid cells and upgraded high-value objectives.
 - Captured AOs have levels from `0` to `5`; commander-authorized players can upgrade friendly uncontested AOs from inside the AO, and enemy capture resets the level.
-- A compact in-world AO panel shows owner, level, income per 15 minutes, upgrade cost, and upgrade availability when a player enters the AO radius.
+- A compact in-world AO panel opens with `Ctrl+Shift+O` while standing inside an AO and shows owner, level, income per 15 minutes, upgrade cost, and upgrade availability.
 - Server-authoritative commander and faction voting for BLUFOR and OPFOR with timed startup and replacement commander vote windows.
 - Startup commander/faction votes resolve to a deterministic fallback on expiry so a side cannot leave opening votes without command or faction setup.
 - Simple HTML command vote dialog using Arma's web browser control.
@@ -44,7 +45,7 @@ FOOF currently requires CBA_A3.
 - Server-validated logistics placement, movement, and deletion inside friendly base build areas.
 - Store attached to friendly FOB buildings for same-side faction equipment and vehicle purchases.
 - Store catalogs are generated from the selected faction's loaded config classes; no player-edited store definition files are required.
-- Store catalogs also append optional support gear without player-edited definitions: reviewed vanilla GPS and cTab/NSWDG device classes plus source-filtered ACRE/TFAR radio and ACE/KAT/ACM medical support items when those mods are loaded.
+- Store catalogs also append optional support gear without player-edited definitions: reviewed vanilla GPS and cTab/NSWDG device classes plus source-filtered ACRE/TFAR radio and ACE/KAT/ACM medical support items when those mods are loaded. Medical consumables backed by `CfgMagazines` are shown under Items when their config marks them as ACE item-backed medical supplies or as inert item-style magazines, so support meds are not mixed into normal ammo. ACM support discovery covers its treatment modules such as airway, breathing, circulation, damage, disability, and CBRN while CBRN ordnance remains ammo because it has real projectile classes.
 - Store uses a cinematic tactical armory UI with item previews, equipment/cart summaries, personal saved kits, and clickable cart targets for putting ammo/items into uniform, vest, or backpack during checkout.
 - Store vehicle checkout creates a pending vehicle placement; the player places the purchased vehicle with the IDS camera inside the purchase FOB build radius.
 - Empty Store-purchased friendly vehicles and captured enemy vehicles can be recovered at friendly bases for partial money returns.

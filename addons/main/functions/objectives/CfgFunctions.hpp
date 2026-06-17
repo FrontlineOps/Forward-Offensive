@@ -28,6 +28,7 @@ class Objective {
     class objectiveInitServer {};
     class objectiveLevelName {};
     class objectiveMarkerColor {};
+    class objectiveNearestAreaId {};
     class objectiveOpenAreaDialog {};
     class objectivePassiveTargetSide {};
     class objectivePostInit {
@@ -49,6 +50,7 @@ class Objective {
     class objectiveSendFullSnapshot {};
     class objectiveSideKey {};
     class objectiveStartLoop {};
+    class objectiveToggleAreaDialog {};
     class objectiveUpdateAreaDialog {};
     class objectiveUpdatePresenceCounts {};
     class objectiveUpdateGridMapMarkers {};

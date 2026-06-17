@@ -4,7 +4,7 @@ class FLO_ObjectiveAreaDialog {
     idd = 9500;
     movingEnable = 0;
     enableSimulation = 1;
-    onUnload = "FLO_ObjectiveAreaClosedId = FLO_ObjectiveAreaActiveId; uiNamespace setVariable ['FLO_ObjectiveAreaControl', controlNull]; FLO_ObjectiveAreaBrowserReady = false";
+    onUnload = "uiNamespace setVariable ['FLO_ObjectiveAreaControl', controlNull]; FLO_ObjectiveAreaBrowserReady = false";
 
     class Controls {
         class Browser: RscText {
