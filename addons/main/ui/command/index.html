@@ -372,7 +372,7 @@
         .role-list {
             display: grid;
             grid-template-columns: 1fr;
-            grid-auto-rows: minmax(136px, auto);
+            grid-auto-rows: auto;
             gap: 10px;
             align-content: start;
             min-height: 0;
@@ -382,15 +382,23 @@
 
         .role-card {
             display: grid;
-            grid-template-rows: auto auto;
-            gap: 10px;
-            min-height: 136px;
+            grid-template-rows: auto auto minmax(0, 1fr);
+            gap: 14px;
+            min-height: 236px;
             padding: 13px;
             background:
                 linear-gradient(155deg, rgba(103, 232, 255, 0.08), rgba(103, 232, 255, 0) 38%),
                 rgba(20, 34, 48, 0.82);
             box-shadow: inset 0 0 0 1px rgba(103, 232, 255, 0.12), 0 16px 30px rgba(0, 0, 0, 0.24);
             clip-path: polygon(0 0, calc(100% - 13px) 0, 100% 13px, 100% 100%, 13px 100%, 0 calc(100% - 13px));
+        }
+
+        .role-card.selected-target {
+            min-height: 292px;
+            background:
+                linear-gradient(155deg, rgba(37, 215, 255, 0.16), rgba(36, 124, 255, 0.08) 48%),
+                rgba(20, 34, 48, 0.86);
+            box-shadow: inset 0 0 0 1px rgba(37, 215, 255, 0.3), 0 20px 34px rgba(0, 0, 0, 0.28);
         }
 
         .role-top {
@@ -407,10 +415,23 @@
             white-space: nowrap;
         }
 
+        .permission-detail {
+            color: #A7B7C8;
+            font-size: 15px;
+            line-height: 1.32;
+        }
+
+        .permission-detail strong {
+            color: #25D7FF;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
         .role-actions {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 7px;
+            align-self: end;
         }
 
         .role-btn {
@@ -805,6 +826,7 @@
             var messageTimer = null;
             var factionRenderLimit = 24;
             var factionBatchSize = 24;
+            var selectedRoleUid = "";
 
             function send(event, data) {
                 var payload = JSON.stringify({ event: event, data: data || {} });
@@ -1008,6 +1030,48 @@
                 return { role: role, label: roleLabel(role), assigned: 0, cap: 0 };
             }
 
+            function candidateByUid(candidateData, uid) {
+                var i;
+
+                for (i = 0; i < candidateData.length; i += 1) {
+                    if (candidateData[i].uid === uid) {
+                        return candidateData[i];
+                    }
+                }
+
+                return null;
+            }
+
+            function ensureRoleTarget(candidateData, snapshot) {
+                var commander;
+                var i;
+
+                if (candidateData.length === 0) {
+                    selectedRoleUid = "";
+                    return null;
+                }
+
+                if (selectedRoleUid && candidateByUid(candidateData, selectedRoleUid)) {
+                    return candidateByUid(candidateData, selectedRoleUid);
+                }
+
+                commander = candidateByUid(candidateData, snapshot.commanderUid);
+                if (commander) {
+                    selectedRoleUid = commander.uid;
+                    return commander;
+                }
+
+                for (i = 0; i < candidateData.length; i += 1) {
+                    if (candidateData[i].isSelf) {
+                        selectedRoleUid = candidateData[i].uid;
+                        return candidateData[i];
+                    }
+                }
+
+                selectedRoleUid = candidateData[0].uid;
+                return candidateData[0];
+            }
+
             function progress(votes, requiredVotes, complete) {
                 var track = document.createElement("div");
                 var fill = document.createElement("div");
@@ -1158,6 +1222,7 @@
             function candidateButton(candidate, snapshot) {
                 var selected = snapshot.playerCommanderVote === candidate.uid;
                 var elected = snapshot.commanderUid === candidate.uid;
+                var roleSelected = !snapshot.commanderVoteOpen && selectedRoleUid === candidate.uid;
                 var tags = [];
                 var roles = candidate.roles || [];
 
@@ -1169,6 +1234,8 @@
                     tags.push({ text: "Commander", tone: "green" });
                 } else if (selected) {
                     tags.push({ text: "Your Vote", tone: "blue" });
+                } else if (roleSelected) {
+                    tags.push({ text: "Selected", tone: "blue" });
                 } else {
                     tags.push({ text: snapshot.commanderVoteOpen ? "Eligible" : "Closed", tone: snapshot.commanderVoteOpen ? "" : "amber" });
                 }
@@ -1181,15 +1248,40 @@
                     name: candidate.name + (candidate.isSelf ? " (You)" : ""),
                     votes: candidate.votes,
                     requiredVotes: snapshot.requiredVotes,
-                    selected: selected || elected,
+                    selected: selected || elected || roleSelected,
                     locked: elected,
-                    disabled: !snapshot.commanderVoteOpen,
-                    description: elected ? "Current command authority." : "Eligible commander candidate for this side.",
+                    disabled: false,
+                    description: snapshot.commanderVoteOpen
+                        ? (elected ? "Current command authority." : "Eligible commander candidate for this side.")
+                        : (roleSelected ? "Selected for permission assignment." : "Select this player to manage permissions."),
                     tags: tags,
                     onclick: function () {
-                        send("command::voteCommander", { uid: candidate.uid });
-                        message("Commander vote submitted.", "good", true);
+                        if (snapshot.commanderVoteOpen) {
+                            send("command::voteCommander", { uid: candidate.uid });
+                            message("Commander vote submitted.", "good", true);
+                            return;
+                        }
+
+                        selectedRoleUid = candidate.uid;
+                        renderCandidates(node("candidateList"), snapshot.candidates || [], snapshot);
+                        renderRoles(node("roleList"), snapshot.candidates || [], snapshot);
+                        message("Selected " + candidate.name + " for permissions.", "", true);
                     }
+                });
+            }
+
+            function renderCandidates(container, candidateData, snapshot) {
+                clear(container);
+
+                if (candidateData.length === 0) {
+                    container.appendChild(empty("No eligible players on this side."));
+                    return;
+                }
+
+                ensureRoleTarget(candidateData, snapshot);
+
+                candidateData.forEach(function (candidate) {
+                    container.appendChild(candidateButton(candidate, snapshot));
                 });
             }
 
@@ -1299,15 +1391,16 @@
                 return button;
             }
 
-            function roleCard(candidate, snapshot) {
+            function permissionCard(candidate, snapshot) {
                 var card = document.createElement("article");
                 var top = document.createElement("div");
                 var name = document.createElement("div");
                 var tags = document.createElement("div");
+                var detail = document.createElement("div");
                 var actions = document.createElement("div");
                 var roles = candidate.roles || [];
 
-                card.className = "role-card";
+                card.className = "role-card selected-target";
                 top.className = "role-top";
                 name.className = "role-name";
                 name.textContent = candidate.name + (candidate.isSelf ? " (You)" : "");
@@ -1326,6 +1419,15 @@
                     tags.appendChild(tag(roleLabel(role), roleTone(role)));
                 });
 
+                detail.className = "permission-detail";
+                if (snapshot.playerIsCommander && !snapshot.commanderVoteOpen && !snapshot.factionVoteOpen) {
+                    detail.innerHTML = "<strong>Selected player.</strong> Assign or clear one side role below.";
+                } else if (snapshot.commanderVoteOpen || snapshot.factionVoteOpen) {
+                    detail.innerHTML = "<strong>Locked until voting ends.</strong> Command and faction must be settled before roles can change.";
+                } else {
+                    detail.innerHTML = "<strong>View only.</strong> Only the commander can assign command permissions.";
+                }
+
                 actions.className = "role-actions";
                 ["deputy", "medic", "doctor", "engineer"].forEach(function (role) {
                     actions.appendChild(roleButton(candidate, snapshot, role));
@@ -1334,6 +1436,7 @@
                 top.appendChild(name);
                 top.appendChild(tags);
                 card.appendChild(top);
+                card.appendChild(detail);
                 card.appendChild(actions);
                 return card;
             }
@@ -1355,9 +1458,7 @@
                     return;
                 }
 
-                candidateData.forEach(function (candidate) {
-                    container.appendChild(roleCard(candidate, snapshot));
-                });
+                container.appendChild(permissionCard(ensureRoleTarget(candidateData, snapshot), snapshot));
             }
 
             window.FOOFCommand = {
@@ -1391,18 +1492,10 @@
                     setText("sideName", snapshot.sideName + " command");
                     setText("authorityStatus", snapshot.playerIsCommander ? "You are the commander" : (snapshot.playerIsDeputy ? "Deputy command authority" : "No command authority"));
 
-                    clear(candidates);
                     updateStatuses(snapshot);
                     renderFooter(snapshot);
 
-                    if (candidateData.length === 0) {
-                        candidates.appendChild(empty("No eligible players on this side."));
-                    } else {
-                        candidateData.forEach(function (candidate) {
-                            candidates.appendChild(candidateButton(candidate, snapshot));
-                        });
-                    }
-
+                    renderCandidates(candidates, candidateData, snapshot);
                     renderFactions(factions, factionData, snapshot);
                     renderRoles(roles, candidateData, snapshot);
 
