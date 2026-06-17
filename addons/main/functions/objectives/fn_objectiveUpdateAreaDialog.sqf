@@ -25,7 +25,12 @@ _record params [
     "_levelName",
     "_incomePer15",
     "_upgradeCost",
-    "_maxLevel"
+    "_maxLevel",
+    ["_pendingUpgradeLevel", 0],
+    ["_pendingUpgradeRemaining", 0],
+    ["_capturedRestoreOwnerKey", "NONE"],
+    ["_capturedRestoreLevel", 0],
+    ["_capturedRestoreRemaining", 0]
 ];
 
 private _playerSide = side group player;
@@ -51,8 +56,14 @@ private _hasAuthority = [player, "build"] call FLO_fnc_commandPlayerHasAuthority
 private _canUpgrade = (_playerSideKey isEqualTo _ownerKey) &&
     {_objectiveState isEqualTo "held"} &&
     {_level < _maxLevel} &&
+    {_pendingUpgradeLevel <= 0} &&
     {_hasAuthority};
 private _upgradeReason = "";
+private _upgradeStatus = "";
+
+if (_pendingUpgradeLevel > 0) then {
+    _upgradeStatus = format ["Upgrading to Level %1", _pendingUpgradeLevel];
+};
 
 if (_playerSideKey isNotEqualTo _ownerKey) then {
     _upgradeReason = "Your side does not control this AO.";
@@ -63,8 +74,12 @@ if (_playerSideKey isNotEqualTo _ownerKey) then {
         if (_level >= _maxLevel) then {
             _upgradeReason = "AO is fully upgraded.";
         } else {
-            if (!_hasAuthority) then {
-                _upgradeReason = "Commander or delegated build authority required.";
+            if (_pendingUpgradeLevel > 0) then {
+                _upgradeReason = "AO upgrade already in progress.";
+            } else {
+                if (!_hasAuthority) then {
+                    _upgradeReason = "Commander or delegated build authority required.";
+                };
             };
         };
     };
@@ -83,7 +98,13 @@ private _payload = createHashMapFromArray [
     ["maxLevel", _maxLevel],
     ["balance", _balance],
     ["canUpgrade", _canUpgrade],
-    ["upgradeReason", _upgradeReason]
+    ["upgradeReason", _upgradeReason],
+    ["upgradeStatus", _upgradeStatus],
+    ["pendingUpgradeLevel", _pendingUpgradeLevel],
+    ["pendingUpgradeRemaining", _pendingUpgradeRemaining],
+    ["capturedRestoreOwner", _capturedRestoreOwnerKey],
+    ["capturedRestoreLevel", _capturedRestoreLevel],
+    ["capturedRestoreRemaining", _capturedRestoreRemaining]
 ];
 
 private _script = format [

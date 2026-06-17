@@ -79,13 +79,13 @@ _objective set ["totalWeight", _totalWeight];
 
 if (_oldOwner isNotEqualTo _newOwner) then {
     _objective set ["lastChanged", diag_tickTime];
-    _objective set ["level", 0];
-    _objective set ["lastLevelChanged", diag_tickTime];
+    [_objective, _oldOwner, _newOwner] call FLO_fnc_objectiveResolveOwnerLevelTransition;
     diag_log format [
-        "[FLO][Objective] Objective %1 owner changed from %2 to %3; level reset",
+        "[FLO][Objective] Objective %1 owner changed from %2 to %3 level=%4",
         _objective get "id",
         [_oldOwner] call FLO_fnc_objectiveSideKey,
-        [_newOwner] call FLO_fnc_objectiveSideKey
+        [_newOwner] call FLO_fnc_objectiveSideKey,
+        _objective get "level"
     ];
 };
 

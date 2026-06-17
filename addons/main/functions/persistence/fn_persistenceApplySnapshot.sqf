@@ -235,6 +235,43 @@ if ("objectives" in _snapshot) then {
                     if ("lastLevelChanged" in _record) then {
                         _objective set ["lastLevelChanged", _record get "lastLevelChanged"];
                     };
+
+                    if ("capturedRestoreOwner" in _record) then {
+                        private _capturedRestoreOwner = [_record get "capturedRestoreOwner"] call FLO_fnc_persistenceSideFromKey;
+                        private _capturedRestoreLevel = 0;
+                        private _capturedRestoreRemaining = 0;
+
+                        if ("capturedRestoreLevel" in _record) then {
+                            _capturedRestoreLevel = _record get "capturedRestoreLevel";
+                        };
+
+                        if ("capturedRestoreRemaining" in _record) then {
+                            _capturedRestoreRemaining = _record get "capturedRestoreRemaining";
+                        };
+
+                        _objective set ["capturedRestoreOwner", _capturedRestoreOwner];
+                        _objective set ["capturedRestoreLevel", (_capturedRestoreLevel min FLO_ObjectiveMaxLevel) max 0];
+                        _objective set ["capturedRestoreExpiresAt", diag_tickTime + (_capturedRestoreRemaining max 0)];
+                    };
+
+                    if ("pendingUpgradeLevel" in _record) then {
+                        private _pendingUpgradeLevel = ((_record get "pendingUpgradeLevel") min FLO_ObjectiveMaxLevel) max 0;
+                        private _pendingUpgradeRemaining = 0;
+
+                        if ("pendingUpgradeRemaining" in _record) then {
+                            _pendingUpgradeRemaining = _record get "pendingUpgradeRemaining";
+                        };
+
+                        _objective set ["pendingUpgradeLevel", _pendingUpgradeLevel];
+
+                        if (_pendingUpgradeLevel > 0) then {
+                            _objective set ["pendingUpgradeStartedAt", diag_tickTime];
+                            _objective set ["pendingUpgradeCompleteAt", diag_tickTime + (_pendingUpgradeRemaining max 0)];
+                        } else {
+                            _objective set ["pendingUpgradeStartedAt", 0];
+                            _objective set ["pendingUpgradeCompleteAt", 0];
+                        };
+                    };
                 };
             };
         } forEach (_objectives get "levels");

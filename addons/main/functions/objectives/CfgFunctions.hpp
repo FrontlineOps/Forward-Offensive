@@ -16,6 +16,7 @@ class Objective {
     class objectiveEvaluate {};
     class objectiveEvaluateCell {};
     class objectiveEvaluateGridInfluence {};
+    class objectiveFinalizeDueUpgrade {};
     class objectiveGenerateDefinitions {};
     class objectiveGenerateGridCells {};
     class objectiveGridCellHasLand {};
@@ -44,6 +45,7 @@ class Objective {
     class objectiveRequestSnapshot {};
     class objectiveRequestUpgrade {};
     class objectiveResolveObjective {};
+    class objectiveResolveOwnerLevelTransition {};
     class objectiveSanitizeId {};
     class objectiveScoreDeploymentPair {};
     class objectiveSeedInitialFrontlines {};
@@ -56,5 +58,6 @@ class Objective {
     class objectiveUpdateGridMapMarkers {};
     class objectiveUpdateMapMarkers {};
     class objectiveUpgradeCost {};
+    class objectiveUpgradeDuration {};
     class objectiveUpsertMapMarker {};
 };

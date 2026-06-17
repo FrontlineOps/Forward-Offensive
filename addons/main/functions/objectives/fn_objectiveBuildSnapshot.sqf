@@ -10,8 +10,19 @@ private _snapshot = [];
     private _cellSnapshot = [];
     private _cellIds = +(_objective get "cellIds");
     private _anchorCellId = _objective get "anchorCellId";
+    private _pendingUpgradeLevel = _objective get "pendingUpgradeLevel";
+    private _pendingUpgradeRemaining = 0;
+    private _restoreRemaining = 0;
 
     _cellIds sort true;
+
+    if (_pendingUpgradeLevel > 0) then {
+        _pendingUpgradeRemaining = ((_objective get "pendingUpgradeCompleteAt") - diag_tickTime) max 0;
+    };
+
+    if ((_objective get "capturedRestoreOwner") in [west, east]) then {
+        _restoreRemaining = ((_objective get "capturedRestoreExpiresAt") - diag_tickTime) max 0;
+    };
 
     {
         private _cell = FLO_ObjectiveCells get _x;
@@ -49,7 +60,12 @@ private _snapshot = [];
         [_objective get "level"] call FLO_fnc_objectiveLevelName,
         [_objective] call FLO_fnc_objectiveIncomePer15,
         [_objective] call FLO_fnc_objectiveUpgradeCost,
-        FLO_ObjectiveMaxLevel
+        FLO_ObjectiveMaxLevel,
+        _pendingUpgradeLevel,
+        round _pendingUpgradeRemaining,
+        [_objective get "capturedRestoreOwner"] call FLO_fnc_objectiveSideKey,
+        _objective get "capturedRestoreLevel",
+        round _restoreRemaining
     ];
 } forEach _objectiveIds;
 

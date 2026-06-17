@@ -37,7 +37,13 @@ FLO_Objectives set [
         ["westWeight", 0],
         ["totalWeight", 0],
         ["lastChanged", 0],
-        ["lastLevelChanged", 0]
+        ["lastLevelChanged", 0],
+        ["capturedRestoreOwner", sideUnknown],
+        ["capturedRestoreLevel", 0],
+        ["capturedRestoreExpiresAt", 0],
+        ["pendingUpgradeLevel", 0],
+        ["pendingUpgradeStartedAt", 0],
+        ["pendingUpgradeCompleteAt", 0]
     ]
 ];
 

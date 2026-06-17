@@ -69,9 +69,14 @@ if !([_player, "build"] call FLO_fnc_commandPlayerHasAuthority) exitWith {
 };
 
 private _level = floor (_objective get "level");
+private _pendingLevel = floor (_objective get "pendingUpgradeLevel");
 
 if (_level >= FLO_ObjectiveMaxLevel) exitWith {
     ["AO is already fully upgraded.", "info"] call _notify;
+};
+
+if (_pendingLevel > 0) exitWith {
+    ["AO upgrade is already in progress.", "info"] call _notify;
 };
 
 private _cost = [_objective] call FLO_fnc_objectiveUpgradeCost;
@@ -81,16 +86,21 @@ if !([_side, _cost, format ["AO upgrade %1 to level %2", _objectiveId, _level + 
 };
 
 private _newLevel = _level + 1;
-_objective set ["level", _newLevel];
-_objective set ["lastLevelChanged", diag_tickTime];
+private _duration = [_level] call FLO_fnc_objectiveUpgradeDuration;
+private _startedAt = diag_tickTime;
+
+_objective set ["pendingUpgradeLevel", _newLevel];
+_objective set ["pendingUpgradeStartedAt", _startedAt];
+_objective set ["pendingUpgradeCompleteAt", _startedAt + _duration];
 
 diag_log format [
-    "[FLO][Objective] %1 upgraded AO %2 to level %3 cost=%4 balance=%5",
+    "[FLO][Objective] %1 started AO upgrade %2 to level %3 cost=%4 balance=%5 duration=%6",
     _sideKey,
     _objectiveId,
     _newLevel,
     _cost,
-    FLO_ResourceBalances get _sideKey
+    FLO_ResourceBalances get _sideKey,
+    _duration
 ];
 
 [false, [], [_objectiveId]] call FLO_fnc_objectivePublishSnapshot;
@@ -98,7 +108,7 @@ diag_log format [
 
 [
     format [
-        "%1 upgraded to Level %2 - %3.",
+        "%1 upgrade to Level %2 - %3 started.",
         _objective get "name",
         _newLevel,
         [_newLevel] call FLO_fnc_objectiveLevelName

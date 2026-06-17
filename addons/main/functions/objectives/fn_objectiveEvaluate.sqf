@@ -48,6 +48,10 @@ private _ownerByCell = createHashMap;
     if ([_objective] call FLO_fnc_objectiveResolveObjective) then {
         _dirtyObjectiveIds set [_x, true];
     };
+
+    if ([_objective] call FLO_fnc_objectiveFinalizeDueUpgrade) then {
+        _dirtyObjectiveIds set [_x, true];
+    };
 } forEach keys FLO_Objectives;
 
 private _changedCellIds = keys _dirtyCellIds;

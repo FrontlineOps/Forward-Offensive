@@ -102,12 +102,28 @@ private _objectiveLevelRecords = [];
 
 {
     private _objective = FLO_Objectives get _x;
+    private _pendingUpgradeRemaining = 0;
+    private _capturedRestoreRemaining = 0;
+
+    if ((_objective get "pendingUpgradeLevel") > 0) then {
+        _pendingUpgradeRemaining = ((_objective get "pendingUpgradeCompleteAt") - diag_tickTime) max 0;
+    };
+
+    if ((_objective get "capturedRestoreOwner") in [west, east]) then {
+        _capturedRestoreRemaining = ((_objective get "capturedRestoreExpiresAt") - diag_tickTime) max 0;
+    };
 
     _objectiveLevelRecords pushBack [
         ["id", _x],
         ["owner", [_objective get "owner"] call FLO_fnc_persistenceSideKey],
         ["level", _objective get "level"],
-        ["lastLevelChanged", _objective get "lastLevelChanged"]
+        ["lastLevelChanged", _objective get "lastLevelChanged"],
+        ["capturedRestoreOwner", [_objective get "capturedRestoreOwner"] call FLO_fnc_persistenceSideKey],
+        ["capturedRestoreLevel", _objective get "capturedRestoreLevel"],
+        ["capturedRestoreRemaining", _capturedRestoreRemaining],
+        ["pendingUpgradeLevel", _objective get "pendingUpgradeLevel"],
+        ["pendingUpgradeStartedAt", _objective get "pendingUpgradeStartedAt"],
+        ["pendingUpgradeRemaining", _pendingUpgradeRemaining]
     ];
 } forEach keys FLO_Objectives;
 

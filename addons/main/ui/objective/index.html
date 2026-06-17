@@ -173,6 +173,10 @@
                 <div class="label">Upgrade Cost</div>
                 <div class="value amber" id="cost">$0</div>
             </div>
+            <div class="stat wide">
+                <div class="label">Upgrade Status</div>
+                <div class="value" id="status">Ready</div>
+            </div>
         </div>
 
         <div class="actions">
@@ -183,6 +187,9 @@
 
     <script>
         (function () {
+            var currentPayload = {};
+            var pendingUntil = 0;
+
             function send(event, data) {
                 var payload = JSON.stringify({ event: event, data: data || {} });
 
@@ -212,15 +219,42 @@
                 return "$" + s + out;
             }
 
+            function duration(value) {
+                var seconds = Math.max(0, Math.floor(Number(value) || 0));
+                var minutes = Math.floor(seconds / 60);
+                var hours = Math.floor(minutes / 60);
+
+                minutes = minutes % 60;
+
+                if (hours > 0) {
+                    return String(hours) + "h " + String(minutes) + "m";
+                }
+
+                return String(minutes) + "m";
+            }
+
+            function updateStatus() {
+                if (currentPayload.pendingUpgradeLevel > 0) {
+                    var remaining = Math.max(0, Math.ceil((pendingUntil - Date.now()) / 1000));
+                    text("status", (currentPayload.upgradeStatus || "Upgrade in progress") + " - " + duration(remaining));
+                    return;
+                }
+
+                text("status", "Ready");
+            }
+
             window.FOOFObjective = {
                 receive: function (payload) {
                     payload = payload || {};
+                    currentPayload = payload;
+                    pendingUntil = Date.now() + (Math.max(0, Number(payload.pendingUpgradeRemaining) || 0) * 1000);
 
                     text("name", payload.name || "AO");
                     text("owner", payload.owner || "Neutral");
                     text("level", String(payload.level || 0) + " " + (payload.levelName || ""));
                     text("income", money(payload.incomePer15) + " / 15 min");
                     text("cost", payload.level >= payload.maxLevel ? "Max" : money(payload.upgradeCost));
+                    updateStatus();
                     text("hint", payload.canUpgrade ? ("Faction balance: " + money(payload.balance)) : (payload.upgradeReason || "Upgrade unavailable."));
 
                     node("upgrade").disabled = !payload.canUpgrade;
@@ -237,6 +271,7 @@
 
             window.addEventListener("load", function () {
                 send("objective::ready", {});
+                window.setInterval(updateStatus, 1000);
             });
         }());
     </script>

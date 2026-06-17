@@ -33,8 +33,9 @@ FOOF currently requires CBA_A3.
 - Slow encirclement pressure against isolated owned cells.
 - Player-driven sector capture is tuned around one minute under uncontested pressure; natural spread and encirclement are deliberately slower so players remain the primary way to move the frontline.
 - Server-owned BLUFOR/OPFOR currency starts at `$5000` and is generated from controlled grid cells and upgraded high-value objectives.
-- Captured AOs have levels from `0` to `5`; commander-authorized players can upgrade friendly uncontested AOs from inside the AO, and enemy capture resets the level.
-- A compact in-world AO panel opens with `Ctrl+Shift+O` while standing inside an AO and shows owner, level, income per 15 minutes, upgrade cost, and upgrade availability.
+- Captured AOs have levels from `0` to `5`; commander-authorized players can start timed upgrades on friendly uncontested AOs from inside the AO.
+- Enemy capture reduces an AO by one level instead of wiping it. If the previous owner recaptures it within 30 minutes, the original level is restored.
+- A compact in-world AO panel opens with `Ctrl+Shift+O` while standing inside an AO and shows owner, level, income per 15 minutes, upgrade cost, upgrade timer, and upgrade availability.
 - Server-authoritative commander and faction voting for BLUFOR and OPFOR with timed startup and replacement commander vote windows.
 - Startup commander/faction votes resolve to a deterministic fallback on expiry so a side cannot leave opening votes without command or faction setup.
 - HTML command panel using Arma's web browser control for commander/faction voting and commander-managed side roles.
