@@ -5,7 +5,6 @@ class Store {
     class storeAddInventoryItem {};
     class storeApplyKit {};
     class storeAppendCatalogItem {};
-    class storeAppendSupportModItems {};
     class storeAppendSupportItems {};
     class storeBuildCatalog {};
     class storeBuildCatalogItem {};
