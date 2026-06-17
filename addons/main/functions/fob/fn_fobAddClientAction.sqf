@@ -10,6 +10,7 @@ if (isNull _fob) exitWith {};
 
 if (!alive _fob) exitWith {};
 
+private _actionRadius = FLO_FOBActionRadius;
 private _existingAction = _fob getVariable ["FLO_FOB_IDSActionId", -1];
 
 if (_existingAction isEqualTo -1) then {
@@ -34,7 +35,8 @@ if (_existingAction isEqualTo -1) then {
         true,
         true,
         "",
-        _condition
+        _condition,
+        _actionRadius
     ];
 
     _fob setVariable ["FLO_FOB_IDSActionId", _actionId];
@@ -65,7 +67,8 @@ if ((_existingStoreAction isEqualTo -1) && {_fob getVariable ["FLO_FOB_StoreEnab
         true,
         true,
         "",
-        _storeCondition
+        _storeCondition,
+        _actionRadius
     ];
 
     _fob setVariable ["FLO_FOB_StoreActionId", _storeActionId];
@@ -95,7 +98,8 @@ if (_existingRecoveryAction isEqualTo -1) then {
         true,
         true,
         "",
-        _recoveryCondition
+        _recoveryCondition,
+        _actionRadius
     ];
 
     _fob setVariable ["FLO_FOB_RecoveryActionId", _recoveryActionId];

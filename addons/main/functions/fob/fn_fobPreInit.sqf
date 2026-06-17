@@ -1,6 +1,7 @@
 FLO_FOBDeployCost = 1500;
 FLO_FOBBuildRadius = 100;
 FLO_FOBMinDistance = 500;
+FLO_FOBActionRadius = 7;
 
 FLO_COPDeployCost = 600;
 FLO_COPBuildRadius = 60;
