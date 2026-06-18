@@ -25,6 +25,7 @@ FLO_ObjectivePublishMinInterval = 2;
 FLO_ObjectiveMinCapturePlayers = 1;
 FLO_ObjectiveCellBaseCaptureSeconds = 60;
 FLO_ObjectiveCellCaptureSecondsPerLevel = 30;
+FLO_ObjectiveAnchorCaptureLockLevel = 2;
 FLO_ObjectiveCellDecayRate = 0.01;
 FLO_ObjectiveGridCellSize = 1000;
 FLO_ObjectiveGridMinLandSamples = 1;

@@ -4,6 +4,7 @@ class Objective {
     class objectiveApplyGridSnapshot {};
     class objectiveApplySnapshot {};
     class objectiveAddAreaWebEventHandler {};
+    class objectiveAnchorCaptureAllowed {};
     class objectiveAreaClientInit {};
     class objectiveAreaWebAction {};
     class objectiveBuildGridSnapshot {};

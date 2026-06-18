@@ -76,8 +76,9 @@ if (_eastPresent && _westPresent) then {
                 {_ownedCellCount isEqualTo 0} &&
                 {(_cell get "id") in (FLO_ObjectiveInitialFrontlineCellIds get _captureSideKey)};
             private _frontlineCapture = ((_friendlyNeighborCount > 0) && {_ownedCellCount > 0}) || {_initialEntryCapture};
+            private _anchorCaptureAllowed = [_cell, _captureSide] call FLO_fnc_objectiveAnchorCaptureAllowed;
 
-            if (_frontlineCapture) then {
+            if (_frontlineCapture && {_anchorCaptureAllowed}) then {
                 private _captureSeconds = [_cell, _captureSide] call FLO_fnc_objectiveCellCaptureSeconds;
                 private _captureStep = FLO_ObjectiveUpdateInterval / _captureSeconds;
 

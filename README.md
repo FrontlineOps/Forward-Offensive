@@ -36,6 +36,7 @@ FOOF currently requires CBA_A3.
 - Server-owned BLUFOR/OPFOR currency starts at `$5000` and is generated from controlled grid cells and upgraded high-value objectives.
 - Captured AOs have levels from `0` to `5`; commander-authorized players can start timed upgrades on friendly uncontested AOs from inside the AO.
 - AO upgrades harden linked sectors: capturing a linked sector takes `60s + 30s` per defending AO level, and attackers must control a larger share of linked sectors to flip upgraded AOs.
+- Level 2+ AOs lock their anchor sector until attackers open an assault window through frontline pressure.
 - Frontline AO pressure adds a siege layer: sustained enemy presence in linked cells and captured support/anchor cells slowly build pressure; at full pressure the AO becomes vulnerable for 45 minutes and upgrade hardening is weakened.
 - AO pressure reports stay minimal: normal players are notified when an AO reaches the contact line and when an assault window opens or closes. Exact pressure values stay in the AO panel.
 - Enemy capture or destabilization reduces an AO by one level instead of wiping it. If the previous owner recaptures it within 30 minutes, the original level is restored.

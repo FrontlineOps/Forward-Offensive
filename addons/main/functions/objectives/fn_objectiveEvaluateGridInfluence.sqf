@@ -21,7 +21,7 @@ private _encirclementStep = FLO_ObjectiveGridEncirclementRate * FLO_ObjectiveUpd
         private _targetSide = [_cell, _ownerByCell] call FLO_fnc_objectivePassiveTargetSide;
         private _step = [_encirclementStep, _influenceStep] select (_owner isEqualTo sideUnknown);
 
-        if (_targetSide isNotEqualTo sideUnknown) then {
+        if ((_targetSide isNotEqualTo sideUnknown) && {[_cell, _targetSide] call FLO_fnc_objectiveAnchorCaptureAllowed}) then {
             if (_progressSide isNotEqualTo _targetSide) then {
                 _progress = 0;
                 _progressSide = _targetSide;
