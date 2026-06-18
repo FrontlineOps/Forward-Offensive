@@ -5,6 +5,7 @@ class Tickets {
     class ticketApplyRespawnLock {};
     class ticketBroadcastRespawnLock {};
     class ticketConsume {};
+    class ticketHandleAceMedicalDeath {};
     class ticketHandleDeath {};
     class ticketHandleRespawn {};
     class ticketInitServer {};

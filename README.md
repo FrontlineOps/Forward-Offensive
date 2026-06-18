@@ -35,8 +35,8 @@ FOOF currently requires CBA_A3.
 - Server-owned BLUFOR/OPFOR currency starts at `$5000` and is generated from controlled grid cells and upgraded high-value objectives.
 - Captured AOs have levels from `0` to `5`; commander-authorized players can start timed upgrades on friendly uncontested AOs from inside the AO.
 - AO upgrades harden linked sectors: capturing a linked sector takes `60s + 30s` per defending AO level, and attackers must control a larger share of linked sectors to flip upgraded AOs.
-- Frontline AO pressure adds a siege layer: enemy presence in linked cells and captured support/anchor cells build pressure; at full pressure the AO becomes vulnerable for 45 minutes and upgrade hardening is weakened.
-- AO pressure reports use command-style tactical language instead of public progress meters. Exact pressure values stay in the AO panel; normal players hear about line-of-contact changes, sustained enemy movement, exposure windows, and fading momentum.
+- Frontline AO pressure adds a siege layer: sustained enemy presence in linked cells and captured support/anchor cells slowly build pressure; at full pressure the AO becomes vulnerable for 45 minutes and upgrade hardening is weakened.
+- AO pressure reports stay minimal: normal players are notified when an AO reaches the contact line and when an assault window opens or closes. Exact pressure values stay in the AO panel.
 - Enemy capture or destabilization reduces an AO by one level instead of wiping it. If the previous owner recaptures it within 30 minutes, the original level is restored.
 - A compact in-world AO panel opens with `Ctrl+Shift+O` while standing inside an AO and shows owner, level, income per 15 minutes, upgrade cost, upgrade timer, and upgrade availability.
 - Server-authoritative commander and faction voting for BLUFOR and OPFOR with timed startup and replacement commander vote windows.
@@ -54,6 +54,7 @@ FOOF currently requires CBA_A3.
 - Store attached to friendly FOB buildings for same-side faction equipment and vehicle purchases.
 - Store catalogs are generated from the selected faction's loaded config classes; no player-edited store definition files are required.
 - Store catalogs also append optional support gear without player-edited definitions: reviewed vanilla GPS and cTab/NSWDG device classes plus source-filtered ACRE/TFAR radio and ACE/KAT/ACM support items when those mods are loaded. Optional support mods follow a Forge-style model: detect the loaded `CfgPatches` entry, then include visible classes whose class/source tokens match that mod.
+- Vanilla Arma chat and voice channels are disabled addon-side for all clients. When ACRE is loaded, FOOF enables side-separated Babel languages and side-separated radio frequencies so BLUFOR and OPFOR start on isolated comms.
 - Store uses a cinematic tactical armory UI with item previews, equipment/cart summaries, personal saved kits, and clickable cart targets for putting ammo/items into uniform, vest, or backpack during checkout.
 - Store vehicle checkout creates a pending vehicle placement; the player places the purchased vehicle with the IDS camera inside the purchase FOB build radius.
 - Empty Store-purchased friendly vehicles and captured enemy vehicles can be recovered at friendly bases for partial money returns.
@@ -61,7 +62,7 @@ FOOF currently requires CBA_A3.
 - Commanders can buy reinforcement ticket packs from the Store with faction currency; ticket packs are commander-only.
 - Native notification and announcement framework replaces ad hoc hints for player-facing feedback.
 - Announcements render as compact top-center command banners, while normal notifications stack as smaller right-side tactical cards.
-- Objective pressure alerts are state-change driven and side-specific so they feel like battlefield reports instead of arcade score events.
+- Objective pressure alerts are state-change driven and side-specific so players only get meaningful contact-line and assault-window reports.
 - Central CBA event adapter normalizes player connect/disconnect, disconnect handling, entity death, and entity respawn into shared `FLO_event*` events so gameplay systems do not each install raw Bohemia mission handlers.
 - Dead enemy player bodies can be searched through a compact HTML intel panel; the server decides whether the body has no intel, enemy movement intel, or rare FOB/COP radius intel.
 - Recovered intel creates temporary local map-radius markers instead of exact enemy positions.

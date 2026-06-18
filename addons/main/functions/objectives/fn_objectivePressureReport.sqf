@@ -15,7 +15,7 @@ switch (_event) do {
             _defenderPayload = createHashMapFromArray [
                 ["mode", "notify"],
                 ["title", "AO"],
-                ["message", format ["%1 is now on the line of contact.", _name]],
+                ["message", format ["%1 is on the contact line.", _name]],
                 ["type", "info"],
                 ["duration", 6]
             ];
@@ -24,45 +24,12 @@ switch (_event) do {
             private _enemySide = [east, west] select (_owner isEqualTo east);
             _attackerPayload = createHashMapFromArray [
                 ["mode", "notify"],
-                ["title", "Command"],
-                ["message", format ["Command marks %1 as a viable pressure point.", _name]],
+                ["title", "AO"],
+                ["message", format ["%1 is on the contact line.", _name]],
                 ["type", "info"],
                 ["duration", 6]
             ];
             [_enemySide, _attackerPayload] call FLO_fnc_notificationSendSide;
-        };
-    };
-    case "rear": {
-        if (_owner in [west, east]) then {
-            _defenderPayload = createHashMapFromArray [
-                ["mode", "notify"],
-                ["title", "AO"],
-                ["message", format ["Reports around %1 have gone quiet.", _name]],
-                ["type", "success"],
-                ["duration", 5]
-            ];
-            [_owner, _defenderPayload] call FLO_fnc_notificationSendSide;
-        };
-    };
-    case "pressure": {
-        if ((_owner in [west, east]) && {_attackerSide in [west, east]}) then {
-            _defenderPayload = createHashMapFromArray [
-                ["mode", "notify"],
-                ["title", "AO"],
-                ["message", format ["Reports indicate sustained enemy movement around %1.", _name]],
-                ["type", "warning"],
-                ["duration", 7]
-            ];
-            [_owner, _defenderPayload] call FLO_fnc_notificationSendSide;
-
-            _attackerPayload = createHashMapFromArray [
-                ["mode", "notify"],
-                ["title", "Command"],
-                ["message", format ["Forward elements are gaining momentum near %1.", _name]],
-                ["type", "info"],
-                ["duration", 7]
-            ];
-            [_attackerSide, _attackerPayload] call FLO_fnc_notificationSendSide;
         };
     };
     case "vulnerable": {
@@ -70,7 +37,7 @@ switch (_event) do {
             _defenderPayload = createHashMapFromArray [
                 ["mode", "announce"],
                 ["title", "Command"],
-                ["message", format ["%1 defenses are exposed. Reinforce immediately.", _name]],
+                ["message", format ["Assault window open at %1. Reinforce immediately.", _name]],
                 ["type", "warning"],
                 ["duration", 8]
             ];
@@ -79,7 +46,7 @@ switch (_event) do {
             _attackerPayload = createHashMapFromArray [
                 ["mode", "announce"],
                 ["title", "Command"],
-                ["message", format ["%1 is exposed. Assault window open.", _name]],
+                ["message", format ["Assault window open at %1.", _name]],
                 ["type", "announcement"],
                 ["duration", 8]
             ];
@@ -91,7 +58,7 @@ switch (_event) do {
             _defenderPayload = createHashMapFromArray [
                 ["mode", "notify"],
                 ["title", "AO"],
-                ["message", format ["The exposure around %1 has passed.", _name]],
+                ["message", format ["Assault window closed at %1.", _name]],
                 ["type", "success"],
                 ["duration", 6]
             ];
@@ -100,28 +67,7 @@ switch (_event) do {
             _attackerPayload = createHashMapFromArray [
                 ["mode", "notify"],
                 ["title", "Command"],
-                ["message", format ["The assault window at %1 has closed.", _name]],
-                ["type", "warning"],
-                ["duration", 6]
-            ];
-            [_attackerSide, _attackerPayload] call FLO_fnc_notificationSendSide;
-        };
-    };
-    case "stalled": {
-        if ((_owner in [west, east]) && {_attackerSide in [west, east]}) then {
-            _defenderPayload = createHashMapFromArray [
-                ["mode", "notify"],
-                ["title", "AO"],
-                ["message", format ["Enemy pressure near %1 has broken.", _name]],
-                ["type", "success"],
-                ["duration", 6]
-            ];
-            [_owner, _defenderPayload] call FLO_fnc_notificationSendSide;
-
-            _attackerPayload = createHashMapFromArray [
-                ["mode", "notify"],
-                ["title", "Command"],
-                ["message", format ["Momentum near %1 has stalled.", _name]],
+                ["message", format ["Assault window closed at %1.", _name]],
                 ["type", "warning"],
                 ["duration", 6]
             ];

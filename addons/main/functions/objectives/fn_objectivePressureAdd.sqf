@@ -30,14 +30,6 @@ if (_newPressure isNotEqualTo _oldPressure) then {
 };
 
 if (
-    (_newPressure >= (FLO_ObjectivePressureThreshold * FLO_ObjectivePressureReportRatio)) &&
-    {(_objective get _reportKey) isEqualTo "none"}
-) then {
-    _objective set [_reportKey, "pressure"];
-    [_objective, "pressure", _side] call FLO_fnc_objectivePressureReport;
-};
-
-if (
     (_newPressure >= FLO_ObjectivePressureThreshold) &&
     {(_objective get "vulnerableSide") isNotEqualTo _side || {diag_tickTime >= (_objective get "vulnerableExpiresAt")}}
 ) then {

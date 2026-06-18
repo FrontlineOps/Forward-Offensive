@@ -7,7 +7,7 @@ FLO_COPDeployCost = 600;
 FLO_COPBuildRadius = 60;
 FLO_COPMinDistance = 300;
 FLO_COPMaxPerSide = 4;
-FLO_COPEnemyDisableRadius = 200;
+FLO_COPEnemyDisableRadius = 500;
 
 FLO_BaseRespawnCheckInterval = 10;
 FLO_FOBClientActionRefreshInterval = 5;

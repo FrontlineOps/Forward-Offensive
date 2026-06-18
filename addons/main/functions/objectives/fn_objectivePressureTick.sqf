@@ -45,17 +45,28 @@ if (!_frontline) then {
         _objective set ["vulnerableExpiresAt", 0];
     };
 
+    private _westPresence = false;
+    private _eastPresence = false;
+
     {
         private _cell = FLO_ObjectiveCells get _x;
 
         if (_owner isEqualTo west && {(_cell get "influenceEast") > 0}) then {
-            [_objective get "id", east, FLO_ObjectivePressurePresencePerTick, "presence"] call FLO_fnc_objectivePressureAdd;
+            _eastPresence = true;
         };
 
         if (_owner isEqualTo east && {(_cell get "influenceWest") > 0}) then {
-            [_objective get "id", west, FLO_ObjectivePressurePresencePerTick, "presence"] call FLO_fnc_objectivePressureAdd;
+            _westPresence = true;
         };
     } forEach (_objective get "cellIds");
+
+    if (_eastPresence) then {
+        [_objective get "id", east, FLO_ObjectivePressurePresencePerTick, "presence"] call FLO_fnc_objectivePressureAdd;
+    };
+
+    if (_westPresence) then {
+        [_objective get "id", west, FLO_ObjectivePressurePresencePerTick, "presence"] call FLO_fnc_objectivePressureAdd;
+    };
 
     {
         _x params ["_pressureKey", "_lastKey"];
@@ -71,12 +82,7 @@ if (!_frontline) then {
 
             if (_newPressure isEqualTo 0) then {
                 private _reportKey = ["pressureWestReportState", "pressureEastReportState"] select (_pressureKey isEqualTo "pressureEast");
-                private _attackerSide = [west, east] select (_pressureKey isEqualTo "pressureEast");
-
-                if ((_objective get _reportKey) isNotEqualTo "none") then {
-                    [_objective, "stalled", _attackerSide] call FLO_fnc_objectivePressureReport;
-                    _objective set [_reportKey, "none"];
-                };
+                _objective set [_reportKey, "none"];
             };
         };
     } forEach [
@@ -87,10 +93,6 @@ if (!_frontline) then {
 
 if (!_oldFrontline && {_objective get "frontline"}) then {
     [_objective, "frontline"] call FLO_fnc_objectivePressureReport;
-};
-
-if (_oldFrontline && {!(_objective get "frontline")}) then {
-    [_objective, "rear"] call FLO_fnc_objectivePressureReport;
 };
 
 (_oldFrontline isNotEqualTo (_objective get "frontline")) ||
