@@ -16,6 +16,7 @@ FLO_TicketConsumedTotal = createHashMapFromArray [
 ];
 
 FLO_TicketDeathStates = createHashMap;
+FLO_TicketHandledRespawns = createHashMap;
 FLO_TicketPlayerSides = createHashMap;
 FLO_TicketRevision = 0;
 

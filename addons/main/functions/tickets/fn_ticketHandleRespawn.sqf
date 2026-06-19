@@ -11,8 +11,19 @@ if !(_side in [west, east]) exitWith {};
 private _uid = getPlayerUID _unit;
 
 if (_uid isEqualTo "") exitWith {};
-if (_unit getVariable ["FLO_TicketRespawnHandled", false]) exitWith {};
-_unit setVariable ["FLO_TicketRespawnHandled", true];
+
+_unit setVariable ["FLO_TicketDeathHandled", false];
+_unit setVariable ["FLO_TicketDeathState", ""];
+_unit setVariable ["FLO_TicketDeathSideKey", ""];
+
+private _respawnId = netId _unit;
+
+if (_respawnId isEqualTo "") then {
+    _respawnId = str _unit;
+};
+
+if (_respawnId in FLO_TicketHandledRespawns) exitWith {};
+FLO_TicketHandledRespawns set [_respawnId, true];
 
 private _sideKey = [_side] call FLO_fnc_resourceSideKey;
 private _uniformClass = [_sideKey] call FLO_fnc_spawnSideStoreUniform;
