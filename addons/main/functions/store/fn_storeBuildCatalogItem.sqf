@@ -33,12 +33,18 @@ if (_image isEqualTo "") then {
 
 private _price = [_className, _category, _entryKind] call FLO_fnc_storePriceClass;
 private _deploymentFundEligible = [_entryKind, _category, _price] call FLO_fnc_storeDeploymentFundEligible;
+private _includedAttachments = [];
+
+if ((_entryKind isEqualTo "gear") && {_category in ["primary", "handgun", "secondary"]}) then {
+    _includedAttachments = [_className] call FLO_fnc_storeWeaponAttachments;
+};
 
 createHashMapFromArray [
     ["className", _className],
     ["name", _name],
     ["category", _category],
     ["entryKind", _entryKind],
+    ["includedAttachments", _includedAttachments],
     ["deploymentFundEligible", _deploymentFundEligible],
     ["priceValue", _price],
     ["price", format ["%1", _price]],

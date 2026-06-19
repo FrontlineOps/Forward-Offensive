@@ -72,7 +72,11 @@ if (isClass (configFile >> "CfgVehicles" >> _className)) then {
     _mass = getNumber (_cfg >> "maximumLoad");
 };
 
-private _price = _base + (ceil (_mass / 6));
+private _price = if ((_category isEqualTo "attachments") && {!isNull _weaponCfg}) then {
+    [_className, _mass] call FLO_fnc_storePriceAttachment
+} else {
+    _base + (ceil (_mass / 6))
+};
 
 if (_minePriceAdd > 0) then {
     _price = _price + _minePriceAdd;
@@ -90,7 +94,7 @@ if (!isNull _weaponCfg) then {
     };
 
     if (_hasNvg && {_itemKind isNotEqualTo "NVGoggles"}) then {
-        _price = _price + 250;
+        _price = _price + ([250, 1000] select (_category isEqualTo "attachments"));
     };
 
     if (_hasThermal) then {

@@ -32,6 +32,7 @@ class Store {
     class storePendingVehiclesForAccess {};
     class storePostInit { postInit = 1; };
     class storePreInit { preInit = 1; };
+    class storePriceAttachment {};
     class storePriceClass {};
     class storePriceVehicle {};
     class storeReceiveResponse {};
@@ -55,4 +56,5 @@ class Store {
     class storeValidateAccess {};
     class storeVehicleConfigTraits {};
     class storeWebAction {};
+    class storeWeaponAttachments {};
 };

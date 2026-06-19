@@ -56,6 +56,8 @@ FOOF currently requires CBA_A3.
 - Server-validated logistics placement, movement, and deletion inside friendly base build areas.
 - Store attached to friendly FOB buildings for same-side faction equipment and vehicle purchases.
 - Store catalogs are generated from the selected faction's loaded config classes; no player-edited store definition files are required.
+- Store attachment catalogs include attachments actually mounted on selected-faction weapon variants; broad weapon-slot compatible attachment expansion is intentionally disabled.
+- Attachment prices use config capability signals for suppressors, pointer/flashlight devices, optic zoom/range, and NV/TI capability instead of only flat item mass.
 - Store separates faction-issued placeable mines and charges into a `Mines` category using Arma's placeable `Put` magazines and mine item classification, avoiding broad explosive ammo detection.
 - Store catalogs also append optional support gear without player-edited definitions: reviewed vanilla GPS and cTab/NSWDG device classes plus source-filtered ACRE/TFAR radio and ACE/KAT/ACM support items when those mods are loaded. Optional support mods follow a Forge-style model: detect the loaded `CfgPatches` entry, then include visible classes whose class/source tokens match that mod.
 - Each player receives a one-time `$1000` Deployment Fund for the current persistence save. It is UID-based, spends before faction balance on eligible personal gear, and disappears from the Store UI once fully spent.

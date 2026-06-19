@@ -972,6 +972,130 @@
             min-width: 160px;
         }
 
+        .modal-backdrop {
+            position: fixed;
+            z-index: 20;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background:
+                radial-gradient(circle at 50% 35%, rgba(37, 215, 255, 0.12), rgba(37, 215, 255, 0) 38%),
+                rgba(3, 8, 14, 0.72);
+            backdrop-filter: blur(8px);
+        }
+
+        .attachment-modal {
+            position: relative;
+            display: grid;
+            grid-template-rows: auto minmax(0, 1fr) auto;
+            width: min(760px, 92vw);
+            max-height: min(720px, 88vh);
+            overflow: hidden;
+            background:
+                linear-gradient(155deg, rgba(37, 215, 255, 0.12), rgba(37, 215, 255, 0) 34%),
+                rgba(12, 22, 32, 0.94);
+            box-shadow: inset 0 0 0 1px rgba(103, 232, 255, 0.34), 0 30px 70px rgba(0, 0, 0, 0.58), 0 0 42px rgba(37, 215, 255, 0.16);
+            clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+        }
+
+        .attachment-head {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 18px;
+            align-items: start;
+            padding: 22px 24px 16px;
+            border-bottom: 1px solid rgba(103, 232, 255, 0.18);
+        }
+
+        .attachment-title {
+            overflow: hidden;
+            color: #F2F7FA;
+            font-size: 30px;
+            line-height: 1.05;
+            font-weight: 900;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .attachment-subtitle {
+            margin-top: 8px;
+            color: #A7B7C8;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .attachment-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            min-height: 0;
+            overflow: auto;
+            padding: 16px 24px 20px;
+            scrollbar-gutter: stable;
+        }
+
+        .attachment-row {
+            display: grid;
+            grid-template-columns: 72px minmax(0, 1fr);
+            gap: 12px;
+            align-items: center;
+            min-height: 84px;
+            padding: 10px;
+            background:
+                linear-gradient(90deg, rgba(37, 215, 255, 0.08), rgba(20, 34, 48, 0.82)),
+                rgba(20, 34, 48, 0.82);
+            box-shadow: inset 0 0 0 1px rgba(103, 232, 255, 0.14);
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+        }
+
+        .attachment-media {
+            position: relative;
+            width: 72px;
+            height: 54px;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 50% 45%, rgba(103, 232, 255, 0.12), rgba(103, 232, 255, 0) 56%),
+                rgba(4, 10, 16, 0.66);
+            box-shadow: inset 0 0 0 1px rgba(103, 232, 255, 0.12);
+        }
+
+        .attachment-media .media-fallback {
+            font-size: 24px;
+        }
+
+        .attachment-media .media-status {
+            display: none;
+        }
+
+        .attachment-slot {
+            color: #25D7FF;
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .attachment-name {
+            margin-top: 5px;
+            overflow: hidden;
+            color: #F2F7FA;
+            font-size: 17px;
+            font-weight: 900;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .attachment-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            padding: 14px 24px 22px;
+            border-top: 1px solid rgba(103, 232, 255, 0.14);
+        }
+
         .hidden {
             display: none !important;
         }
@@ -1198,6 +1322,24 @@
                 <button class="action-btn danger" type="button" onclick="FOOFStore.close()">Close</button>
             </div>
         </footer>
+
+        <div class="modal-backdrop hidden" id="attachmentModal" onclick="FOOFStore.cancelAttachmentAdd(event)">
+            <section class="attachment-modal" onclick="event.stopPropagation()">
+                <header class="attachment-head">
+                    <div>
+                        <div class="overline">Included Attachments</div>
+                        <div class="attachment-title" id="attachmentWeaponName">Weapon</div>
+                        <div class="attachment-subtitle" id="attachmentWeaponMeta">Mounted equipment on this weapon variant.</div>
+                    </div>
+                    <div class="price" id="attachmentWeaponPrice">$0</div>
+                </header>
+                <div class="attachment-list" id="attachmentList"></div>
+                <footer class="attachment-actions">
+                    <button class="action-btn secondary" type="button" onclick="FOOFStore.cancelAttachmentAdd()">Back</button>
+                    <button class="action-btn good" type="button" onclick="FOOFStore.confirmAttachmentAdd()">Add Weapon</button>
+                </footer>
+            </section>
+        </div>
     </main>
 
     <script>
@@ -1209,6 +1351,7 @@
                 cart: [],
                 savedKits: [],
                 pendingVehicles: [],
+                pendingAttachmentAdd: null,
                 selectedItem: null,
                 activeContainer: "auto",
                 balance: 0,
@@ -1592,6 +1735,20 @@
                 return item.entryKind === "vehicle" || !!vehicleCategories[item.category];
             }
 
+            function includedAttachments(item) {
+                if (!item || !item.includedAttachments || !item.includedAttachments.length) {
+                    return [];
+                }
+
+                return item.includedAttachments;
+            }
+
+            function hasIncludedAttachments(item) {
+                return item.entryKind === "gear" &&
+                    (item.category === "primary" || item.category === "secondary" || item.category === "handgun") &&
+                    includedAttachments(item).length > 0;
+            }
+
             function sameItem(left, right) {
                 return !!left && !!right &&
                     left.entryKind === right.entryKind &&
@@ -1822,6 +1979,72 @@
                 return box;
             }
 
+            function renderAttachmentMedia(attachment) {
+                var box = document.createElement("div");
+                var image = attachment.image || "";
+                var normalized = normalizeTexturePath(image);
+                var source = getTextureSource(image);
+
+                box.className = "attachment-media";
+                box.setAttribute("data-symbol", "+");
+                box.setAttribute("data-raw-texture", image);
+                box.setAttribute("data-texture-path", normalized);
+                drawTextureNode(box, source);
+                markTextureVisible(image);
+
+                return box;
+            }
+
+            function hideAttachmentModal() {
+                var modal = node("attachmentModal");
+
+                state.pendingAttachmentAdd = null;
+
+                if (modal) {
+                    modal.className = "modal-backdrop hidden";
+                }
+            }
+
+            function showAttachmentModal(item, container) {
+                var modal = node("attachmentModal");
+                var list = node("attachmentList");
+                var attachments = includedAttachments(item);
+                var i;
+
+                state.pendingAttachmentAdd = {
+                    item: item,
+                    container: container
+                };
+
+                text("attachmentWeaponName", item.name || "Weapon");
+                text("attachmentWeaponMeta", String(attachments.length) + " mounted attachment" + (attachments.length === 1 ? "" : "s") + " included with this weapon variant.");
+                text("attachmentWeaponPrice", formatMoney(itemPrice(item)));
+                clear(list);
+
+                for (i = 0; i < attachments.length; i += 1) {
+                    (function (attachment) {
+                        var row = document.createElement("div");
+                        var info = document.createElement("div");
+                        var slot = document.createElement("div");
+                        var name = document.createElement("div");
+
+                        row.className = "attachment-row";
+                        slot.className = "attachment-slot";
+                        name.className = "attachment-name";
+                        slot.textContent = attachment.slotName || "Attachment";
+                        name.textContent = attachment.name || "Mounted Item";
+
+                        info.appendChild(slot);
+                        info.appendChild(name);
+                        row.appendChild(renderAttachmentMedia(attachment));
+                        row.appendChild(info);
+                        list.appendChild(row);
+                    }(attachments[i]));
+                }
+
+                modal.className = "modal-backdrop";
+            }
+
             function createSlot(title, lines, wide) {
                 var slot = document.createElement("div");
                 var slotTitle = document.createElement("div");
@@ -2023,7 +2246,11 @@
                                 return;
                             }
                             state.selectedItem = item;
-                            FOOFStore.add(item);
+                            if (hasIncludedAttachments(item)) {
+                                showAttachmentModal(item, undefined);
+                            } else {
+                                FOOFStore.add(item);
+                            }
                             renderItems();
                         };
 
@@ -2341,6 +2568,24 @@
 
                     renderCart();
                 },
+                confirmAttachmentAdd: function () {
+                    var pending = state.pendingAttachmentAdd;
+                    var item;
+                    var container;
+
+                    if (!pending) {
+                        return;
+                    }
+
+                    item = pending.item;
+                    container = pending.container;
+                    hideAttachmentModal();
+                    FOOFStore.add(item, container);
+                    renderItems();
+                },
+                cancelAttachmentAdd: function () {
+                    hideAttachmentModal();
+                },
                 adjust: function (line, delta) {
                     line.quantity += delta;
 
@@ -2466,6 +2711,19 @@
                 renderTargetButtons();
                 updateSummary();
                 send("store::ready", {});
+            });
+
+            window.addEventListener("keydown", function (event) {
+                var modal = node("attachmentModal");
+
+                if (!modal || modal.className.indexOf("hidden") >= 0) {
+                    return;
+                }
+
+                if (event.key === "Escape" || event.key === "Esc") {
+                    event.preventDefault();
+                    hideAttachmentModal();
+                }
             });
         }());
     </script>
