@@ -6,6 +6,10 @@ Forward Offensive, also known as FOOF, including its source code, scripts,
 configs, UI files, documentation, packaged builds, names, branding, and related
 assets, is proprietary.
 
+Third-party or pre-existing components included in this repository remain
+subject to their original ownership, attribution, and permission terms where
+applicable.
+
 No permission is granted to copy, modify, redistribute, reupload, repack,
 sublicense, sell, host, publish, or create derivative works from this project
 without prior written permission from Frontline Operations Development Group.
