@@ -1,9 +1,12 @@
-params ["_side", ["_allowPlurality", false, [false]]];
+params ["_side", ["_allowPlurality", false, [false]], ["_forceFinalize", false, [false]]];
 
 if (!isServer) exitWith { false };
 
 private _sideKey = [_side] call FLO_fnc_resourceSideKey;
 private _state = FLO_CommandSideState get _sideKey;
+
+if ((_state get "commanderVoteOpen") && {!_forceFinalize}) exitWith { false };
+
 private _players = [_side] call FLO_fnc_commandSidePlayers;
 private _votes = _state get "commanderVotes";
 private _activeUids = createHashMap;

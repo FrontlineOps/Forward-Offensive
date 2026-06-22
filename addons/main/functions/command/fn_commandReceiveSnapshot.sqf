@@ -13,6 +13,7 @@ if (_snapshot get "shouldPromptVote") then {
     private _display = findDisplay FLO_CommandVoteDialogIdd;
     private _isNewPrompt = FLO_CommandLastVotePromptId isNotEqualTo _promptId;
     FLO_CommandVoteCloseRevision = -1;
+    FLO_CommandVoteAutoClosePromptId = _promptId;
 
     if (_isNewPrompt) then {
         FLO_CommandLastVotePromptId = _promptId;
@@ -59,29 +60,18 @@ if (_snapshot get "shouldPromptVote") then {
     };
 } else {
     private _display = findDisplay FLO_CommandVoteDialogIdd;
+    private _autoClosePromptId = FLO_CommandVoteAutoClosePromptId;
 
-    if (!isNull _display) then {
+    FLO_CommandVoteAutoClosePromptId = "";
+
+    if ((!isNull _display) && {_autoClosePromptId isNotEqualTo ""}) then {
         private _revision = _snapshot get "revision";
 
         if (FLO_CommandVoteCloseRevision isNotEqualTo _revision) then {
             FLO_CommandVoteCloseRevision = _revision;
 
-            [
-                {
-                    params ["_revision"];
-
-                    if (FLO_CommandVoteCloseRevision isEqualTo _revision) then {
-                        private _display = findDisplay FLO_CommandVoteDialogIdd;
-
-                        if (!isNull _display) then {
-                            _display closeDisplay 0;
-                            uiNamespace setVariable ["FLO_CommandVoteControl", controlNull];
-                        };
-                    };
-                },
-                [_revision],
-                5
-            ] call CBA_fnc_waitAndExecute;
+            _display closeDisplay 0;
+            uiNamespace setVariable ["FLO_CommandVoteControl", controlNull];
         };
     };
 };

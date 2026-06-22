@@ -52,6 +52,5 @@ if (_currentVote isEqualTo _candidateUid) exitWith {
 _votes set [_playerUid, _candidateUid];
 
 FLO_CommandRevision = FLO_CommandRevision + 1;
-[_side] call FLO_fnc_commandResolveCommanderVote;
 [_player] call FLO_fnc_commandSendSnapshot;
 [_side] call FLO_fnc_commandScheduleBroadcastSide;

@@ -2,6 +2,7 @@ FLO_CommandSnapshot = createHashMap;
 FLO_CommandLastVotePromptId = "";
 FLO_CommandVoteDismissedPromptId = "";
 FLO_CommandVoteCloseRevision = -1;
+FLO_CommandVoteAutoClosePromptId = "";
 FLO_CommandVoteBrowserReady = false;
 FLO_CommandVoteRenderKey = "";
 FLO_CommandVoteOpenWhenReady = false;

@@ -11,7 +11,7 @@ switch (_kind) do {
         if !(_state get "commanderVoteOpen") exitWith {};
         if ((_state get "commanderVotePromptId") isNotEqualTo _promptId) exitWith {};
 
-        _resolved = [_side, true] call FLO_fnc_commandResolveCommanderVote;
+        _resolved = [_side, true, true] call FLO_fnc_commandResolveCommanderVote;
 
         if (!_resolved) then {
             _state set ["commanderVoteOpen", false];
@@ -30,7 +30,7 @@ switch (_kind) do {
         if !(_state get "factionVoteOpen") exitWith {};
         if ((_state get "factionVotePromptId") isNotEqualTo _promptId) exitWith {};
 
-        _resolved = [_side, true] call FLO_fnc_commandResolveFactionVote;
+        _resolved = [_side, true, true] call FLO_fnc_commandResolveFactionVote;
 
         if (!_resolved) then {
             _state set ["factionVoteOpen", false];

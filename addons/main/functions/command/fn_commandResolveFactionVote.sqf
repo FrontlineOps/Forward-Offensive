@@ -1,9 +1,11 @@
-params ["_side", ["_allowPlurality", false, [false]]];
+params ["_side", ["_allowPlurality", false, [false]], ["_forceFinalize", false, [false]]];
 
 if (!isServer) exitWith { false };
 
 private _sideKey = [_side] call FLO_fnc_resourceSideKey;
 private _state = FLO_CommandSideState get _sideKey;
+
+if ((_state get "factionVoteOpen") && {!_forceFinalize}) exitWith { false };
 
 if ((_state get "factionClass") isNotEqualTo "") exitWith {
     _state set ["factionVoteOpen", false];
