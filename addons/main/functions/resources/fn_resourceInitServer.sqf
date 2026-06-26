@@ -1,6 +1,6 @@
 if (!isServer) exitWith {};
 
-FLO_ResourceInitialBalance = 5000;
+FLO_ResourceInitialBalance = 10000;
 
 FLO_ResourceBalances = createHashMapFromArray [
     ["WEST", FLO_ResourceInitialBalance],
