@@ -12,7 +12,7 @@ if (_type isEqualTo "COP") exitWith {
         ["maxPerSide", FLO_COPMaxPerSide],
         ["sideClasses", FLO_COPSideClasses],
         ["logisticsCategories", +FLO_COPLogisticsCategories],
-        ["storeEnabled", false],
+        ["storeEnabled", true],
         ["vehicleStoreEnabled", false],
         ["ticketStoreEnabled", false],
         ["respawnEnabled", true],

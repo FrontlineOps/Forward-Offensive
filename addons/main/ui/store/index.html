@@ -1277,6 +1277,8 @@
                 deploymentFundAmount: 0,
                 tickets: 0,
                 canBuyTickets: false,
+                vehicleStoreEnabled: false,
+                ticketStoreEnabled: false,
                 query: ""
             };
 
@@ -2039,7 +2041,9 @@
                         var actions = document.createElement("div");
                         var price = document.createElement("div");
                         var add = document.createElement("button");
-                        var ticketLocked = item.entryKind === "ticket" && !state.canBuyTickets;
+                        var vehicleLocked = isVehicle(item) && !state.vehicleStoreEnabled;
+                        var ticketLocked = item.entryKind === "ticket" && (!state.ticketStoreEnabled || !state.canBuyTickets);
+                        var locked = vehicleLocked || ticketLocked;
 
                         card.className = "armory-card" + (sameItem(item, state.selectedItem) ? " selected" : "");
                         card.onclick = function () {
@@ -2058,11 +2062,11 @@
 
                         add.className = "action-btn";
                         add.type = "button";
-                        add.textContent = ticketLocked ? "Locked" : (item.entryKind === "ticket" ? "Buy" : (isVehicle(item) ? "Queue" : "Add"));
-                        add.disabled = ticketLocked;
+                        add.textContent = locked ? "Locked" : (item.entryKind === "ticket" ? "Buy" : (isVehicle(item) ? "Queue" : "Add"));
+                        add.disabled = locked;
                         add.onclick = function (event) {
                             event.stopPropagation();
-                            if (ticketLocked) {
+                            if (locked) {
                                 return;
                             }
                             state.selectedItem = item;
@@ -2292,6 +2296,8 @@
                         state.deploymentFundAmount = typeof payload.deploymentFundAmount === "number" ? payload.deploymentFundAmount : state.deploymentFundAmount;
                         state.tickets = typeof payload.tickets === "number" ? payload.tickets : state.tickets;
                         state.canBuyTickets = typeof payload.canBuyTickets === "boolean" ? payload.canBuyTickets : false;
+                        state.vehicleStoreEnabled = typeof payload.vehicleStoreEnabled === "boolean" ? payload.vehicleStoreEnabled : false;
+                        state.ticketStoreEnabled = typeof payload.ticketStoreEnabled === "boolean" ? payload.ticketStoreEnabled : false;
                         state.currentCategory = payload.firstCategory || state.currentCategory;
                         text("sideName", payload.sideName || "");
                         text("factionName", payload.factionName || "");
@@ -2320,6 +2326,8 @@
                         state.deploymentFundAmount = typeof payload.deploymentFundAmount === "number" ? payload.deploymentFundAmount : state.deploymentFundAmount;
                         state.tickets = typeof payload.tickets === "number" ? payload.tickets : state.tickets;
                         state.canBuyTickets = typeof payload.canBuyTickets === "boolean" ? payload.canBuyTickets : state.canBuyTickets;
+                        state.vehicleStoreEnabled = typeof payload.vehicleStoreEnabled === "boolean" ? payload.vehicleStoreEnabled : state.vehicleStoreEnabled;
+                        state.ticketStoreEnabled = typeof payload.ticketStoreEnabled === "boolean" ? payload.ticketStoreEnabled : state.ticketStoreEnabled;
                         text("categoryTitle", payload.label || "Items");
                         updateSummary();
                         renderCategories();

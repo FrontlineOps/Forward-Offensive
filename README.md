@@ -31,7 +31,7 @@ See `LICENSE.md` for the full license terms.
 - AO pressure and assault windows
 - FOB and COP deployment systems
 - Commander voting and faction selection
-- Faction-based Store with weapons, gear, vehicles, kits, tickets, and support items
+- Faction-based Store with weapons, gear, kits, support items, and FOB-only vehicle/ticket purchases
 - Faction currency and income from controlled territory
 - AO upgrade levels that increase value and defensive strength
 - Ticket-based respawns

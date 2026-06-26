@@ -3,7 +3,11 @@ params ["_access"];
 private _sideKey = _access get "sideKey";
 private _state = FLO_CommandSideState get _sideKey;
 private _playerUid = getPlayerUID (_access get "player");
-private _canBuyTickets = (_state get "commanderUid") isEqualTo _playerUid;
+private _fobRecord = _access get "fobRecord";
+private _baseType = _fobRecord get "type";
+private _vehicleStoreEnabled = _fobRecord get "vehicleStoreEnabled";
+private _ticketStoreEnabled = _fobRecord get "ticketStoreEnabled";
+private _canBuyTickets = _ticketStoreEnabled && {(_state get "commanderUid") isEqualTo _playerUid};
 private _deploymentFund = [_playerUid] call FLO_fnc_storeDeploymentFundBalance;
 private _catalog = [
     _sideKey,
@@ -17,6 +21,10 @@ private _firstCategory = "";
 {
     private _category = _x select 0;
     private _label = _x select 1;
+
+    if (!_vehicleStoreEnabled && {_category in FLO_StoreVehicleCategories}) then { continue };
+    if (!_ticketStoreEnabled && {_category isEqualTo "tickets"}) then { continue };
+
     private _count = count (_itemsByCategory get _category);
 
     _categories pushBack createHashMapFromArray [
@@ -37,6 +45,9 @@ createHashMapFromArray [
     ["sideName", ["BLUFOR", "OPFOR"] select (_sideKey isEqualTo "EAST")],
     ["factionClass", _catalog get "factionClass"],
     ["factionName", _catalog get "factionName"],
+    ["baseType", _baseType],
+    ["vehicleStoreEnabled", _vehicleStoreEnabled],
+    ["ticketStoreEnabled", _ticketStoreEnabled],
     ["balance", FLO_ResourceBalances get _sideKey],
     ["deploymentFund", _deploymentFund],
     ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],

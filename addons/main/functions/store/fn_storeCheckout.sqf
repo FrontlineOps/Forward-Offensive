@@ -140,7 +140,7 @@ for "_i" from 0 to ((count _cart) - 1) do {
 
                                                 if !(_fobRecord get "ticketStoreEnabled") then {
                                                     _ok = false;
-                                                    _message = "Respawn tickets can only be bought from a FOB.";
+                                                    _message = "Respawn tickets are not available at this base.";
                                                 } else {
                                                     if ((_state get "commanderUid") isNotEqualTo (getPlayerUID (_access get "player"))) then {
                                                         _ok = false;
@@ -155,7 +155,7 @@ for "_i" from 0 to ((count _cart) - 1) do {
                                             case "vehicle": {
                                                 if !(_fobRecord get "vehicleStoreEnabled") then {
                                                     _ok = false;
-                                                    _message = "Vehicles can only be bought from a FOB.";
+                                                    _message = "Vehicles are not available at this base.";
                                                 } else {
                                                     for "_vehicleIndex" from 1 to _quantity do {
                                                         _vehicleJobs pushBack createHashMapFromArray [

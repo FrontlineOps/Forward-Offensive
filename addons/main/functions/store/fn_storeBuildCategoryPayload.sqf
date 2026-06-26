@@ -20,16 +20,58 @@ if (!_valid) exitWith {
     ]
 };
 
+private _sideKey = _access get "sideKey";
+private _fobRecord = _access get "fobRecord";
+private _baseType = _fobRecord get "type";
+private _vehicleStoreEnabled = _fobRecord get "vehicleStoreEnabled";
+private _ticketStoreEnabled = _fobRecord get "ticketStoreEnabled";
+private _state = FLO_CommandSideState get _sideKey;
+private _playerUid = getPlayerUID (_access get "player");
+private _canBuyTickets = _ticketStoreEnabled && {(_state get "commanderUid") isEqualTo _playerUid};
+private _deploymentFund = [_playerUid] call FLO_fnc_storeDeploymentFundBalance;
+
+if (!_vehicleStoreEnabled && {_category in FLO_StoreVehicleCategories}) exitWith {
+    createHashMapFromArray [
+        ["success", true],
+        ["message", "Vehicles are not available at this base."],
+        ["category", _category],
+        ["label", _label],
+        ["items", []],
+        ["baseType", _baseType],
+        ["vehicleStoreEnabled", _vehicleStoreEnabled],
+        ["ticketStoreEnabled", _ticketStoreEnabled],
+        ["balance", FLO_ResourceBalances get _sideKey],
+        ["deploymentFund", _deploymentFund],
+        ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
+        ["tickets", FLO_TicketBalances get _sideKey],
+        ["canBuyTickets", _canBuyTickets]
+    ]
+};
+
+if (!_ticketStoreEnabled && {_category isEqualTo "tickets"}) exitWith {
+    createHashMapFromArray [
+        ["success", true],
+        ["message", "Tickets are not available at this base."],
+        ["category", _category],
+        ["label", _label],
+        ["items", []],
+        ["baseType", _baseType],
+        ["vehicleStoreEnabled", _vehicleStoreEnabled],
+        ["ticketStoreEnabled", _ticketStoreEnabled],
+        ["balance", FLO_ResourceBalances get _sideKey],
+        ["deploymentFund", _deploymentFund],
+        ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
+        ["tickets", FLO_TicketBalances get _sideKey],
+        ["canBuyTickets", _canBuyTickets]
+    ]
+};
+
 private _catalog = [
-    _access get "sideKey",
+    _sideKey,
     _access get "factionClass",
     _access get "factionName"
 ] call FLO_fnc_storeBuildCatalog;
 private _itemsByCategory = _catalog get "itemsByCategory";
-private _state = FLO_CommandSideState get (_access get "sideKey");
-private _playerUid = getPlayerUID (_access get "player");
-private _canBuyTickets = (_state get "commanderUid") isEqualTo _playerUid;
-private _deploymentFund = [_playerUid] call FLO_fnc_storeDeploymentFundBalance;
 
 createHashMapFromArray [
     ["success", true],
@@ -37,9 +79,12 @@ createHashMapFromArray [
     ["category", _category],
     ["label", _label],
     ["items", _itemsByCategory get _category],
-    ["balance", FLO_ResourceBalances get (_access get "sideKey")],
+    ["baseType", _baseType],
+    ["vehicleStoreEnabled", _vehicleStoreEnabled],
+    ["ticketStoreEnabled", _ticketStoreEnabled],
+    ["balance", FLO_ResourceBalances get _sideKey],
     ["deploymentFund", _deploymentFund],
     ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
-    ["tickets", FLO_TicketBalances get (_access get "sideKey")],
+    ["tickets", FLO_TicketBalances get _sideKey],
     ["canBuyTickets", _canBuyTickets]
 ]

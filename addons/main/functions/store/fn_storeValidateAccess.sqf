@@ -63,7 +63,7 @@ private _fob = objectFromNetId _fobNetId;
 if (isNull _fob) exitWith {
     createHashMapFromArray [
         ["success", false],
-        ["message", "Store must be opened from a valid FOB."],
+        ["message", "Store must be opened from a valid base."],
         ["owner", _requestOwner]
     ]
 };
@@ -71,7 +71,7 @@ if (isNull _fob) exitWith {
 if (!alive _fob) exitWith {
     createHashMapFromArray [
         ["success", false],
-        ["message", "This FOB is destroyed."],
+        ["message", "This base is destroyed."],
         ["owner", _requestOwner]
     ]
 };
@@ -81,7 +81,7 @@ private _fobId = _fob getVariable ["FLO_FOB_Id", ""];
 if (_fobId isEqualTo "") exitWith {
     createHashMapFromArray [
         ["success", false],
-        ["message", "Store must be opened from a registered FOB."],
+        ["message", "Store must be opened from a registered base."],
         ["owner", _requestOwner]
     ]
 };
@@ -89,7 +89,7 @@ if (_fobId isEqualTo "") exitWith {
 if !(_fobId in FLO_FOBs) exitWith {
     createHashMapFromArray [
         ["success", false],
-        ["message", "Store must be opened from an active FOB."],
+        ["message", "Store must be opened from an active base."],
         ["owner", _requestOwner]
     ]
 };
@@ -100,7 +100,7 @@ private _registeredFob = _fobRecord get "object";
 if (_registeredFob isNotEqualTo _fob) exitWith {
     createHashMapFromArray [
         ["success", false],
-        ["message", "Store FOB registration mismatch."],
+        ["message", "Store base registration mismatch."],
         ["owner", _requestOwner]
     ]
 };
@@ -118,7 +118,7 @@ private _fobSideKey = _fobRecord get "sideKey";
 if (_fobSideKey isNotEqualTo _sideKey) exitWith {
     createHashMapFromArray [
         ["success", false],
-        ["message", "This FOB belongs to the other side."],
+        ["message", "This base belongs to the other side."],
         ["owner", _requestOwner]
     ]
 };
@@ -128,7 +128,7 @@ private _buildRadius = _fobRecord get "buildRadius";
 if ((_player distance2D _fob) > _buildRadius) exitWith {
     createHashMapFromArray [
         ["success", false],
-        ["message", "Move closer to the FOB to use the store."],
+        ["message", "Move closer to the base to use the store."],
         ["owner", _requestOwner]
     ]
 };
