@@ -33,7 +33,7 @@ private _sideKey = _access get "sideKey";
 private _fob = _access get "fob";
 private _fobRecord = _access get "fobRecord";
 private _playerUid = getPlayerUID (_access get "player");
-private _deploymentFundRemaining = [_playerUid] call FLO_fnc_storeEnsureDeploymentFund;
+private _deploymentFundRemaining = [_playerUid] call FLO_fnc_storeDeploymentFundBalance;
 private _catalog = [
     _sideKey,
     _access get "factionClass",

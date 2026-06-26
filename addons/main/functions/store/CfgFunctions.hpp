@@ -18,8 +18,8 @@ class Store {
     class storeCheckout {};
     class storeCollectVehicleWeapons {};
     class storeCurrentLoadoutKitItems {};
+    class storeDeploymentFundBalance {};
     class storeDeploymentFundEligible {};
-    class storeEnsureDeploymentFund {};
     class storeFactionUsesVanillaGear {};
     class storeGearVisionTraits {};
     class storeHandleUiEvent {};

@@ -29,7 +29,7 @@ private _itemsByCategory = _catalog get "itemsByCategory";
 private _state = FLO_CommandSideState get (_access get "sideKey");
 private _playerUid = getPlayerUID (_access get "player");
 private _canBuyTickets = (_state get "commanderUid") isEqualTo _playerUid;
-private _deploymentFund = [_playerUid] call FLO_fnc_storeEnsureDeploymentFund;
+private _deploymentFund = [_playerUid] call FLO_fnc_storeDeploymentFundBalance;
 
 createHashMapFromArray [
     ["success", true],
