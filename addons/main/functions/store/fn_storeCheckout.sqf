@@ -57,8 +57,6 @@ private _total = 0;
 private _deploymentEligibleTotal = 0;
 private _gearEntries = [];
 private _vehicleJobs = [];
-private _ticketCount = 0;
-private _ticketLines = 0;
 
 for "_i" from 0 to ((count _cart) - 1) do {
     if (_ok) then {
@@ -104,11 +102,7 @@ for "_i" from 0 to ((count _cart) - 1) do {
                             _ok = false;
                             _message = "Vehicle quantity is too high.";
                         } else {
-                            if ((_entryKind isEqualTo "ticket") && {_quantity > 10}) then {
-                                _ok = false;
-                                _message = "Ticket pack quantity is too high.";
-                            } else {
-                                if !(_container in FLO_StoreGearContainers) then {
+                            if !(_container in FLO_StoreGearContainers) then {
                                     _ok = false;
                                     _message = "Cart line has invalid container target.";
                                 } else {
@@ -135,23 +129,6 @@ for "_i" from 0 to ((count _cart) - 1) do {
                                         };
 
                                         switch (_item get "entryKind") do {
-                                            case "ticket": {
-                                                private _state = FLO_CommandSideState get _sideKey;
-
-                                                if !(_fobRecord get "ticketStoreEnabled") then {
-                                                    _ok = false;
-                                                    _message = "Respawn tickets are not available at this base.";
-                                                } else {
-                                                    if ((_state get "commanderUid") isNotEqualTo (getPlayerUID (_access get "player"))) then {
-                                                        _ok = false;
-                                                        _message = "Only the commander can buy respawn tickets.";
-                                                    } else {
-                                                        _ticketCount = _ticketCount + ((_item get "ticketCount") * _quantity);
-                                                        _ticketLines = _ticketLines + _quantity;
-                                                    };
-                                                };
-                                            };
-
                                             case "vehicle": {
                                                 if !(_fobRecord get "vehicleStoreEnabled") then {
                                                     _ok = false;
@@ -182,7 +159,6 @@ for "_i" from 0 to ((count _cart) - 1) do {
                                     };
                                     };
                                 };
-                            };
                         };
                     };
                 };
@@ -270,10 +246,6 @@ private _pendingVehicles = [];
     ];
 } forEach _vehicleJobs;
 
-if (_ticketCount > 0) then {
-    [_side, _ticketCount, "Store checkout"] call FLO_fnc_ticketAdd;
-};
-
 if (_gearEntries isNotEqualTo []) then {
     private _owner = _access get "owner";
 
@@ -287,7 +259,7 @@ if (_gearEntries isNotEqualTo []) then {
 };
 
 diag_log format [
-    "[FLO][Store] %1 checkout player=%2 total=%3 deployment=%4 faction=%5 gear=%6 pendingVehicles=%7 tickets=%8 balance=%9",
+    "[FLO][Store] %1 checkout player=%2 total=%3 deployment=%4 faction=%5 gear=%6 pendingVehicles=%7 balance=%8",
     _sideKey,
     name (_access get "player"),
     _total,
@@ -295,7 +267,6 @@ diag_log format [
     _factionTotal,
     count _gearEntries,
     count _pendingVehicles,
-    _ticketCount,
     FLO_ResourceBalances get _sideKey
 ];
 
@@ -303,7 +274,7 @@ diag_log format [
 
 createHashMapFromArray [
     ["success", true],
-    ["message", format ["Purchased %1 gear lines, %2 vehicles, and %3 tickets for %4.", count _gearEntries, count _pendingVehicles, _ticketCount, _total]],
+    ["message", format ["Purchased %1 gear lines and %2 vehicles for %3.", count _gearEntries, count _pendingVehicles, _total]],
     ["balance", FLO_ResourceBalances get _sideKey],
     ["deploymentFund", _deploymentFundRemaining],
     ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
@@ -313,7 +284,5 @@ createHashMapFromArray [
     ["spent", _total],
     ["gearCount", count _gearEntries],
     ["vehicleCount", count _pendingVehicles],
-    ["ticketCount", _ticketCount],
-    ["ticketLines", _ticketLines],
     ["pendingVehicles", [_access] call FLO_fnc_storePendingVehiclesForAccess]
 ]

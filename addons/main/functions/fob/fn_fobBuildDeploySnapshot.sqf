@@ -13,7 +13,9 @@ private _balance = 0;
 private _income = 0;
 private _cellIncome = 0;
 private _objectiveIncome = 0;
+private _tickets = 0;
 private _resourceSnapshot = missionNamespace getVariable ["FLO_ResourceSnapshot", []];
+private _ticketSnapshot = missionNamespace getVariable ["FLO_TicketSnapshot", createHashMap];
 
 {
     if ((_x isEqualType []) && {count _x >= 6} && {(_x # 0) isEqualTo _sideKey}) exitWith {
@@ -23,6 +25,29 @@ private _resourceSnapshot = missionNamespace getVariable ["FLO_ResourceSnapshot"
         _objectiveIncome = _x # 5;
     };
 } forEach _resourceSnapshot;
+
+if (_sideKey isNotEqualTo "") then {
+    if (isServer) then {
+        _tickets = FLO_TicketBalances get _sideKey;
+    } else {
+        if (((typeName _ticketSnapshot) isEqualTo "HASHMAP") && {("sideKey" in _ticketSnapshot) && {(_ticketSnapshot get "sideKey") isEqualTo _sideKey}}) then {
+            _tickets = _ticketSnapshot get "tickets";
+        };
+    };
+};
+
+private _ticketPacks = [];
+
+{
+    _x params ["_id", "_name", "_ticketCount", "_price"];
+
+    _ticketPacks pushBack createHashMapFromArray [
+        ["id", _id],
+        ["name", _name],
+        ["ticketCount", _ticketCount],
+        ["price", _price]
+    ];
+} forEach FLO_TicketPurchasePacks;
 
 private _factionName = "";
 private _commanderName = "";
@@ -49,6 +74,8 @@ createHashMapFromArray [
     ["factionName", _factionName],
     ["commanderName", _commanderName],
     ["balance", _balance],
+    ["tickets", _tickets],
+    ["ticketPacks", _ticketPacks],
     ["income", _income],
     ["cellIncome", _cellIncome],
     ["objectiveIncome", _objectiveIncome],

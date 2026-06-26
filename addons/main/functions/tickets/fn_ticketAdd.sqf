@@ -23,6 +23,7 @@ if (_oldBalance <= 0) then {
 };
 
 ["ticketAdd"] call FLO_fnc_persistenceScheduleSave;
+[] call FLO_fnc_ticketScheduleSnapshot;
 
 diag_log format [
     "[FLO][Tickets] Added %1 tickets to %2 reason=%3 balance=%4",

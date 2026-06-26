@@ -7,7 +7,7 @@ if (!FLO_FOBDeployBrowserReady) exitWith {};
 
 private _snapshot = [] call FLO_fnc_fobBuildDeploySnapshot;
 private _renderKey = format [
-    "%1|%2|%3|%4|%5|%6|%7|%8",
+    "%1|%2|%3|%4|%5|%6|%7|%8|%9",
     _snapshot get "sideKey",
     _snapshot get "grid",
     _snapshot get "alive",
@@ -15,7 +15,8 @@ private _renderKey = format [
     _snapshot get "hasAuthority",
     _snapshot get "balance",
     _snapshot get "factionName",
-    _snapshot get "commanderName"
+    _snapshot get "commanderName",
+    _snapshot get "tickets"
 ];
 
 if (FLO_FOBDeployRenderKey isEqualTo _renderKey) exitWith {};

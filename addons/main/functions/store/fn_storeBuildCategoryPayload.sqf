@@ -24,10 +24,7 @@ private _sideKey = _access get "sideKey";
 private _fobRecord = _access get "fobRecord";
 private _baseType = _fobRecord get "type";
 private _vehicleStoreEnabled = _fobRecord get "vehicleStoreEnabled";
-private _ticketStoreEnabled = _fobRecord get "ticketStoreEnabled";
-private _state = FLO_CommandSideState get _sideKey;
 private _playerUid = getPlayerUID (_access get "player");
-private _canBuyTickets = _ticketStoreEnabled && {(_state get "commanderUid") isEqualTo _playerUid};
 private _deploymentFund = [_playerUid] call FLO_fnc_storeDeploymentFundBalance;
 
 if (!_vehicleStoreEnabled && {_category in FLO_StoreVehicleCategories}) exitWith {
@@ -39,30 +36,10 @@ if (!_vehicleStoreEnabled && {_category in FLO_StoreVehicleCategories}) exitWith
         ["items", []],
         ["baseType", _baseType],
         ["vehicleStoreEnabled", _vehicleStoreEnabled],
-        ["ticketStoreEnabled", _ticketStoreEnabled],
         ["balance", FLO_ResourceBalances get _sideKey],
         ["deploymentFund", _deploymentFund],
         ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
-        ["tickets", FLO_TicketBalances get _sideKey],
-        ["canBuyTickets", _canBuyTickets]
-    ]
-};
-
-if (!_ticketStoreEnabled && {_category isEqualTo "tickets"}) exitWith {
-    createHashMapFromArray [
-        ["success", true],
-        ["message", "Tickets are not available at this base."],
-        ["category", _category],
-        ["label", _label],
-        ["items", []],
-        ["baseType", _baseType],
-        ["vehicleStoreEnabled", _vehicleStoreEnabled],
-        ["ticketStoreEnabled", _ticketStoreEnabled],
-        ["balance", FLO_ResourceBalances get _sideKey],
-        ["deploymentFund", _deploymentFund],
-        ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
-        ["tickets", FLO_TicketBalances get _sideKey],
-        ["canBuyTickets", _canBuyTickets]
+        ["tickets", FLO_TicketBalances get _sideKey]
     ]
 };
 
@@ -81,10 +58,8 @@ createHashMapFromArray [
     ["items", _itemsByCategory get _category],
     ["baseType", _baseType],
     ["vehicleStoreEnabled", _vehicleStoreEnabled],
-    ["ticketStoreEnabled", _ticketStoreEnabled],
     ["balance", FLO_ResourceBalances get _sideKey],
     ["deploymentFund", _deploymentFund],
     ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
-    ["tickets", FLO_TicketBalances get _sideKey],
-    ["canBuyTickets", _canBuyTickets]
+    ["tickets", FLO_TicketBalances get _sideKey]
 ]

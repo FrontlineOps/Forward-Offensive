@@ -84,22 +84,6 @@ private _factionUsesVanillaGear = [_factionClass] call FLO_fnc_storeFactionUsesV
 [_itemsByCategory, _seen] call FLO_fnc_storeAppendSupportItems;
 
 {
-    _x params ["_className", "_name", "_ticketCount", "_price"];
-
-    (_itemsByCategory get "tickets") pushBack createHashMapFromArray [
-        ["className", _className],
-        ["name", _name],
-        ["category", "tickets"],
-        ["entryKind", "ticket"],
-        ["deploymentFundEligible", false],
-        ["ticketCount", _ticketCount],
-        ["priceValue", _price],
-        ["price", format ["%1", _price]],
-        ["image", ""]
-    ];
-} forEach FLO_StoreTicketPacks;
-
-{
     private _category = _x select 0;
     private _items = _itemsByCategory get _category;
 

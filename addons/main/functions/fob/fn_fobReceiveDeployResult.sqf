@@ -1,11 +1,11 @@
-params ["_success", "_message"];
+params ["_success", "_message", ["_title", "Deployment", [""]]];
 
 if (!hasInterface) exitWith {};
 if (isMultiplayer && {remoteExecutedOwner isNotEqualTo 2} && {remoteExecutedOwner isNotEqualTo 0}) exitWith {
     diag_log format ["[FLO][FOB] Rejected deployment result from owner %1", remoteExecutedOwner];
 };
 
-[_message, ["error", "success"] select _success, "Deployment"] call FLO_fnc_notify;
+[_message, ["error", "success"] select _success, _title] call FLO_fnc_notify;
 
 private _control = uiNamespace getVariable ["FLO_DeployControl", controlNull];
 

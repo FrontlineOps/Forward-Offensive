@@ -27,7 +27,6 @@ if (_deleteObject && {!isNull _object}) then {
         _object setVariable ["FLO_FOB_BuildRadius", 0, true];
         _object setVariable ["FLO_FOB_StoreEnabled", false, true];
         _object setVariable ["FLO_FOB_VehicleStoreEnabled", false, true];
-        _object setVariable ["FLO_FOB_TicketStoreEnabled", false, true];
         _object setVariable ["FLO_FOB_RespawnEnabled", false, true];
     };
 };

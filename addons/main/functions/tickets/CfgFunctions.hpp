@@ -15,6 +15,11 @@ class Tickets {
     class ticketInitServer {};
     class ticketPostInit { postInit = 1; };
     class ticketPreInit { preInit = 1; };
+    class ticketReceiveSnapshot {};
+    class ticketRequestPurchase {};
+    class ticketRequestSnapshot {};
+    class ticketScheduleSnapshot {};
+    class ticketSendSnapshot {};
     class ticketSideBalance {};
     class ticketSyncPlayer {};
     class ticketTrackPlayer {};

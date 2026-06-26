@@ -24,6 +24,7 @@ if (_newBalance <= 0) then {
 };
 
 ["ticketConsume"] call FLO_fnc_persistenceScheduleSave;
+[] call FLO_fnc_ticketScheduleSnapshot;
 
 diag_log format [
     "[FLO][Tickets] Consumed %1 tickets from %2 reason=%3 balance=%4",

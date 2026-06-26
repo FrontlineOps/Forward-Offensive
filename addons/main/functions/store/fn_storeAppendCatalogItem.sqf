@@ -4,7 +4,6 @@ if (_className isEqualTo "") exitWith {};
 if (_category isEqualTo "") exitWith {};
 
 private _validClass = switch (_category) do {
-    case "tickets": { _entryKind isEqualTo "ticket" };
     case "ammo": { isClass (configFile >> "CfgMagazines" >> _className) };
     case "mines": { isClass (configFile >> "CfgMagazines" >> _className) };
     case "misc": { (isClass (configFile >> "CfgWeapons" >> _className)) || {isClass (configFile >> "CfgMagazines" >> _className)} };

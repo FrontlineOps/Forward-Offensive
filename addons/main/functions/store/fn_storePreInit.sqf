@@ -33,7 +33,6 @@ FLO_StoreCategories = [
     ["ammo", "Ammo"],
     ["mines", "Mines"],
     ["misc", "Items"],
-    ["tickets", "Tickets"],
     ["cars", "Cars"],
     ["armor", "Armor"],
     ["helis", "Helicopters"],
@@ -73,12 +72,6 @@ FLO_StoreGearContainers = [
     "uniform",
     "vest",
     "backpack"
-];
-
-FLO_StoreTicketPacks = [
-    ["foof_ticket_5", "Reinforcement Tickets x5", 5, 900],
-    ["foof_ticket_10", "Reinforcement Tickets x10", 10, 1700],
-    ["foof_ticket_25", "Reinforcement Tickets x25", 25, 3800]
 ];
 
 FLO_StoreSupportModSources = [

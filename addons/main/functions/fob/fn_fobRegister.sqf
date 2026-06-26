@@ -34,7 +34,6 @@ _fob setVariable ["FLO_FOB_OwnerUid", _ownerUid, true];
 _fob setVariable ["FLO_FOB_LogisticsCategories", +(_config get "logisticsCategories"), true];
 _fob setVariable ["FLO_FOB_StoreEnabled", _config get "storeEnabled", true];
 _fob setVariable ["FLO_FOB_VehicleStoreEnabled", _config get "vehicleStoreEnabled", true];
-_fob setVariable ["FLO_FOB_TicketStoreEnabled", _config get "ticketStoreEnabled", true];
 _fob setVariable ["FLO_FOB_RespawnEnabled", _config get "respawnEnabled", true];
 _fob setVariable ["FLO_FOB_EnemyDisableRadius", _config get "enemyDisableRadius", true];
 
@@ -53,7 +52,6 @@ FLO_FOBs set [
         ["logisticsCategories", +(_config get "logisticsCategories")],
         ["storeEnabled", _config get "storeEnabled"],
         ["vehicleStoreEnabled", _config get "vehicleStoreEnabled"],
-        ["ticketStoreEnabled", _config get "ticketStoreEnabled"],
         ["respawnEnabled", _config get "respawnEnabled"],
         ["respawnHandle", []],
         ["enemyDisableRadius", _config get "enemyDisableRadius"],

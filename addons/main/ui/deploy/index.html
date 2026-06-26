@@ -484,6 +484,56 @@
             gap: 10px;
         }
 
+        .ticket-panel {
+            display: grid;
+            gap: 10px;
+        }
+
+        .ticket-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .ticket-pack {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 10px;
+            align-items: center;
+            min-height: 54px;
+            padding: 10px 12px;
+            background: rgba(20, 34, 48, 0.72);
+            box-shadow: inset 0 0 0 1px rgba(103, 232, 255, 0.1);
+        }
+
+        .ticket-pack:hover {
+            background: rgba(24, 58, 82, 0.92);
+            box-shadow: 0 0 24px rgba(37, 215, 255, 0.12), inset 0 0 0 1px rgba(37, 215, 255, 0.34);
+            transform: translateY(-1px);
+        }
+
+        .ticket-pack:disabled {
+            background: rgba(20, 34, 48, 0.5);
+            box-shadow: inset 0 0 0 1px rgba(103, 232, 255, 0.08);
+            transform: none;
+        }
+
+        .ticket-name {
+            overflow: hidden;
+            color: #F2F7FA;
+            font-size: 16px;
+            font-weight: 900;
+            text-align: left;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .ticket-cost {
+            color: #FFB84A;
+            font-size: 17px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
         .status-row {
             display: grid;
             grid-template-columns: minmax(0, 1fr) auto;
@@ -630,6 +680,10 @@
                     <div class="chip-value warn" id="balance">$0</div>
                 </div>
                 <div class="chip">
+                    <div class="chip-label">Tickets</div>
+                    <div class="chip-value" id="tickets">0</div>
+                </div>
+                <div class="chip">
                     <div class="chip-label">Income</div>
                     <div class="chip-value good" id="income">+0/min</div>
                 </div>
@@ -760,6 +814,10 @@
                         <div class="status-name">AO Income</div>
                         <div class="status-value good" id="objectiveIncome">+0</div>
                     </div>
+                </div>
+                <div class="ticket-panel">
+                    <div class="summary-title">Reinforcements</div>
+                    <div class="ticket-list" id="ticketPackList"></div>
                 </div>
                 <div class="toast" id="messageBox">Waiting for deployment state.</div>
             </aside>
@@ -894,6 +952,42 @@
                 text("deploySubtitle", "Select a deployment package.");
             }
 
+            function renderTicketPacks(snapshot) {
+                var list = node("ticketPackList");
+                var packs = snapshot.ticketPacks || [];
+                var canBuy = !!snapshot.playerIsCommander && !!snapshot.sideKey;
+                var i;
+
+                while (list.firstChild) {
+                    list.removeChild(list.firstChild);
+                }
+
+                for (i = 0; i < packs.length; i += 1) {
+                    (function (pack) {
+                        var button = document.createElement("button");
+                        var name = document.createElement("span");
+                        var cost = document.createElement("span");
+                        var affordable = Number(snapshot.balance || 0) >= Number(pack.price || 0);
+
+                        button.type = "button";
+                        button.className = "ticket-pack";
+                        button.disabled = !canBuy || !affordable;
+                        button.onclick = function () {
+                            FOOFDeploy.buyTickets(pack.id);
+                        };
+
+                        name.className = "ticket-name";
+                        name.textContent = pack.name || "Reinforcements";
+                        cost.className = "ticket-cost";
+                        cost.textContent = money(pack.price);
+
+                        button.appendChild(name);
+                        button.appendChild(cost);
+                        list.appendChild(button);
+                    }(packs[i]));
+                }
+            }
+
             function render(snapshot) {
                 var faction = snapshot.factionName || "Faction Pending";
                 var commander = snapshot.commanderName || "No Commander";
@@ -902,6 +996,7 @@
 
                 text("sideTitle", snapshot.sideName + " Deployment");
                 text("balance", money(snapshot.balance));
+                text("tickets", Math.round(Number(snapshot.tickets || 0)).toString());
                 text("income", plus(snapshot.income) + "/min");
                 text("grid", snapshot.grid || "----");
                 text("authorityNav", authorityText);
@@ -923,6 +1018,7 @@
                 setClass("terrainStatus", "status-value " + (snapshot.onWater ? "bad" : "good"));
 
                 applyButtonState(snapshot);
+                renderTicketPacks(snapshot);
             }
 
             window.FOOFDeploy = {
@@ -958,6 +1054,20 @@
 
                     send("deploy::requestFOB", {});
                     message("FOB deployment request sent.", "");
+                },
+                buyTickets: function (packId) {
+                    if (!state.sideKey) {
+                        message("Join BLUFOR or OPFOR.", "bad");
+                        return;
+                    }
+
+                    if (!state.playerIsCommander) {
+                        message("Only the elected commander can buy reinforcement tickets.", "bad");
+                        return;
+                    }
+
+                    send("deploy::buyTickets", { packId: packId });
+                    message("Reinforcement purchase request sent.", "");
                 },
                 refresh: function () {
                     send("deploy::refresh", {});

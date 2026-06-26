@@ -14,7 +14,6 @@ if (_type isEqualTo "COP") exitWith {
         ["logisticsCategories", +FLO_COPLogisticsCategories],
         ["storeEnabled", true],
         ["vehicleStoreEnabled", false],
-        ["ticketStoreEnabled", false],
         ["respawnEnabled", true],
         ["enemyDisableRadius", FLO_COPEnemyDisableRadius],
         ["markerSuffix", "COP"]
@@ -32,7 +31,6 @@ createHashMapFromArray [
     ["logisticsCategories", []],
     ["storeEnabled", true],
     ["vehicleStoreEnabled", true],
-    ["ticketStoreEnabled", true],
     ["respawnEnabled", true],
     ["enemyDisableRadius", 0],
     ["markerSuffix", "FOB"]

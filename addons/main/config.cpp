@@ -136,6 +136,21 @@ class CfgRemoteExec {
             jip = 0;
         };
 
+        class FLO_fnc_ticketReceiveSnapshot {
+            allowedTargets = 1;
+            jip = 0;
+        };
+
+        class FLO_fnc_ticketRequestPurchase {
+            allowedTargets = 2;
+            jip = 0;
+        };
+
+        class FLO_fnc_ticketRequestSnapshot {
+            allowedTargets = 2;
+            jip = 0;
+        };
+
         class FLO_fnc_fobAddClientAction {
             allowedTargets = 0;
             jip = 1;
