@@ -6,6 +6,7 @@ class Intel {
     class intelBuildInitialPayload {};
     class intelCreateMarker {};
     class intelFindBaseTarget {};
+    class intelFindCommandRoleTarget {};
     class intelFindPlayerTarget {};
     class intelHandleUiEvent {};
     class intelInitClient {};

@@ -16,10 +16,12 @@ FLO_IntelEntityKilledEh = [
 ] call CBA_fnc_addEventHandler;
 
 diag_log format [
-    "[FLO][Intel] Intel system initialized dropChance=%1 baseChance=%2 baseRadius=%3-%4 playerRadius=%5",
+    "[FLO][Intel] Intel system initialized dropChance=%1 baseChance=%2 commandRoleChance=%3 baseRadius=%4-%5 playerRadius=%6 commandRoleRadius=%7",
     FLO_IntelDropChance,
     FLO_IntelBaseChance,
+    FLO_IntelCommandRoleChance,
     FLO_IntelBaseRadiusStart,
     FLO_IntelBaseRadiusMin,
-    FLO_IntelPlayerMarkerRadius
+    FLO_IntelPlayerMarkerRadius,
+    FLO_IntelCommandRoleMarkerRadius
 ];

@@ -8,7 +8,7 @@ if (isMultiplayer && {remoteExecutedOwner isNotEqualTo 2} && {remoteExecutedOwne
 
 FLO_IntelLastPayload = _payload;
 
-if ((_payload get "success") && {(_payload get "type") in ["base", "players"]}) then {
+if ((_payload get "success") && {(_payload get "type") in ["base", "players", "commandRole"]}) then {
     [_payload] call FLO_fnc_intelCreateMarker;
 };
 

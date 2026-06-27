@@ -4,9 +4,11 @@ FLO_IntelBrowserIdc = 9601;
 FLO_IntelSearchDistance = 3;
 FLO_IntelDropChance = 0.32;
 FLO_IntelBaseChance = 0.08;
+FLO_IntelCommandRoleChance = 0.12;
 
 FLO_IntelPlayerSearchRadius = 2500;
-FLO_IntelPlayerMarkerRadius = 900;
+FLO_IntelPlayerMarkerRadius = 300;
+FLO_IntelCommandRoleMarkerRadius = 650;
 
 FLO_IntelBaseRadiusStart = 4000;
 FLO_IntelBaseRadiusStep = 750;

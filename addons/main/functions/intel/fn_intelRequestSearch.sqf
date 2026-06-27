@@ -113,6 +113,10 @@ if ((random 1) < FLO_IntelBaseChance) then {
     _payload = [_playerSideKey, _bodySideKey] call FLO_fnc_intelFindBaseTarget;
 };
 
+if (((count _payload) isEqualTo 0) && {(random 1) < FLO_IntelCommandRoleChance}) then {
+    _payload = [_bodySideKey] call FLO_fnc_intelFindCommandRoleTarget;
+};
+
 if ((count _payload) isEqualTo 0) then {
     _payload = [_player, _body, _bodySideKey] call FLO_fnc_intelFindPlayerTarget;
 };
