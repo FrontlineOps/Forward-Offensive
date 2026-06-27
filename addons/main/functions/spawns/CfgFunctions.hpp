@@ -2,20 +2,21 @@ class Spawn {
     file = "\z\foof\addons\main\functions\spawns";
 
     class spawnApplyAssignment {};
+    class spawnApplyDefaultKit {};
     class spawnClientInit {};
     class spawnClientNeedsAssignment {};
     class spawnClientReady {};
     class spawnConfirmAssignment {};
-    class spawnEquipFreshSideUniforms {};
+    class spawnEquipFreshSideDefaultKits {};
     class spawnEnsureSideRespawn {};
-    class spawnEnsureFreshUniform {};
-    class spawnEnsureMap {};
+    class spawnFactionGroupUnitClasses {};
     class spawnFindLandPositionInCell {};
     class spawnInitServer {};
     class spawnPreInit { preInit = 1; };
     class spawnRemoveStagingRespawn {};
     class spawnRequestAssignment {};
-    class spawnSideStoreUniform {};
+    class spawnSideDefaultKitClass {};
     class spawnSyncStagingRespawns {};
     class spawnSyncConnectedPlayer {};
+    class spawnUnitClassCanBeBaseKit {};
 };

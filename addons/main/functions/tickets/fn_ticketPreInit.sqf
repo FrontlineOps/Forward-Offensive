@@ -21,7 +21,6 @@ FLO_TicketClientRespawnEh = -1;
 FLO_TicketHandleDisconnectEh = -1;
 FLO_TicketPlayerDisconnectedEh = -1;
 FLO_TicketManualRespawnPfh = -1;
-FLO_TicketManualRespawnDisplay = displayNull;
 FLO_TicketRespawnLocked = false;
 FLO_TicketRespawnLockMessage = "";
 FLO_TicketRevision = 0;

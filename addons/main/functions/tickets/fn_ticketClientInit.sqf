@@ -6,12 +6,12 @@ FLO_TicketManualRespawnPfh = [
         private _display = findDisplay 49;
 
         if (isNull _display) exitWith {
-            FLO_TicketManualRespawnDisplay = displayNull;
+            uiNamespace setVariable ["FLO_TicketManualRespawnDisplay", displayNull];
         };
 
-        if (_display isEqualTo FLO_TicketManualRespawnDisplay) exitWith {};
+        if (_display isEqualTo (uiNamespace getVariable ["FLO_TicketManualRespawnDisplay", displayNull])) exitWith {};
 
-        FLO_TicketManualRespawnDisplay = _display;
+        uiNamespace setVariable ["FLO_TicketManualRespawnDisplay", _display];
         [_display] call FLO_fnc_ticketConfigureManualRespawn;
     },
     0.25,

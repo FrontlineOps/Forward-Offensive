@@ -52,10 +52,13 @@ if (_respawnId isEqualTo "") then {
 if (_respawnId in FLO_TicketHandledRespawns) exitWith {};
 FLO_TicketHandledRespawns set [_respawnId, true];
 
-private _uniformClass = [_sideKey] call FLO_fnc_spawnSideStoreUniform;
+if !(_unit getVariable ["FLO_Persistence_Loaded", false]) then {
+    private _defaultKitClass = [_sideKey] call FLO_fnc_spawnSideDefaultKitClass;
 
-[_unit, _uniformClass] remoteExecCall ["FLO_fnc_spawnEnsureFreshUniform", owner _unit];
-[_unit] remoteExecCall ["FLO_fnc_spawnEnsureMap", owner _unit];
+    if (_defaultKitClass isNotEqualTo "") then {
+        [_unit, _defaultKitClass] remoteExecCall ["FLO_fnc_spawnApplyDefaultKit", owner _unit];
+    };
+};
 
 private _deathState = createHashMap;
 

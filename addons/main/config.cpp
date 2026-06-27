@@ -181,12 +181,7 @@ class CfgRemoteExec {
             jip = 0;
         };
 
-        class FLO_fnc_spawnEnsureFreshUniform {
-            allowedTargets = 1;
-            jip = 0;
-        };
-
-        class FLO_fnc_spawnEnsureMap {
+        class FLO_fnc_spawnApplyDefaultKit {
             allowedTargets = 1;
             jip = 0;
         };

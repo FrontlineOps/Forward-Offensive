@@ -33,6 +33,7 @@ See `LICENSE.md` for the full license terms.
 - FOB and COP deployment systems
 - Commander voting and faction selection
 - Faction-based Store with weapons, gear, kits, support items, and FOB-only vehicle purchases
+- Faction-derived default spawn kits
 - Commander reinforcement ticket purchases from the FOB/COP deployment panel
 - Faction currency and income from controlled territory
 - AO upgrade levels that increase value and defensive strength
@@ -89,6 +90,12 @@ The objective system is server-authoritative. Clients receive sanitized objectiv
 Commander/build-authorized players can request AO upgrades remotely from the panel at full price. If the requester is physically inside the selected AO, the server applies the in-person upgrade discount. The current remote formula is `nextLevel * resourceWeight * 1500`, rounded up to the nearest `$100`; the current in-person discount is `25%`.
 
 The server validates request owner, player life state, side, AO ownership, held/uncontested state, command authority, max level, pending upgrade state, physical proximity for discount eligibility, and faction balance before spending money or starting the upgrade timer.
+
+## Default Spawn Kits
+
+Fresh, non-persisted players receive a default kit from their side's selected faction. The server picks the first usable infantry unit from faction-authored data: `CfgGroups` unit order first, then playable `CfgVehicles` infantry fallback. A candidate only needs to be a valid infantry class with a usable unit loadout.
+
+The chosen unit classname is sent to the owning client through the server-authorized default-kit apply function, which uses Arma's class-based unit loadout support. Persisted player loadouts remain authoritative and are not replaced by default kits.
 
 ### Resetting Persistence
 
