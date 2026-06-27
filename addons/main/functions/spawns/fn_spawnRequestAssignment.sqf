@@ -102,7 +102,7 @@ if ((_uid isNotEqualTo "") && {_uid in FLO_SpawnPlayerAssignments}) exitWith {
         _clientPayload pushBack _defaultKitClass;
 
         _player setVariable ["FLO_Spawn_AssignedCellId", _payload # 3, true];
-        _clientPayload remoteExecCall ["FLO_fnc_spawnApplyAssignment", _owner];
+        [_player, _clientPayload] call FLO_fnc_spawnSyncAssignment;
 
         diag_log format [
             "[FLO][Spawn] Resent deployment assignment for %1 player %2 cell=%3",
@@ -148,7 +148,7 @@ if (_uid isNotEqualTo "") then {
     FLO_SpawnPlayerAssignments set [_uid, _payload];
 };
 
-_clientPayload remoteExecCall ["FLO_fnc_spawnApplyAssignment", _owner];
+[_player, _clientPayload] call FLO_fnc_spawnSyncAssignment;
 
 diag_log format [
     "[FLO][Spawn] Assigned %1 player %2 to deployment cell %3 slot=%4 pos=%5",

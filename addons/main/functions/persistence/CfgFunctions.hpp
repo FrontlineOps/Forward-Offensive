@@ -23,4 +23,5 @@ class Persistence {
     class persistenceSideFromKey {};
     class persistenceSideKey {};
     class persistenceStartLoop {};
+    class persistenceSyncPlayerState {};
 };

@@ -143,24 +143,12 @@ if ("assignedCellId" in _record) then {
     _unit setVariable ["FLO_Spawn_AssignedCellId", _assignedCellId, true];
 };
 
-if (_owner <= 0) then {
-    _owner = owner _unit;
-};
-
-if (_owner <= 0) exitWith {
-    if (hasInterface && {(getPlayerUID player) isEqualTo _uid}) then {
-        [_recordData] call FLO_fnc_persistenceApplyPlayerState;
-    };
-
-    true
-};
-
-[_recordData] remoteExecCall ["FLO_fnc_persistenceApplyPlayerState", _owner];
+[_unit, _recordData] call FLO_fnc_persistenceSyncPlayerState;
 
 diag_log format [
-    "[FLO][Persistence] Sent saved player state uid=%1 owner=%2",
+    "[FLO][Persistence] Queued saved player state sync uid=%1 owner=%2",
     _uid,
-    _owner
+    owner _unit
 ];
 
 true

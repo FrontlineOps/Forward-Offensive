@@ -24,4 +24,4 @@ if (isNull _player) exitWith {
     };
 };
 
-[_player, 0, _owner] call FLO_fnc_spawnRequestAssignment;
+[_player, 0, 0] call FLO_fnc_spawnRequestAssignment;

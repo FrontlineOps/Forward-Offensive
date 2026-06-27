@@ -16,6 +16,7 @@ class Spawn {
     class spawnRemoveStagingRespawn {};
     class spawnRequestAssignment {};
     class spawnSideDefaultKitClass {};
+    class spawnSyncAssignment {};
     class spawnSyncDefaultKit {};
     class spawnSyncStagingRespawns {};
     class spawnSyncConnectedPlayer {};
