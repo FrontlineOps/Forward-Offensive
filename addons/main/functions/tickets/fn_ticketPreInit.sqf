@@ -2,7 +2,6 @@ FLO_TicketInitialBalance = 25;
 FLO_TicketRespawnCost = 1;
 FLO_TicketRespawnDelay = 10;
 FLO_TicketNoTicketRespawnDelay = 999999;
-FLO_TicketManualRespawnButtonIdc = 1010;
 FLO_TicketSnapshotBroadcastDelay = 0.25;
 FLO_TicketPurchasePacks = [
     ["ticket_5", "Reinforcements x5", 5, 900],
@@ -20,7 +19,6 @@ FLO_TicketAceMedicalDeathEh = -1;
 FLO_TicketClientRespawnEh = -1;
 FLO_TicketHandleDisconnectEh = -1;
 FLO_TicketPlayerDisconnectedEh = -1;
-FLO_TicketManualRespawnPfh = -1;
 FLO_TicketRespawnLocked = false;
 FLO_TicketRespawnLockMessage = "";
 FLO_TicketRevision = 0;

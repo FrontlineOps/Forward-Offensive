@@ -29,8 +29,6 @@ if (hasInterface && {isClass (configFile >> "CfgPatches" >> "ace_medical")}) the
 };
 
 if (hasInterface) then {
-    [] call FLO_fnc_ticketClientInit;
-
     FLO_TicketClientRespawnEh = addMissionEventHandler [
         "EntityRespawned",
         {
