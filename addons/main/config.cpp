@@ -262,6 +262,11 @@ class CfgRemoteExec {
             jip = 0;
         };
 
+        class FLO_fnc_clientAcreRequestGroupChannel {
+            allowedTargets = 2;
+            jip = 0;
+        };
+
         class IDS_Logistics_fnc_finalizeEntity {
             allowedTargets = 2;
             jip = 0;
