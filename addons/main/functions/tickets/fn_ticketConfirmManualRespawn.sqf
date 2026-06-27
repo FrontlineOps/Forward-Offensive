@@ -21,19 +21,4 @@ private _message = if (FLO_TicketRespawnLocked) then {
     format ["Manual respawn will kill you and consume %1 side ticket. Continue?", FLO_TicketRespawnCost]
 };
 
-private _confirmed = [
-    _message,
-    "Confirm Manual Respawn",
-    true,
-    true
-] call BIS_fnc_guiMessage;
-
-if (!_confirmed) exitWith {};
-
-private _display = findDisplay 49;
-
-if (!isNull _display) then {
-    _display closeDisplay 2;
-};
-
-player setDamage 1;
+[_message] call FLO_fnc_ticketOpenManualRespawnDialog;

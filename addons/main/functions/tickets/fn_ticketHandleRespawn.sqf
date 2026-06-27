@@ -42,6 +42,7 @@ _unit setVariable ["FLO_TicketDisconnecting", false];
 _unit setVariable ["FLO_TicketDeathHandled", false];
 _unit setVariable ["FLO_TicketDeathState", ""];
 _unit setVariable ["FLO_TicketDeathSideKey", ""];
+_unit setVariable ["FLO_Persistence_Loaded", false, true];
 
 private _respawnId = netId _unit;
 
@@ -52,13 +53,7 @@ if (_respawnId isEqualTo "") then {
 if (_respawnId in FLO_TicketHandledRespawns) exitWith {};
 FLO_TicketHandledRespawns set [_respawnId, true];
 
-if !(_unit getVariable ["FLO_Persistence_Loaded", false]) then {
-    private _defaultKitClass = [_sideKey] call FLO_fnc_spawnSideDefaultKitClass;
-
-    if (_defaultKitClass isNotEqualTo "") then {
-        [_unit, _defaultKitClass] remoteExecCall ["FLO_fnc_spawnApplyDefaultKit", owner _unit];
-    };
-};
+private _defaultKitClass = [_sideKey] call FLO_fnc_spawnSideDefaultKitClass;
 
 private _deathState = createHashMap;
 
@@ -105,6 +100,10 @@ if (_deathResult isNotEqualTo "") exitWith {
             _uid,
             [_side] call FLO_fnc_resourceSideKey
         ];
+    } else {
+        if (_defaultKitClass isNotEqualTo "") then {
+            [_unit, _defaultKitClass] call FLO_fnc_spawnSyncDefaultKit;
+        };
     };
 };
 
@@ -127,6 +126,10 @@ private _message = if (_locked) then {
     "Respawn ticket consumed. No tickets remain."
 } else {
     format ["Respawn ticket consumed. %1 tickets remain.", _balance]
+};
+
+if (_defaultKitClass isNotEqualTo "") then {
+    [_unit, _defaultKitClass] call FLO_fnc_spawnSyncDefaultKit;
 };
 
 [_unit, _locked, _message] call FLO_fnc_ticketSyncPlayer;

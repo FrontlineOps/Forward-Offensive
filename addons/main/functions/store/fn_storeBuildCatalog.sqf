@@ -14,7 +14,7 @@ private _itemsByCategory = createHashMap;
 
 {
     _itemsByCategory set [_x select 0, []];
-} forEach FLO_StoreCategories;
+} forEach FLO_StoreCatalogCategories;
 
 private _seen = createHashMap;
 private _factionLower = toLower _factionClass;
@@ -89,7 +89,7 @@ private _factionUsesVanillaGear = [_factionClass] call FLO_fnc_storeFactionUsesV
 
     _items = [_items, [], { _x get "name" }, "ASCEND"] call BIS_fnc_sortBy;
     _itemsByCategory set [_category, _items];
-} forEach FLO_StoreCategories;
+} forEach FLO_StoreCatalogCategories;
 
 private _catalog = createHashMapFromArray [
     ["sideKey", _sideKey],

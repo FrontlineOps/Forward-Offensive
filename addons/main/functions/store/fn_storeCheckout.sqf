@@ -57,7 +57,7 @@ private _itemIndex = createHashMap;
         private _key = format ["%1:%2", _x get "entryKind", toLower (_x get "className")];
         _itemIndex set [_key, _x];
     } forEach (_itemsByCategory get _category);
-} forEach FLO_StoreCategories;
+} forEach FLO_StoreCatalogCategories;
 
 private _ok = true;
 private _message = "";
@@ -198,7 +198,7 @@ if (!_ok) exitWith {
     ]
 };
 
-if (_total <= 0) exitWith {
+if ((_total < 0) || {(_gearEntries isEqualTo []) && {_vehicleJobs isEqualTo []}}) exitWith {
     createHashMapFromArray [
         ["success", false],
         ["message", "Checkout total is invalid."],

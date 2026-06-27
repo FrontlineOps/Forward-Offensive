@@ -101,13 +101,15 @@ Only the commander and deputy can spend faction funds from Store approval. Pendi
 
 The client checks carried inventory capacity before submitting packable item checkout lines, so full uniforms, vests, or backpacks reject the checkout before any money is spent. Server checkout still owns catalog, balance, approval, and vehicle authority.
 
-Store-purchased uniforms, vests, backpacks, and vehicles are stripped of inherited class cargo before use. Only gear explicitly bought through the cart is added to player containers, and purchased vehicles spawn with empty cargo inventory while retaining their normal vehicle weapons and turrets.
+Store-purchased uniforms, vests, backpacks, and vehicles are stripped of inherited class cargo before use. Only gear explicitly bought through the cart is added to player containers, and purchased vehicles spawn with empty cargo inventory while retaining their normal vehicle weapons and turrets. The support item allow-list includes ACE basics such as earplugs, map tools, and range cards when ACE is loaded; basic ACE consumables such as bandages, tourniquets, splints, and earplugs are free.
+
+Store weapon pricing keeps bare rifles cheap, then adds visible price steps for mounted optics, muzzle devices, pointers, grips, and thermal/NV equipment. Underbarrel rifle GLs receive a moderate premium, standalone MGL/HE launchers receive a larger premium, and AMRs/long-range .50 or 12.7mm rifles are priced as powerful infantry weapons without pushing them into vehicle-price territory. Attachments are kept as an internal catalog category for validation and saved kits, but they are not shown as a standalone Store tab. Vehicle pricing scores config-derived protection, transport, logistics, weapon ammo quality, GMG/indirect explosive power, AT/AA/artillery capability, remote or stabilized weapon stations, exposed gunner penalties, and thermal/NV optics so a thermal CROWS MRAP prices above a basic armed car.
 
 ## Default Spawn Kits
 
-Fresh, non-persisted players receive a default kit from their side's selected faction. The server picks the first usable infantry unit from faction-authored data: `CfgGroups` unit order first, then playable `CfgVehicles` infantry fallback. A candidate only needs to be a valid infantry class with a usable unit loadout.
+Fresh deployment and normal respawns receive a default kit from their side's selected faction. The server picks the first usable infantry unit from faction-authored data: `CfgGroups` unit order first, then playable `CfgVehicles` infantry fallback. A candidate only needs to be a valid infantry class with a usable unit loadout.
 
-The chosen unit classname is sent to the owning client through the server-authorized default-kit apply function, which uses Arma's class-based unit loadout support. Persisted player loadouts remain authoritative and are not replaced by default kits.
+The chosen unit classname is sent to the owning client through the server-authorized default-kit apply function, which uses Arma's class-based unit loadout support. Persisted player loadouts remain authoritative when restored on reconnect, but death respawns clear the copied persistence-loaded marker and reapply the side default kit.
 
 ### Resetting Persistence
 

@@ -36,11 +36,13 @@ class Store {
     class storePendingApprovalsForAccess {};
     class storePostInit { postInit = 1; };
     class storePreInit { preInit = 1; };
+    class storeMagazineCombatTraits {};
     class storePriceAttachment {};
     class storePriceClass {};
     class storePriceVehicle {};
     class storeReceiveResponse {};
     class storeReceivePlacementResult {};
+    class storeReadConfigVisionTree {};
     class storeReadVisionTraits {};
     class storeRequestCategory {};
     class storeRequestApprovalDecision {};
@@ -62,5 +64,6 @@ class Store {
     class storeValidateAccess {};
     class storeVehicleConfigTraits {};
     class storeWebAction {};
+    class storeWeaponCombatPrice {};
     class storeWeaponAttachments {};
 };

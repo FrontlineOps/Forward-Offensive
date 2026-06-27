@@ -13,6 +13,7 @@ class Tickets {
     class ticketHandleDisconnect {};
     class ticketHandleRespawn {};
     class ticketInitServer {};
+    class ticketOpenManualRespawnDialog {};
     class ticketPostInit { postInit = 1; };
     class ticketPreInit { preInit = 1; };
     class ticketReceiveSnapshot {};

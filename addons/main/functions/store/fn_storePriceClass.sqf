@@ -1,8 +1,8 @@
 params ["_className", "_category", "_entryKind"];
 
 private _base = switch (_category) do {
-    case "primary": { 250 };
-    case "handgun": { 80 };
+    case "primary": { 40 };
+    case "handgun": { 25 };
     case "secondary": { 650 };
     case "uniforms": { 40 };
     case "vests": { 120 };
@@ -25,6 +25,8 @@ private _base = switch (_category) do {
 if (_entryKind isEqualTo "vehicle") exitWith {
     [_className, _category] call FLO_fnc_storePriceVehicle
 };
+
+if ((toLower _className) in FLO_StoreFreeItemClasses) exitWith { 0 };
 
 private _mass = 0;
 private _minePriceAdd = 0;
@@ -76,6 +78,44 @@ private _price = if ((_category isEqualTo "attachments") && {!isNull _weaponCfg}
     [_className, _mass] call FLO_fnc_storePriceAttachment
 } else {
     _base + (ceil (_mass / 6))
+};
+
+if ((_category in ["primary", "handgun", "secondary"]) && {!isNull _weaponCfg}) then {
+    _price = _price + ([_className, _category] call FLO_fnc_storeWeaponCombatPrice);
+
+    {
+        private _attachmentClass = _x get "className";
+        private _attachmentCfg = configFile >> "CfgWeapons" >> _attachmentClass;
+        private _attachmentMass = getNumber (_attachmentCfg >> "ItemInfo" >> "mass");
+
+        if (_attachmentMass <= 0) then {
+            _attachmentMass = getNumber (_attachmentCfg >> "WeaponSlotsInfo" >> "mass");
+        };
+
+        private _attachmentPrice = [_attachmentClass, _attachmentMass] call FLO_fnc_storePriceAttachment;
+        private _attachmentTraits = [_attachmentClass] call FLO_fnc_storeGearVisionTraits;
+        private _slot = _x get "slot";
+        private _slotBase = switch (_slot) do {
+            case "MuzzleSlot": { 105 };
+            case "CowsSlot": { 90 };
+            case "PointerSlot": { 60 };
+            case "UnderBarrelSlot": { 70 };
+            default { 45 };
+        };
+        private _bundledPrice = switch (true) do {
+            case (_attachmentTraits get "hasThermal"): {
+                450 + ceil (((_attachmentPrice max 0) min 3000) * 0.18)
+            };
+            case (_attachmentTraits get "hasNvg"): {
+                225 + ceil (((_attachmentPrice max 0) min 1500) * 0.12)
+            };
+            default {
+                _slotBase + ceil (((_attachmentPrice max 0) min 900) * 0.12)
+            };
+        };
+
+        _price = _price + _bundledPrice;
+    } forEach ([_className] call FLO_fnc_storeWeaponAttachments);
 };
 
 if (_minePriceAdd > 0) then {

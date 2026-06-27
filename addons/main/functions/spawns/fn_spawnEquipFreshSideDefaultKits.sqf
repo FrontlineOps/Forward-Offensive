@@ -14,7 +14,7 @@ private _equipped = 0;
     if ((side group _x) isNotEqualTo _side) then { continue };
     if (_x getVariable ["FLO_Persistence_Loaded", false]) then { continue };
 
-    [_x, _defaultKitClass] remoteExecCall ["FLO_fnc_spawnApplyDefaultKit", owner _x];
+    [_x, _defaultKitClass] call FLO_fnc_spawnSyncDefaultKit;
     _equipped = _equipped + 1;
 } forEach allPlayers;
 

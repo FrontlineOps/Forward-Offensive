@@ -9,8 +9,6 @@ FLO_TicketManualRespawnPfh = [
             uiNamespace setVariable ["FLO_TicketManualRespawnDisplay", displayNull];
         };
 
-        if (_display isEqualTo (uiNamespace getVariable ["FLO_TicketManualRespawnDisplay", displayNull])) exitWith {};
-
         uiNamespace setVariable ["FLO_TicketManualRespawnDisplay", _display];
         [_display] call FLO_fnc_ticketConfigureManualRespawn;
     },

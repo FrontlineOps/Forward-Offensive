@@ -29,7 +29,6 @@ FLO_StoreCategories = [
     ["headgear", "Headgear"],
     ["facewear", "Facewear"],
     ["backpacks", "Backpacks"],
-    ["attachments", "Attachments"],
     ["ammo", "Ammo"],
     ["mines", "Mines"],
     ["misc", "Items"],
@@ -40,6 +39,10 @@ FLO_StoreCategories = [
     ["naval", "Naval"],
     ["static", "Statics"],
     ["other", "Other"]
+];
+
+FLO_StoreCatalogCategories = FLO_StoreCategories + [
+    ["attachments", "Attachments"]
 ];
 
 FLO_StoreGearCategories = [
@@ -72,6 +75,16 @@ FLO_StoreGearContainers = [
     "uniform",
     "vest",
     "backpack"
+];
+
+FLO_StoreFreeItemClasses = [
+    "ace_earplugs",
+    "ace_elasticbandage",
+    "ace_fielddressing",
+    "ace_packingbandage",
+    "ace_quikclot",
+    "ace_splint",
+    "ace_tourniquet"
 ];
 
 FLO_StoreSupportModSources = [
@@ -111,6 +124,7 @@ FLO_StoreSupportCatalogItems = [
     ["ACE_elasticBandage", "gear", "misc"],
     ["ACE_epinephrine", "gear", "misc"],
     ["ACE_fieldDressing", "gear", "misc"],
+    ["ACE_MapTools", "gear", "misc"],
     ["ACE_morphine", "gear", "misc"],
     ["ACE_packingBandage", "gear", "misc"],
     ["ACE_personalAidKit", "gear", "misc"],
@@ -118,6 +132,7 @@ FLO_StoreSupportCatalogItems = [
     ["ACE_plasmaIV_250", "gear", "misc"],
     ["ACE_plasmaIV_500", "gear", "misc"],
     ["ACE_quikclot", "gear", "misc"],
+    ["ACE_RangeCard", "gear", "misc"],
     ["ACE_salineIV", "gear", "misc"],
     ["ACE_salineIV_250", "gear", "misc"],
     ["ACE_salineIV_500", "gear", "misc"],

@@ -9,6 +9,13 @@ if !(isClass _cfg) then {
 private _collected = [_cfg] call FLO_fnc_storeCollectVehicleWeapons;
 private _weapons = +(_collected get "weapons");
 private _magazines = +(_collected get "magazines");
+private _turretCount = _collected get "turretCount";
+private _remoteWeaponCount = _collected get "remoteWeaponCount";
+private _exposedWeaponCount = _collected get "exposedWeaponCount";
+private _stabilizedWeaponCount = _collected get "stabilizedWeaponCount";
+private _thermalOpticCount = _collected get "thermalOpticCount";
+private _nvgOpticCount = _collected get "nvgOpticCount";
+private _opticsScore = _collected get "opticsScore";
 
 private _addUnique = {
     params ["_items", "_value"];
@@ -32,6 +39,10 @@ private _addUnique = {
 private _transport = getNumber (_cfg >> "transportSoldier");
 private _cargo = getNumber (_cfg >> "maximumLoad");
 private _armor = getNumber (_cfg >> "armor");
+private _armorStructural = getNumber (_cfg >> "armorStructural");
+private _crewExplosionProtection = getNumber (_cfg >> "crewExplosionProtection");
+private _explosionShielding = getNumber (_cfg >> "explosionShielding");
+private _crewVulnerable = getNumber (_cfg >> "crewVulnerable");
 private _slingMass = getNumber (_cfg >> "slingLoadMaxCargoMass");
 private _transportAmmo = getNumber (_cfg >> "transportAmmo");
 private _transportFuel = getNumber (_cfg >> "transportFuel");
@@ -51,6 +62,48 @@ private _softThreat = _threat param [0, 0];
 private _armorThreat = _threat param [1, 0];
 private _airThreat = _threat param [2, 0];
 private _searchText = toLower format ["%1 %2 %3", _className, getText (_cfg >> "displayName"), getText (_cfg >> "editorSubcategory")];
+private _isMrap = false;
+private _isHumvee = false;
+
+{
+    if ((_searchText find _x) >= 0) exitWith {
+        _isMrap = true;
+    };
+} forEach ["mrap", "m-atv", "matv", "m1240", "m1277", "m1230", "maxxpro", "cougar", "rg33", "rg-33"];
+
+{
+    if ((_searchText find _x) >= 0) exitWith {
+        _isHumvee = true;
+    };
+} forEach ["humvee", "hmmwv", "m1025", "m1043", "m1045", "m1097", "m1114", "m1151", "m1152", "m1165"];
+
+private _structuralProtection = 0;
+
+if (_armorStructural > 0) then {
+    _structuralProtection = _structuralProtection + (_armorStructural min 12) * 22;
+};
+
+if (_crewExplosionProtection > 0) then {
+    _structuralProtection = _structuralProtection + (_crewExplosionProtection min 8) * 80;
+};
+
+if (_explosionShielding > 0) then {
+    _structuralProtection = _structuralProtection + (_explosionShielding min 8) * 55;
+};
+
+if (_isMrap) then {
+    _structuralProtection = _structuralProtection + 260;
+};
+
+if (_isHumvee && {!_isMrap}) then {
+    _structuralProtection = _structuralProtection - 160;
+};
+
+if (_crewVulnerable > 0) then {
+    _structuralProtection = _structuralProtection - 220;
+};
+
+private _protectionScore = (_armor max 0) + (_structuralProtection max -220);
 private _combatWeaponCount = 0;
 private _weaponPower = 0;
 private _antiArmorScore = 0;
@@ -58,6 +111,7 @@ private _antiAirScore = 0;
 private _artilleryScore = 0;
 private _cannonScore = 0;
 private _machineGunScore = 0;
+private _grenadeScore = 0;
 private _directHitMax = 0;
 private _indirectPowerMax = 0;
 
@@ -87,81 +141,19 @@ private _indirectPowerMax = 0;
 } forEach _weapons;
 
 {
-    private _magCfg = configFile >> "CfgMagazines" >> _x;
+    private _magTraits = [_x] call FLO_fnc_storeMagazineCombatTraits;
 
-    if !(isClass _magCfg) then { continue };
+    if (_magTraits get "isUtility") then { continue };
 
-    private _ammoClass = getText (_magCfg >> "ammo");
-    private _ammoCfg = configFile >> "CfgAmmo" >> _ammoClass;
-
-    if !(isClass _ammoCfg) then { continue };
-
-    private _ammoText = toLower format ["%1 %2 %3", _ammoClass, configName _magCfg, getText (_magCfg >> "displayName")];
-    private _simulation = toLower getText (_ammoCfg >> "simulation");
-    private _isUtilityAmmo = false;
-
-    {
-        if ((_ammoText find _x) >= 0) exitWith {
-            _isUtilityAmmo = true;
-        };
-    } forEach ["smoke", "flare", "chaff", "countermeasure", "laser"];
-
-    if (_isUtilityAmmo || {_simulation isEqualTo "shotsmoke"}) then { continue };
-
-    private _hit = getNumber (_ammoCfg >> "hit");
-    private _indirectHit = getNumber (_ammoCfg >> "indirectHit");
-    private _indirectRange = getNumber (_ammoCfg >> "indirectHitRange");
-    private _airLock = getNumber (_ammoCfg >> "airLock");
-    private _irLock = getNumber (_ammoCfg >> "irLock");
-    private _laserLock = getNumber (_ammoCfg >> "laserLock");
-    private _manualControl = getNumber (_ammoCfg >> "manualControl");
-    private _maxControlRange = getNumber (_ammoCfg >> "maxControlRange");
-    private _indirectPower = _indirectHit * (_indirectRange max 1);
-    private _roundPower = (_hit min 220) + (_indirectPower min 420);
-
-    _directHitMax = _directHitMax max _hit;
-    _indirectPowerMax = _indirectPowerMax max _indirectPower;
-    _weaponPower = _weaponPower + (_roundPower min 260);
-
-    if (_hit >= 45 && {_hit < 120}) then {
-        _cannonScore = _cannonScore + (_hit min 90);
-    };
-
-    if (_hit > 0 && {_hit < 45}) then {
-        _machineGunScore = _machineGunScore + (_hit min 35);
-    };
-
-    if (
-        _hit >= 120
-        || {_manualControl > 0}
-        || {_maxControlRange > 0}
-        || {(_ammoText find "atgm") >= 0}
-        || {(_ammoText find "at_") >= 0}
-        || {(_ammoText find "heat") >= 0}
-        || {(_ammoText find "apfsds") >= 0}
-    ) then {
-        _antiArmorScore = _antiArmorScore + ((_hit min 220) max 80);
-    };
-
-    if (
-        _airLock > 0
-        || {_irLock > 0}
-        || {_laserLock > 0}
-        || {(_ammoText find "aa") >= 0}
-        || {(_ammoText find "sam") >= 0}
-    ) then {
-        _antiAirScore = _antiAirScore + 120;
-    };
-
-    if (
-        _artilleryScanner > 0
-        || {_indirectRange >= 12 && {_indirectHit >= 20}}
-        || {(_ammoText find "mortar") >= 0}
-        || {(_ammoText find "artillery") >= 0}
-        || {(_ammoText find "howitzer") >= 0}
-    ) then {
-        _artilleryScore = _artilleryScore + ((_indirectPower min 500) max 150);
-    };
+    _directHitMax = _directHitMax max (_magTraits get "directHit");
+    _indirectPowerMax = _indirectPowerMax max (_magTraits get "indirectPower");
+    _weaponPower = _weaponPower + ((_magTraits get "weaponPower") min 360);
+    _antiArmorScore = _antiArmorScore + (_magTraits get "antiArmorScore");
+    _antiAirScore = _antiAirScore + (_magTraits get "antiAirScore");
+    _artilleryScore = _artilleryScore + (_magTraits get "artilleryScore");
+    _grenadeScore = _grenadeScore + (_magTraits get "grenadeScore");
+    _cannonScore = _cannonScore + (_magTraits get "cannonScore");
+    _machineGunScore = _machineGunScore + (_magTraits get "machineGunScore");
 } forEach _magazines;
 
 private _threatScore = ((_softThreat min 1) * 350) + ((_armorThreat min 1) * 750) + ((_airThreat min 1) * 850);
@@ -177,9 +169,17 @@ private _hasWeapon = _combatWeaponCount > 0 || {_weaponPower > 0} || {
 };
 private _hasAntiArmor = _antiArmorScore > 0 || {_hasWeapon && {_armorThreat >= 0.55}};
 private _hasAntiAir = _antiAirScore > 0 || {_hasWeapon && {_airThreat >= 0.55}};
-private _hasArtillery = _artilleryScanner > 0 || {_artilleryScore > 0} || {(_searchText find "mortar") >= 0} || {(_searchText find "artillery") >= 0} || {(_searchText find "howitzer") >= 0};
+private _hasArtillery = _artilleryScanner > 0
+    || {_artilleryScore > 0}
+    || {(_searchText find "m142") >= 0}
+    || {(_searchText find "himars") >= 0}
+    || {(_searchText find "mlrs") >= 0}
+    || {(_searchText find "rocket") >= 0}
+    || {(_searchText find "mortar") >= 0}
+    || {(_searchText find "artillery") >= 0}
+    || {(_searchText find "howitzer") >= 0};
 private _hasLogistics = _transportAmmo > 0 || {_transportFuel > 0} || {_transportRepair > 0} || {_aceAmmo > 0} || {_aceFuel > 0} || {_aceRepair > 0};
-private _hasSensors = _radar > 0 || {_irScan > 0} || {_laserScanner > 0} || {_lockDetection > 0} || {_incomingMissileDetection > 0};
+private _hasSensors = _radar > 0 || {_irScan > 0} || {_laserScanner > 0} || {_lockDetection > 0} || {_incomingMissileDetection > 0} || {_thermalOpticCount > 0} || {_nvgOpticCount > 0};
 private _isMbt = _category isEqualTo "armor" && {
     _armor >= 650
     || {(_searchText find "mbt") >= 0}
@@ -200,6 +200,11 @@ createHashMapFromArray [
     ["transport", _transport],
     ["cargo", _cargo],
     ["armor", _armor],
+    ["armorStructural", _armorStructural],
+    ["crewExplosionProtection", _crewExplosionProtection],
+    ["explosionShielding", _explosionShielding],
+    ["crewVulnerable", _crewVulnerable],
+    ["protectionScore", _protectionScore],
     ["slingMass", _slingMass],
     ["transportAmmo", _transportAmmo],
     ["transportFuel", _transportFuel],
@@ -214,9 +219,17 @@ createHashMapFromArray [
     ["artilleryScore", _artilleryScore],
     ["cannonScore", _cannonScore],
     ["machineGunScore", _machineGunScore],
+    ["grenadeScore", _grenadeScore],
     ["directHitMax", _directHitMax],
     ["indirectPowerMax", _indirectPowerMax],
     ["threatScore", _threatScore],
+    ["turretCount", _turretCount],
+    ["remoteWeaponCount", _remoteWeaponCount],
+    ["exposedWeaponCount", _exposedWeaponCount],
+    ["stabilizedWeaponCount", _stabilizedWeaponCount],
+    ["thermalOpticCount", _thermalOpticCount],
+    ["nvgOpticCount", _nvgOpticCount],
+    ["opticsScore", _opticsScore],
     ["hasWeapon", _hasWeapon],
     ["hasAntiArmor", _hasAntiArmor],
     ["hasAntiAir", _hasAntiAir],
@@ -226,5 +239,7 @@ createHashMapFromArray [
     ["isMbt", _isMbt],
     ["isIfv", _isIfv],
     ["isApc", _isApc],
+    ["isMrap", _isMrap],
+    ["isHumvee", _isHumvee],
     ["isUav", _isUav > 0]
 ]
