@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Approvals</title>
+    <style>
+        html {
+            color-scheme: dark;
+            background: rgba(3, 8, 14, 0.72);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            color: #F2F7FA;
+            font-family: "Bahnschrift", "DIN Condensed", "Arial Narrow", Arial, sans-serif;
+            font-size: 18px;
+            letter-spacing: 0;
+            background:
+                linear-gradient(135deg, rgba(4, 10, 16, 0.82), rgba(2, 6, 10, 0.94)),
+                radial-gradient(circle at 18% 18%, rgba(37, 215, 255, 0.15), rgba(37, 215, 255, 0) 28%),
+                radial-gradient(circle at 85% 12%, rgba(255, 184, 74, 0.12), rgba(255, 184, 74, 0) 24%);
+        }
+
+        body::before {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            content: "";
+            background:
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(0deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+            background-size: 72px 72px, 72px 72px;
+            opacity: 0.2;
+        }
+
+        button {
+            cursor: pointer;
+            color: #F2F7FA;
+            border: 0;
+            font: inherit;
+            letter-spacing: 0;
+            background: transparent;
+        }
+
+        button:disabled {
+            cursor: default;
+            color: #66788A;
+        }
+
+        h1,
+        h2,
+        p {
+            margin: 0;
+        }
+
+        .shell {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-rows: 96px minmax(0, 1fr) 74px;
+            gap: 14px;
+            width: 100vw;
+            height: 100vh;
+            padding: 24px 30px;
+        }
+
+        .topbar,
+        .queue,
+        .actionbar {
+            position: relative;
+            overflow: hidden;
+            background: rgba(12, 22, 32, 0.76);
+            box-shadow: 0 20px 46px rgba(0, 0, 0, 0.34);
+            clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+        }
+
+        .topbar::after,
+        .queue::after,
+        .actionbar::after {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            height: 1px;
+            content: "";
+            background: linear-gradient(90deg, rgba(37, 215, 255, 0.92), rgba(103, 232, 255, 0.16), transparent);
+        }
+
+        .topbar {
+            display: grid;
+            grid-template-columns: minmax(360px, 1fr) repeat(3, minmax(170px, 0.34fr));
+            gap: 1px;
+            padding: 10px;
+        }
+
+        .brand,
+        .stat {
+            display: flex;
+            min-width: 0;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 18px;
+            border-left: 1px solid rgba(103, 232, 255, 0.14);
+        }
+
+        .brand {
+            border-left: 0;
+        }
+
+        .overline,
+        .label {
+            color: #25D7FF;
+            font-size: 13px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .brand h1 {
+            margin-top: 4px;
+            overflow: hidden;
+            color: #F2F7FA;
+            font-size: 38px;
+            line-height: 1;
+            font-weight: 900;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .stat .value {
+            margin-top: 6px;
+            overflow: hidden;
+            color: #F2F7FA;
+            font-size: 25px;
+            font-weight: 900;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .stat .value.amber {
+            color: #FFB84A;
+            text-shadow: 0 0 16px rgba(255, 184, 74, 0.18);
+        }
+
+        .queue {
+            display: grid;
+            grid-template-columns: minmax(300px, 0.35fr) minmax(0, 1fr);
+            min-height: 0;
+        }
+
+        .sidepane {
+            min-width: 0;
+            padding: 22px;
+            border-right: 1px solid rgba(103, 232, 255, 0.16);
+            background:
+                linear-gradient(180deg, rgba(37, 215, 255, 0.08), rgba(37, 215, 255, 0)),
+                rgba(3, 8, 14, 0.26);
+        }
+
+        .side-title {
+            color: #A8BAC8;
+            font-size: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .side-value {
+            margin-top: 8px;
+            overflow: hidden;
+            color: #F2F7FA;
+            font-size: 30px;
+            font-weight: 900;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .side-value.small {
+            font-size: 21px;
+            color: #A8BAC8;
+        }
+
+        .divider {
+            height: 1px;
+            margin: 20px 0;
+            background: linear-gradient(90deg, rgba(37, 215, 255, 0.6), transparent);
+        }
+
+        .hint {
+            color: #8193A4;
+            font-size: 16px;
+            line-height: 1.35;
+        }
+
+        .list {
+            min-height: 0;
+            overflow-y: auto;
+            padding: 18px;
+        }
+
+        .approval {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 128px 128px;
+            gap: 12px;
+            align-items: stretch;
+            margin-bottom: 12px;
+            padding: 16px;
+            border: 1px solid rgba(103, 232, 255, 0.18);
+            background:
+                linear-gradient(90deg, rgba(37, 215, 255, 0.08), rgba(37, 215, 255, 0)),
+                rgba(4, 10, 16, 0.62);
+            clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+        }
+
+        .approval.busy {
+            opacity: 0.56;
+        }
+
+        .requester {
+            overflow: hidden;
+            color: #F2F7FA;
+            font-size: 25px;
+            font-weight: 900;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .pill {
+            display: inline-flex;
+            min-height: 28px;
+            align-items: center;
+            padding: 4px 10px;
+            color: #A8BAC8;
+            border: 1px solid rgba(103, 232, 255, 0.16);
+            background: rgba(5, 12, 18, 0.54);
+            font-size: 14px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .pill.money {
+            color: #FFB84A;
+            border-color: rgba(255, 184, 74, 0.28);
+        }
+
+        .decision {
+            display: flex;
+            min-height: 72px;
+            align-items: center;
+            justify-content: center;
+            padding: 0 12px;
+            border: 1px solid rgba(103, 232, 255, 0.2);
+            font-size: 18px;
+            font-weight: 900;
+            text-transform: uppercase;
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+        }
+
+        .decision.approve {
+            color: #071117;
+            background: #25D7FF;
+            box-shadow: 0 0 20px rgba(37, 215, 255, 0.18);
+        }
+
+        .decision.deny {
+            color: #FFD4D4;
+            border-color: rgba(255, 93, 93, 0.36);
+            background: rgba(90, 17, 20, 0.7);
+        }
+
+        .empty {
+            display: flex;
+            height: 100%;
+            min-height: 260px;
+            align-items: center;
+            justify-content: center;
+            color: #66788A;
+            border: 1px dashed rgba(103, 232, 255, 0.2);
+            background: rgba(4, 10, 16, 0.46);
+            font-size: 26px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .actionbar {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto auto;
+            gap: 12px;
+            align-items: center;
+            padding: 12px 18px;
+        }
+
+        .message {
+            overflow: hidden;
+            color: #A8BAC8;
+            font-size: 18px;
+            font-weight: 800;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .message.good {
+            color: #25D7FF;
+        }
+
+        .message.error {
+            color: #FF7676;
+        }
+
+        .bar-btn {
+            min-width: 140px;
+            min-height: 46px;
+            padding: 0 18px;
+            border: 1px solid rgba(103, 232, 255, 0.22);
+            background: rgba(7, 44, 63, 0.74);
+            font-size: 18px;
+            font-weight: 900;
+            text-transform: uppercase;
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+        }
+
+        .bar-btn.danger {
+            border-color: rgba(255, 93, 93, 0.3);
+            background: rgba(62, 14, 18, 0.82);
+        }
+
+        @media (max-width: 1180px) {
+            .topbar {
+                grid-template-columns: minmax(260px, 1fr) repeat(2, minmax(145px, 0.42fr));
+            }
+
+            .topbar .stat:last-child {
+                display: none;
+            }
+
+            .queue {
+                grid-template-columns: minmax(220px, 0.33fr) minmax(0, 1fr);
+            }
+
+            .approval {
+                grid-template-columns: minmax(0, 1fr) 110px 110px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <header class="topbar">
+            <section class="brand">
+                <div class="overline">Store Command</div>
+                <h1>Checkout Approvals</h1>
+            </section>
+            <section class="stat">
+                <div class="label">Queue</div>
+                <div class="value" id="approvalCount">0</div>
+            </section>
+            <section class="stat">
+                <div class="label">Faction Funds</div>
+                <div class="value amber" id="balance">$0</div>
+            </section>
+            <section class="stat">
+                <div class="label">Personal</div>
+                <div class="value" id="personalBalance">$0</div>
+            </section>
+        </header>
+
+        <section class="queue">
+            <aside class="sidepane">
+                <div class="side-title">Side</div>
+                <div class="side-value" id="sideName">Waiting</div>
+                <div class="divider"></div>
+                <div class="side-title">Faction</div>
+                <div class="side-value small" id="factionName">No snapshot</div>
+                <div class="divider"></div>
+                <p class="hint" id="accessText">Only the commander or deputy can approve faction-funded checkouts and vehicle purchases.</p>
+            </aside>
+
+            <section class="list" id="approvalList"></section>
+        </section>
+
+        <footer class="actionbar">
+            <div class="message" id="message">Waiting for approval snapshot.</div>
+            <button class="bar-btn" type="button" onclick="FOOFApprovals.refresh()">Refresh</button>
+            <button class="bar-btn danger" type="button" onclick="FOOFApprovals.close()">Close</button>
+        </footer>
+    </main>
+
+    <script>
+        (function () {
+            var state = {
+                success: false,
+                message: "",
+                sideName: "",
+                factionName: "",
+                balance: 0,
+                personalBalance: 0,
+                pendingApprovals: [],
+                busyId: ""
+            };
+
+            function send(event, data) {
+                var payload = JSON.stringify({ event: event, data: data || {} });
+
+                if (typeof A3API !== "undefined" && A3API.SendAlert) {
+                    A3API.SendAlert(payload);
+                }
+            }
+
+            function node(id) {
+                return document.getElementById(id);
+            }
+
+            function text(id, value) {
+                var target = node(id);
+                if (target) {
+                    target.textContent = String(value);
+                }
+            }
+
+            function clear(target) {
+                while (target.firstChild) {
+                    target.removeChild(target.firstChild);
+                }
+            }
+
+            function formatMoney(value) {
+                var number = Number(value || 0);
+                var sign = number < 0 ? "-" : "";
+                var rounded = String(Math.abs(Math.round(number)));
+                var out = "";
+
+                while (rounded.length > 3) {
+                    out = "," + rounded.slice(-3) + out;
+                    rounded = rounded.slice(0, -3);
+                }
+
+                return sign + "$" + rounded + out;
+            }
+
+            function formatAge(seconds) {
+                var value = Math.max(0, Number(seconds || 0));
+
+                if (value >= 60) {
+                    return Math.floor(value / 60) + "m";
+                }
+
+                return Math.floor(value) + "s";
+            }
+
+            function message(value, kind) {
+                var target = node("message");
+
+                if (!target) {
+                    return;
+                }
+
+                target.className = "message" + (kind ? " " + kind : "");
+                target.textContent = value || "";
+            }
+
+            function addPill(parent, label, value, money) {
+                var pill = document.createElement("span");
+                pill.className = money ? "pill money" : "pill";
+                pill.textContent = label + " " + value;
+                parent.appendChild(pill);
+            }
+
+            function render() {
+                var list = node("approvalList");
+                var approvals = state.pendingApprovals || [];
+                var i;
+
+                text("approvalCount", approvals.length);
+                text("balance", formatMoney(state.balance));
+                text("personalBalance", formatMoney(state.personalBalance));
+                text("sideName", state.sideName || "Unavailable");
+                text("factionName", state.factionName || "No faction");
+
+                if (!list) {
+                    return;
+                }
+
+                clear(list);
+
+                if (!state.success) {
+                    var blocked = document.createElement("div");
+                    blocked.className = "empty";
+                    blocked.textContent = state.message || "Approval access denied.";
+                    list.appendChild(blocked);
+                    message(state.message || "Approval access denied.", "error");
+                    return;
+                }
+
+                if (approvals.length === 0) {
+                    var empty = document.createElement("div");
+                    empty.className = "empty";
+                    empty.textContent = "No pending checkouts";
+                    list.appendChild(empty);
+                    message("Approval queue clear.", "good");
+                    return;
+                }
+
+                for (i = 0; i < approvals.length; i += 1) {
+                    (function (approval) {
+                        var row = document.createElement("article");
+                        var info = document.createElement("div");
+                        var requester = document.createElement("div");
+                        var meta = document.createElement("div");
+                        var approve = document.createElement("button");
+                        var deny = document.createElement("button");
+                        var isBusy = state.busyId === approval.id;
+
+                        row.className = "approval" + (isBusy ? " busy" : "");
+                        requester.className = "requester";
+                        requester.textContent = approval.playerName || "Player";
+                        meta.className = "meta";
+
+                        addPill(meta, "Total", formatMoney(approval.total), true);
+                        addPill(meta, "Faction", formatMoney(approval.factionTotal), true);
+                        addPill(meta, "Personal", formatMoney(approval.personalSpent), true);
+                        addPill(meta, "Deploy", formatMoney(approval.deploymentFundSpent), true);
+                        addPill(meta, "Gear", Number(approval.gearCount || 0), false);
+                        addPill(meta, "Vehicles", Number(approval.vehicleCount || 0), false);
+                        addPill(meta, "Age", formatAge(approval.createdAgo), false);
+
+                        info.appendChild(requester);
+                        info.appendChild(meta);
+
+                        approve.type = "button";
+                        approve.className = "decision approve";
+                        approve.disabled = isBusy;
+                        approve.textContent = isBusy ? "Sending" : "Approve";
+                        approve.onclick = function () {
+                            window.FOOFApprovals.decision(approval.id, true);
+                        };
+
+                        deny.type = "button";
+                        deny.className = "decision deny";
+                        deny.disabled = isBusy;
+                        deny.textContent = isBusy ? "Locked" : "Deny";
+                        deny.onclick = function () {
+                            window.FOOFApprovals.decision(approval.id, false);
+                        };
+
+                        row.appendChild(info);
+                        row.appendChild(approve);
+                        row.appendChild(deny);
+                        list.appendChild(row);
+                    }(approvals[i]));
+                }
+            }
+
+            window.FOOFApprovals = {
+                receive: function (event, payload) {
+                    payload = payload || {};
+
+                    if (event === "storeApprovals::snapshot") {
+                        state.success = !!payload.success;
+                        state.message = payload.message || "";
+                        state.sideName = payload.sideName || state.sideName;
+                        state.factionName = payload.factionName || state.factionName;
+                        state.balance = typeof payload.balance === "number" ? payload.balance : state.balance;
+                        state.personalBalance = typeof payload.personalBalance === "number" ? payload.personalBalance : state.personalBalance;
+                        state.pendingApprovals = payload.pendingApprovals || [];
+                        state.busyId = "";
+                        render();
+                    }
+
+                    if (event === "storeApprovals::decision") {
+                        if ("pendingApprovals" in payload) {
+                            state.success = true;
+                        } else if (payload.success === false) {
+                            state.success = false;
+                        }
+                        state.message = payload.message || "";
+                        state.sideName = payload.sideName || state.sideName;
+                        state.factionName = payload.factionName || state.factionName;
+                        state.balance = typeof payload.balance === "number" ? payload.balance : state.balance;
+                        state.personalBalance = typeof payload.personalBalance === "number" ? payload.personalBalance : state.personalBalance;
+                        state.pendingApprovals = payload.pendingApprovals || state.pendingApprovals;
+                        state.busyId = "";
+                        render();
+                        message(payload.message || "Approval updated.", payload.success ? "good" : "error");
+                    }
+                },
+
+                decision: function (id, approved) {
+                    if (!id || state.busyId) {
+                        return;
+                    }
+
+                    state.busyId = id;
+                    render();
+                    message(approved ? "Approving checkout." : "Denying checkout.", "");
+                    send("storeApprovals::decision", {
+                        id: id,
+                        approved: !!approved
+                    });
+                },
+
+                refresh: function () {
+                    state.busyId = "";
+                    message("Refreshing approvals.", "");
+                    send("storeApprovals::refresh", {});
+                },
+
+                close: function () {
+                    send("storeApprovals::close", {});
+                }
+            };
+
+            render();
+            send("storeApprovals::ready", {});
+        }());
+    </script>
+</body>
+</html>

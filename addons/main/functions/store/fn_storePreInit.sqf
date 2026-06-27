@@ -1,5 +1,7 @@
 FLO_StoreDialogIdd = 9800;
 FLO_StoreBrowserIdc = 9801;
+FLO_StoreApprovalsDialogIdd = 9820;
+FLO_StoreApprovalsBrowserIdc = 9821;
 FLO_StoreActiveFobNetId = "";
 FLO_StoreClientPendingVehicles = [];
 FLO_StorePurchasedVehicleKilledEh = -1;

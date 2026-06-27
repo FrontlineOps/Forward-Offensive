@@ -2,6 +2,7 @@ class Store {
     file = "\z\foof\addons\main\functions\store";
 
     class storeAddWebEventHandler {};
+    class storeAddApprovalsWebEventHandler {};
     class storeAddInventoryItem {};
     class storeApplyKit {};
     class storeAppendCatalogItem {};
@@ -9,9 +10,11 @@ class Store {
     class storeAppendGearMagazine {};
     class storeAppendGearWeapon {};
     class storeAppendSupportItems {};
+    class storeApprovalsClientInit {};
     class storeBuildCatalog {};
     class storeBuildCatalogItem {};
     class storeBuildHydratePayload {};
+    class storeBuildApprovalSnapshot {};
     class storeBuildCategoryPayload {};
     class storeCategoryForVehicle {};
     class storeCategoryForWeapon {};
@@ -24,6 +27,7 @@ class Store {
     class storeDeploymentFundEligible {};
     class storeFactionUsesVanillaGear {};
     class storeGearVisionTraits {};
+    class storeHandleApprovalsUiEvent {};
     class storeHandleUiEvent {};
     class storeInitServer {};
     class storeIsMineMagazine {};
@@ -31,6 +35,7 @@ class Store {
     class storeIsVanillaConfig {};
     class storeIsVanillaDefaultNvg {};
     class storeOpenDialog {};
+    class storeOpenApprovalsDialog {};
     class storeFinalizeVehiclePlacement {};
     class storePendingVehiclesForAccess {};
     class storePendingApprovalsForAccess {};
@@ -42,11 +47,13 @@ class Store {
     class storePriceClass {};
     class storePriceVehicle {};
     class storeReceiveResponse {};
+    class storeReceiveApprovalsResponse {};
     class storeReceivePlacementResult {};
     class storeReadConfigVisionTree {};
     class storeReadVisionTraits {};
     class storeRequestCategory {};
     class storeRequestApprovalDecision {};
+    class storeRequestApprovalSnapshot {};
     class storeRequestCheckout {};
     class storeRequestHydrate {};
     class storeQueueApproval {};
@@ -56,13 +63,16 @@ class Store {
     class storeSavedKitsSave {};
     class storeSelectedFaction {};
     class storeSendResponse {};
+    class storeSendApprovalsResponse {};
     class storeStartVehiclePlacement {};
     class storeStringMatchesPatterns {};
     class storeSupportClassRejected {};
     class storeSupportConfigMatchesSource {};
     class storeSupportSourceLoaded {};
     class storeUpdateDialog {};
+    class storeUpdateApprovalsDialog {};
     class storeValidateAccess {};
+    class storeValidateApprovalAccess {};
     class storeVehicleConfigTraits {};
     class storeWebAction {};
     class storeWeaponCombatPrice {};

@@ -1,8 +1,8 @@
-params ["_player", "_fobNetId", "_approvalId", ["_approved", true]];
+params ["_player", "_approvalId", ["_approved", true]];
 
 if (!isServer) exitWith {};
 
-private _access = [_player, _fobNetId] call FLO_fnc_storeValidateAccess;
+private _access = [_player] call FLO_fnc_storeValidateApprovalAccess;
 private _owner = _access get "owner";
 
 private _sendDecision = {
@@ -14,20 +14,18 @@ private _sendDecision = {
     ];
 
     if (_payloadAccess get "success") then {
-        _payload set ["pendingApprovals", [_payloadAccess] call FLO_fnc_storePendingApprovalsForAccess];
-        _payload set ["balance", FLO_ResourceBalances get (_payloadAccess get "sideKey")];
-        _payload set ["personalBalance", [(_payloadAccess get "sideKey"), getPlayerUID (_payloadAccess get "player")] call FLO_fnc_resourcePersonalBalance];
+        private _snapshot = [_payloadAccess] call FLO_fnc_storeBuildApprovalSnapshot;
+
+        {
+            _payload set [_x, _snapshot get _x];
+        } forEach ["sideKey", "sideName", "factionName", "balance", "personalBalance", "pendingApprovals"];
     };
 
-    [_owner, "store::approvalDecision", _payload] call FLO_fnc_storeSendResponse;
+    [_owner, "storeApprovals::decision", _payload] call FLO_fnc_storeSendApprovalsResponse;
 };
 
 if !(_access get "success") exitWith {
     [false, _access get "message"] call _sendDecision;
-};
-
-if !([_player] call FLO_fnc_commandPlayerIsCommanderOrDeputy) exitWith {
-    [false, "Only the commander or deputy can approve faction-funded checkouts."] call _sendDecision;
 };
 
 private _sideKey = _access get "sideKey";
@@ -121,7 +119,6 @@ if !(_checkoutPayload get "success") exitWith {
 
 FLO_StorePendingApprovals deleteAt _index;
 ["storeApprovalApproved"] call FLO_fnc_persistenceScheduleSave;
-_checkoutPayload set ["pendingApprovals", [_buyerAccess] call FLO_fnc_storePendingApprovalsForAccess];
 
 private _buyerOwner = owner _buyer;
 private _buyerHydrate = [_buyerAccess] call FLO_fnc_storeBuildHydratePayload;

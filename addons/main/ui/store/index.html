@@ -1221,16 +1221,6 @@
                 <section class="operator-section">
                     <div class="panel-head">
                         <div class="panel-title">
-                            <div class="overline">Faction Funds</div>
-                            <h2>Approvals</h2>
-                        </div>
-                    </div>
-                    <div class="scroll-list" id="approvalList"></div>
-                </section>
-
-                <section class="operator-section">
-                    <div class="panel-head">
-                        <div class="panel-title">
                             <div class="overline">Presets</div>
                             <h2>Kits</h2>
                         </div>
@@ -1293,7 +1283,6 @@
                 tickets: 0,
                 vehicleStoreEnabled: false,
                 canUseFactionFunds: false,
-                pendingApprovals: [],
                 query: ""
             };
 
@@ -2234,78 +2223,6 @@
                 refreshStoreState();
             }
 
-            function renderApprovals() {
-                var list = node("approvalList");
-                var approvals = state.pendingApprovals || [];
-                var i;
-
-                if (!list) {
-                    return;
-                }
-
-                clear(list);
-
-                if (approvals.length === 0) {
-                    list.appendChild(empty(state.canUseFactionFunds ? "No pending approvals." : "No checkout waiting."));
-                    return;
-                }
-
-                for (i = 0; i < approvals.length; i += 1) {
-                    (function (approval) {
-                        var row = document.createElement("div");
-                        var info = document.createElement("div");
-                        var name = document.createElement("div");
-                        var meta = document.createElement("div");
-                        var actions = document.createElement("div");
-                        var approve = document.createElement("button");
-                        var deny = document.createElement("button");
-                        var wait = document.createElement("button");
-                        var vehicleCount = Number(approval.vehicleCount || 0);
-                        var gearCount = Number(approval.gearCount || 0);
-                        var factionTotal = Number(approval.factionTotal || 0);
-
-                        row.className = "kit-line";
-                        name.className = "name";
-                        meta.className = "meta";
-                        name.textContent = approval.isOwn && !state.canUseFactionFunds ? "Your Checkout" : (approval.playerName || "Player");
-                        meta.textContent = formatMoney(approval.total || 0) + " / faction " + formatMoney(factionTotal) + " / gear " + gearCount + " / vehicles " + vehicleCount;
-
-                        info.appendChild(name);
-                        info.appendChild(meta);
-                        actions.className = "container-row";
-
-                        if (state.canUseFactionFunds) {
-                            approve.type = "button";
-                            approve.className = "chip selected";
-                            approve.textContent = "Approve";
-                            approve.onclick = function () {
-                                FOOFStore.approval(approval.id, true);
-                            };
-
-                            deny.type = "button";
-                            deny.className = "chip";
-                            deny.textContent = "Deny";
-                            deny.onclick = function () {
-                                FOOFStore.approval(approval.id, false);
-                            };
-
-                            actions.appendChild(approve);
-                            actions.appendChild(deny);
-                        } else {
-                            wait.type = "button";
-                            wait.className = "chip";
-                            wait.disabled = true;
-                            wait.textContent = "Pending";
-                            actions.appendChild(wait);
-                        }
-
-                        row.appendChild(info);
-                        row.appendChild(actions);
-                        list.appendChild(row);
-                    }(approvals[i]));
-                }
-            }
-
             function renderSavedKits() {
                 var list = node("kitList");
                 var i;
@@ -2370,7 +2287,6 @@
 
                         state.categories = payload.categories || [];
                         state.pendingVehicles = payload.pendingVehicles || state.pendingVehicles;
-                        state.pendingApprovals = payload.pendingApprovals || state.pendingApprovals;
                         state.balance = typeof payload.balance === "number" ? payload.balance : 0;
                         state.personalBalance = typeof payload.personalBalance === "number" ? payload.personalBalance : 0;
                         state.deploymentFund = typeof payload.deploymentFund === "number" ? payload.deploymentFund : 0;
@@ -2384,7 +2300,6 @@
                         updateSummary();
                         renderCategories();
                         renderCart();
-                        renderApprovals();
                         updatePlaceVehicleButton();
                         message("Catalog loaded.", "good");
 
@@ -2409,19 +2324,16 @@
                         state.tickets = typeof payload.tickets === "number" ? payload.tickets : state.tickets;
                         state.vehicleStoreEnabled = typeof payload.vehicleStoreEnabled === "boolean" ? payload.vehicleStoreEnabled : state.vehicleStoreEnabled;
                         state.canUseFactionFunds = typeof payload.canUseFactionFunds === "boolean" ? payload.canUseFactionFunds : state.canUseFactionFunds;
-                        state.pendingApprovals = payload.pendingApprovals || state.pendingApprovals;
                         text("categoryTitle", payload.label || "Items");
                         updateSummary();
                         renderCategories();
                         renderItems();
-                        renderApprovals();
                     }
 
                     if (event === "store::checkout") {
                         if (payload.success) {
                             state.cart = [];
                             state.pendingVehicles = payload.pendingVehicles || state.pendingVehicles;
-                            state.pendingApprovals = payload.pendingApprovals || state.pendingApprovals;
                             state.balance = typeof payload.balance === "number" ? payload.balance : state.balance;
                             state.personalBalance = typeof payload.personalBalance === "number" ? payload.personalBalance : state.personalBalance;
                             state.deploymentFund = typeof payload.deploymentFund === "number" ? payload.deploymentFund : state.deploymentFund;
@@ -2429,34 +2341,20 @@
                             state.tickets = typeof payload.tickets === "number" ? payload.tickets : state.tickets;
                             state.canUseFactionFunds = typeof payload.canUseFactionFunds === "boolean" ? payload.canUseFactionFunds : state.canUseFactionFunds;
                             renderCart();
-                            renderApprovals();
                             updatePlaceVehicleButton();
                             message(payload.message || "Checkout complete.", "good");
                         } else {
                             state.balance = typeof payload.balance === "number" ? payload.balance : state.balance;
                             state.personalBalance = typeof payload.personalBalance === "number" ? payload.personalBalance : state.personalBalance;
                             state.deploymentFund = typeof payload.deploymentFund === "number" ? payload.deploymentFund : state.deploymentFund;
-                            state.pendingApprovals = payload.pendingApprovals || state.pendingApprovals;
                             updateSummary();
-                            renderApprovals();
                             message(payload.message || "Checkout failed.", "error");
                         }
                     }
 
-                    if (event === "store::approvalDecision") {
-                        state.balance = typeof payload.balance === "number" ? payload.balance : state.balance;
-                        state.personalBalance = typeof payload.personalBalance === "number" ? payload.personalBalance : state.personalBalance;
-                        state.pendingApprovals = payload.pendingApprovals || state.pendingApprovals;
-                        updateSummary();
-                        renderApprovals();
-                        message(payload.message || "Approval updated.", payload.success ? "good" : "error");
-                    }
-
                     if (event === "store::pendingVehicles") {
                         state.pendingVehicles = payload.pendingVehicles || [];
-                        state.pendingApprovals = payload.pendingApprovals || state.pendingApprovals;
                         updateSummary();
-                        renderApprovals();
                         updatePlaceVehicleButton();
                     }
 
@@ -2590,19 +2488,6 @@
                             };
                         })
                     });
-                },
-                approval: function (id, approved) {
-                    if (!id) {
-                        message("Approval is no longer available.", "error");
-                        return;
-                    }
-
-                    send("store::approval", {
-                        id: id,
-                        approved: !!approved
-                    });
-
-                    message(approved ? "Approving checkout." : "Denying checkout.", "");
                 },
                 refresh: function () {
                     send("store::refresh", {});

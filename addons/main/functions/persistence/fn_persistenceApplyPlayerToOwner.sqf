@@ -73,8 +73,7 @@ if ((_savedSideKey isEqualTo "") || {_savedSideKey isNotEqualTo _currentSideKey}
         ];
         private _pendingPayload = createHashMapFromArray [
             ["success", true],
-            ["pendingVehicles", [_pendingAccess] call FLO_fnc_storePendingVehiclesForAccess],
-            ["pendingApprovals", [_pendingAccess] call FLO_fnc_storePendingApprovalsForAccess]
+            ["pendingVehicles", [_pendingAccess] call FLO_fnc_storePendingVehiclesForAccess]
         ];
 
         [_owner, "store::pendingVehicles", _pendingPayload] call FLO_fnc_storeSendResponse;

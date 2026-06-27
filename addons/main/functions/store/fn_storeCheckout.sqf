@@ -217,8 +217,7 @@ if (!_ok) exitWith {
         ["canUseFactionFunds", _canUseFactionFunds],
         ["deploymentFund", _deploymentFundRemaining],
         ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
-        ["tickets", FLO_TicketBalances get _sideKey],
-        ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess]
+        ["tickets", FLO_TicketBalances get _sideKey]
     ]
 };
 
@@ -240,8 +239,7 @@ if ((_total < 0) || {(_gearEntries isEqualTo []) && {_vehicleJobs isEqualTo []}}
         ["canUseFactionFunds", _canUseFactionFunds],
         ["deploymentFund", _deploymentFundRemaining],
         ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
-        ["tickets", FLO_TicketBalances get _sideKey],
-        ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess]
+        ["tickets", FLO_TicketBalances get _sideKey]
     ]
 };
 
@@ -280,7 +278,6 @@ if (_requiresApproval && {!_canUseFactionFunds}) exitWith {
         ["gearCount", count _gearEntries],
         ["vehicleCount", count _vehicleJobs],
         ["pendingApproval", _approval],
-        ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess],
         ["pendingVehicles", [_access] call FLO_fnc_storePendingVehiclesForAccess]
     ]
 };
@@ -294,8 +291,7 @@ if ((_factionTotal > 0) && {(FLO_ResourceBalances get _sideKey) < _factionTotal}
         ["canUseFactionFunds", _canUseFactionFunds],
         ["deploymentFund", _deploymentFundRemaining],
         ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
-        ["tickets", FLO_TicketBalances get _sideKey],
-        ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess]
+        ["tickets", FLO_TicketBalances get _sideKey]
     ]
 };
 
@@ -308,8 +304,7 @@ if ((_personalSpent > 0) && {!([_sideKey, _playerUid, _personalSpent, "Store che
         ["canUseFactionFunds", _canUseFactionFunds],
         ["deploymentFund", _deploymentFundRemaining],
         ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
-        ["tickets", FLO_TicketBalances get _sideKey],
-        ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess]
+        ["tickets", FLO_TicketBalances get _sideKey]
     ]
 };
 
@@ -322,8 +317,7 @@ if ((_factionTotal > 0) && {!([_side, _factionTotal, "Store checkout"] call FLO_
         ["canUseFactionFunds", _canUseFactionFunds],
         ["deploymentFund", _deploymentFundRemaining],
         ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
-        ["tickets", FLO_TicketBalances get _sideKey],
-        ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess]
+        ["tickets", FLO_TicketBalances get _sideKey]
     ]
 };
 
@@ -417,6 +411,5 @@ createHashMapFromArray [
     ["spent", _total],
     ["gearCount", count _gearEntries],
     ["vehicleCount", count _pendingVehicles],
-    ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess],
     ["pendingVehicles", [_access] call FLO_fnc_storePendingVehiclesForAccess]
 ]

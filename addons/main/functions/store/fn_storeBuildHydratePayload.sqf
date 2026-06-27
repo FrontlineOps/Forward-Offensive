@@ -54,6 +54,5 @@ createHashMapFromArray [
     ["categories", _categories],
     ["firstCategory", _firstCategory],
     ["fobNetId", _access get "fobNetId"],
-    ["pendingVehicles", [_access] call FLO_fnc_storePendingVehiclesForAccess],
-    ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess]
+    ["pendingVehicles", [_access] call FLO_fnc_storePendingVehiclesForAccess]
 ]

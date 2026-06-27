@@ -43,8 +43,7 @@ if (!_vehicleStoreEnabled && {_category in FLO_StoreVehicleCategories}) exitWith
         ["canUseFactionFunds", _canUseFactionFunds],
         ["deploymentFund", _deploymentFund],
         ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
-        ["tickets", FLO_TicketBalances get _sideKey],
-        ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess]
+        ["tickets", FLO_TicketBalances get _sideKey]
     ]
 };
 
@@ -68,6 +67,5 @@ createHashMapFromArray [
     ["canUseFactionFunds", _canUseFactionFunds],
     ["deploymentFund", _deploymentFund],
     ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
-    ["tickets", FLO_TicketBalances get _sideKey],
-    ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess]
+    ["tickets", FLO_TicketBalances get _sideKey]
 ]

@@ -40,6 +40,7 @@ class CfgFunctions {
 #include "ui\intel\IntelDialog.hpp"
 #include "ui\objective\ObjectiveAreaDialog.hpp"
 #include "ui\store\StoreDialog.hpp"
+#include "ui\store\StoreApprovalsDialog.hpp"
 
 class CfgRemoteExec {
     class Functions {
@@ -196,6 +197,11 @@ class CfgRemoteExec {
             jip = 0;
         };
 
+        class FLO_fnc_storeReceiveApprovalsResponse {
+            allowedTargets = 1;
+            jip = 0;
+        };
+
         class FLO_fnc_storeReceivePlacementResult {
             allowedTargets = 1;
             jip = 0;
@@ -217,6 +223,16 @@ class CfgRemoteExec {
         };
 
         class FLO_fnc_storeRequestCheckout {
+            allowedTargets = 2;
+            jip = 0;
+        };
+
+        class FLO_fnc_storeRequestApprovalDecision {
+            allowedTargets = 2;
+            jip = 0;
+        };
+
+        class FLO_fnc_storeRequestApprovalSnapshot {
             allowedTargets = 2;
             jip = 0;
         };

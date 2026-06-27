@@ -30,14 +30,6 @@ switch (_event) do {
 
         [player, FLO_StoreActiveFobNetId, _items] remoteExecCall ["FLO_fnc_storeRequestCheckout", 2];
     };
-    case "store::approval": {
-        [
-            player,
-            FLO_StoreActiveFobNetId,
-            _data get "id",
-            _data get "approved"
-        ] remoteExecCall ["FLO_fnc_storeRequestApprovalDecision", 2];
-    };
     case "store::refresh": {
         [player, FLO_StoreActiveFobNetId] remoteExecCall ["FLO_fnc_storeRequestHydrate", 2];
         ["store::savedKits", createHashMapFromArray [
