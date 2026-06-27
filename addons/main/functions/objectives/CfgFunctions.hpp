@@ -27,7 +27,7 @@ class Objective {
     class objectiveGridCellIdAtPosition {};
     class objectiveGridCellId {};
     class objectiveHandleAreaUiEvent {};
-    class objectiveIncomePer15 {};
+    class objectiveIncomePer10 {};
     class objectiveIncomePerTick {};
     class objectiveInitServer {};
     class objectiveLevelName {};

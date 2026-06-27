@@ -479,7 +479,7 @@
                 text("selected", "No Friendly Held AO");
                 text("mode", "Capture and hold AOs before ordering upgrades");
                 text("level", "0");
-                text("income", "$0 / 15 min");
+                text("income", "$0 / 10 min");
                 text("remoteCost", "-");
                 text("localCost", "-");
                 text("cost", "-");
@@ -589,7 +589,7 @@
                 text("selected", area.name || "AO");
                 text("mode", mode);
                 text("level", "L" + String(area.level || 0));
-                text("income", money(area.incomePer15) + " / 15 min");
+                text("income", money(area.incomePer10) + " / 10 min");
                 text("remoteCost", area.level >= area.maxLevel ? "Max" : money(area.remoteUpgradeCost));
                 text("localCost", area.level >= area.maxLevel ? "Max" : money(area.inPersonUpgradeCost));
                 text("cost", area.level >= area.maxLevel ? "Max" : money(area.upgradeCost));

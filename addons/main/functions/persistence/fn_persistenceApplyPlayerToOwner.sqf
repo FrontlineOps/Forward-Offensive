@@ -31,11 +31,19 @@ if ((_savedSideKey isEqualTo "") || {_savedSideKey isNotEqualTo _currentSideKey}
     };
 
     private _oldPendingCount = count FLO_StorePendingVehicles;
+    private _oldApprovalCount = count FLO_StorePendingApprovals;
 
     FLO_PersistencePlayerRecords deleteAt _uid;
     FLO_SpawnPlayerAssignments deleteAt _uid;
     FLO_StorePendingVehicles = FLO_StorePendingVehicles select {
         !(((_x get "playerUid") isEqualTo _uid) && {(_savedSideKey isEqualTo "") || {(_x get "sideKey") isEqualTo _savedSideKey}})
+    };
+    FLO_StorePendingApprovals = FLO_StorePendingApprovals select {
+        !(((_x get "playerUid") isEqualTo _uid) && {(_savedSideKey isEqualTo "") || {(_x get "sideKey") isEqualTo _savedSideKey}})
+    };
+
+    if (_savedSideKey in ["WEST", "EAST"]) then {
+        FLO_ResourcePersonalBalances deleteAt ([_savedSideKey, _uid] call FLO_fnc_resourcePersonalKey);
     };
 
     private _changedRoleSides = [_uid] call FLO_fnc_commandClearUidRoles;
@@ -65,18 +73,20 @@ if ((_savedSideKey isEqualTo "") || {_savedSideKey isNotEqualTo _currentSideKey}
         ];
         private _pendingPayload = createHashMapFromArray [
             ["success", true],
-            ["pendingVehicles", [_pendingAccess] call FLO_fnc_storePendingVehiclesForAccess]
+            ["pendingVehicles", [_pendingAccess] call FLO_fnc_storePendingVehiclesForAccess],
+            ["pendingApprovals", [_pendingAccess] call FLO_fnc_storePendingApprovalsForAccess]
         ];
 
         [_owner, "store::pendingVehicles", _pendingPayload] call FLO_fnc_storeSendResponse;
     };
 
     diag_log format [
-        "[FLO][Persistence] Cleared saved player state uid=%1 savedSide=%2 currentSide=%3 pendingVehiclesRemoved=%4",
+        "[FLO][Persistence] Cleared saved player state uid=%1 savedSide=%2 currentSide=%3 pendingVehiclesRemoved=%4 pendingApprovalsRemoved=%5",
         _uid,
         _savedSideKey,
         _currentSideKey,
-        _oldPendingCount - count FLO_StorePendingVehicles
+        _oldPendingCount - count FLO_StorePendingVehicles,
+        _oldApprovalCount - count FLO_StorePendingApprovals
     ];
 
     false

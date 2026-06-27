@@ -6,6 +6,8 @@ private _fobRecord = _access get "fobRecord";
 private _baseType = _fobRecord get "type";
 private _vehicleStoreEnabled = _fobRecord get "vehicleStoreEnabled";
 private _deploymentFund = [_playerUid] call FLO_fnc_storeDeploymentFundBalance;
+private _personalBalance = [_sideKey, _playerUid] call FLO_fnc_resourcePersonalBalance;
+private _canUseFactionFunds = [_access get "player"] call FLO_fnc_commandPlayerIsCommanderOrDeputy;
 private _catalog = [
     _sideKey,
     _access get "factionClass",
@@ -44,11 +46,14 @@ createHashMapFromArray [
     ["baseType", _baseType],
     ["vehicleStoreEnabled", _vehicleStoreEnabled],
     ["balance", FLO_ResourceBalances get _sideKey],
+    ["personalBalance", _personalBalance],
+    ["canUseFactionFunds", _canUseFactionFunds],
     ["deploymentFund", _deploymentFund],
     ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
     ["tickets", FLO_TicketBalances get _sideKey],
     ["categories", _categories],
     ["firstCategory", _firstCategory],
     ["fobNetId", _access get "fobNetId"],
-    ["pendingVehicles", [_access] call FLO_fnc_storePendingVehiclesForAccess]
+    ["pendingVehicles", [_access] call FLO_fnc_storePendingVehiclesForAccess],
+    ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess]
 ]

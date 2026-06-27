@@ -13,7 +13,7 @@ if !(_side in [west, east]) exitWith {
 };
 
 if (!([player, "logistics"] call FLO_fnc_commandPlayerHasAuthority)) exitWith {
-    ["Only the side commander can use base logistics right now.", "warning", "Build Menu"] call FLO_fnc_notify;
+    ["Only the commander or deputy can use base logistics.", "warning", "Build Menu"] call FLO_fnc_notify;
 };
 
 private _sideKey = [_side] call FLO_fnc_resourceSideKey;

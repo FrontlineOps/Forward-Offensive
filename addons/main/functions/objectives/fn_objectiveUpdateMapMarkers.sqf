@@ -20,7 +20,7 @@ private _activeMarkers = createHashMap;
         "_displayRadius",
         "_level",
         "_levelName",
-        "_incomePer15",
+        "_incomePer10",
         "_upgradeCost",
         "_maxLevel"
     ];

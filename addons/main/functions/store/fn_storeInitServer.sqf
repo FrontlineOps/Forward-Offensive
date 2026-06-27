@@ -3,10 +3,13 @@ if (!isServer) exitWith {};
 FLO_StoreCatalogCache = createHashMap;
 FLO_StorePendingVehicles = [];
 FLO_StorePendingVehicleCounter = 0;
+FLO_StorePendingApprovals = [];
+FLO_StorePendingApprovalCounter = 0;
 FLO_StorePurchasedVehicles = createHashMap;
 FLO_StorePurchasedVehicleCounter = 0;
 FLO_StoreDeploymentFunds = createHashMap;
 FLO_StorePendingVehicleTtl = 900;
+FLO_StorePendingApprovalTtl = 900;
 FLO_StoreVehicleSpawnRadius = 40;
 
 FLO_StorePurchasedVehicleKilledEh = [

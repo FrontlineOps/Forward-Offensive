@@ -28,7 +28,7 @@ private _icon = "\A3\ui_f\data\map\markers\military\dot_CA.paa";
         "_displayRadius",
         "_level",
         "_levelName",
-        "_incomePer15",
+        "_incomePer10",
         "_remoteUpgradeCost",
         "_maxLevel",
         ["_pendingUpgradeLevel", 0],

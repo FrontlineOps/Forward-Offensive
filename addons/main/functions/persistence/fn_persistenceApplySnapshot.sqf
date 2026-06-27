@@ -55,6 +55,19 @@ if ("resources" in _snapshot) then {
     if ("spentTotal" in _resources) then {
         FLO_ResourceSpentTotal = createHashMapFromArray (_resources get "spentTotal");
     };
+
+    FLO_ResourcePersonalBalances = createHashMap;
+
+    if ("personalBalances" in _resources) then {
+        {
+            private _record = createHashMapFromArray _x;
+            private _key = _record get "key";
+
+            if (_key isNotEqualTo "") then {
+                FLO_ResourcePersonalBalances set [_key, (_record get "balance") max 0];
+            };
+        } forEach (_resources get "personalBalances");
+    };
 };
 
 if ("tickets" in _snapshot) then {
@@ -378,6 +391,10 @@ if ("store" in _snapshot) then {
         FLO_StorePendingVehicleCounter = _store get "pendingVehicleCounter";
     };
 
+    if ("pendingApprovalCounter" in _store) then {
+        FLO_StorePendingApprovalCounter = _store get "pendingApprovalCounter";
+    };
+
     if ("purchasedVehicleCounter" in _store) then {
         FLO_StorePurchasedVehicleCounter = _store get "purchasedVehicleCounter";
     };
@@ -424,6 +441,43 @@ if ("store" in _snapshot) then {
                 ["createdAt", diag_tickTime]
             ];
         } forEach (_store get "pendingVehicles");
+    };
+
+    FLO_StorePendingApprovals = [];
+
+    if ("pendingApprovals" in _store) then {
+        {
+            private _record = createHashMapFromArray _x;
+            private _sideKey = _record get "sideKey";
+            private _fobId = _record get "fobId";
+            private _fobNetId = _record get "fobNetId";
+
+            if (_fobId in FLO_FOBs) then {
+                private _fobRecord = FLO_FOBs get _fobId;
+                _fobNetId = netId (_fobRecord get "object");
+            };
+
+            if (_sideKey in ["WEST", "EAST"]) then {
+                FLO_StorePendingApprovals pushBack createHashMapFromArray [
+                    ["id", _record get "id"],
+                    ["side", [_sideKey] call FLO_fnc_persistenceSideFromKey],
+                    ["sideKey", _sideKey],
+                    ["owner", _record get "owner"],
+                    ["playerUid", _record get "playerUid"],
+                    ["playerName", _record get "playerName"],
+                    ["fobNetId", _fobNetId],
+                    ["fobId", _fobId],
+                    ["cart", _record get "cart"],
+                    ["total", _record get "total"],
+                    ["deploymentFundSpent", _record get "deploymentFundSpent"],
+                    ["personalSpent", _record get "personalSpent"],
+                    ["factionTotal", _record get "factionTotal"],
+                    ["gearCount", _record get "gearCount"],
+                    ["vehicleCount", _record get "vehicleCount"],
+                    ["createdAt", diag_tickTime]
+                ];
+            };
+        } forEach (_store get "pendingApprovals");
     };
 };
 

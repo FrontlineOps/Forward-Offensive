@@ -18,6 +18,7 @@ class Command {
     class commandInitServer {};
     class commandOpenVoteDialog {};
     class commandPlayerHasAuthority {};
+    class commandPlayerIsCommanderOrDeputy {};
     class commandPostInit { postInit = 1; };
     class commandPreInit { preInit = 1; };
     class commandPruneRoleAssignments {};

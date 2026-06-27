@@ -22,7 +22,7 @@ if !(_side in [west, east]) exitWith {
 };
 
 if (!([_player, "logistics"] call FLO_fnc_commandPlayerHasAuthority)) exitWith {
-    [false, "Only the elected side commander can use FOB logistics right now."] remoteExecCall ["IDS_Logistics_fnc_receivePlacementResult", _owner];
+    [false, "Only the commander or deputy can use base logistics."] remoteExecCall ["IDS_Logistics_fnc_receivePlacementResult", _owner];
 };
 
 private _sideKey = [_side] call FLO_fnc_resourceSideKey;

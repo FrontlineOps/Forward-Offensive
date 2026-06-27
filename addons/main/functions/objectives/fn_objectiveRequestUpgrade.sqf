@@ -61,7 +61,7 @@ if ((_objective get "state") isNotEqualTo "held") exitWith {
 };
 
 if !([_player, "build"] call FLO_fnc_commandPlayerHasAuthority) exitWith {
-    ["Only commander-authorized players can upgrade AOs.", "warning"] call _notify;
+    ["Only command-authorized players can upgrade AOs.", "warning"] call _notify;
 };
 
 private _level = floor (_objective get "level");

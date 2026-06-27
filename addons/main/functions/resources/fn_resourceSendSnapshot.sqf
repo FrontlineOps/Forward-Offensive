@@ -8,7 +8,7 @@ if (_owner isEqualTo 0) then {
         private _payload = [];
 
         if (_side in [west, east]) then {
-            _payload = [FLO_ResourceSnapshot, [_side] call FLO_fnc_resourceSideKey] call FLO_fnc_resourceScopeSnapshot;
+            _payload = [FLO_ResourceSnapshot, [_side] call FLO_fnc_resourceSideKey, getPlayerUID _x] call FLO_fnc_resourceScopeSnapshot;
         };
 
         [_payload] remoteExecCall ["FLO_fnc_resourceReceiveSnapshot", owner _x];
@@ -28,7 +28,7 @@ if (_owner isEqualTo 0) then {
         private _side = side group _target;
 
         if (_side in [west, east]) then {
-            _payload = [FLO_ResourceSnapshot, [_side] call FLO_fnc_resourceSideKey] call FLO_fnc_resourceScopeSnapshot;
+            _payload = [FLO_ResourceSnapshot, [_side] call FLO_fnc_resourceSideKey, getPlayerUID _target] call FLO_fnc_resourceScopeSnapshot;
         };
     };
 

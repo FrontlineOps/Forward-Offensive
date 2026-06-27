@@ -10,4 +10,4 @@ if (_level <= 0) exitWith { 0 };
 
 private _weight = _objective get "resourceWeight";
 
-floor (_weight * _level * FLO_ObjectiveIncomePerWeightLevel15Min)
+floor (_weight * _level * FLO_ObjectiveIncomePerWeightLevel10Min)

@@ -15,6 +15,7 @@ class Store {
     class storeBuildCategoryPayload {};
     class storeCategoryForVehicle {};
     class storeCategoryForWeapon {};
+    class storeCanReceiveCheckout {};
     class storeCheckout {};
     class storeClearCargo {};
     class storeCollectVehicleWeapons {};
@@ -32,6 +33,7 @@ class Store {
     class storeOpenDialog {};
     class storeFinalizeVehiclePlacement {};
     class storePendingVehiclesForAccess {};
+    class storePendingApprovalsForAccess {};
     class storePostInit { postInit = 1; };
     class storePreInit { preInit = 1; };
     class storePriceAttachment {};
@@ -41,8 +43,10 @@ class Store {
     class storeReceivePlacementResult {};
     class storeReadVisionTraits {};
     class storeRequestCategory {};
+    class storeRequestApprovalDecision {};
     class storeRequestCheckout {};
     class storeRequestHydrate {};
+    class storeQueueApproval {};
     class storeRegisterPurchasedVehicle {};
     class storeSavedKitsDelete {};
     class storeSavedKitsLoad {};

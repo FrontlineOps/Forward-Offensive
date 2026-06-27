@@ -26,6 +26,8 @@ private _baseType = _fobRecord get "type";
 private _vehicleStoreEnabled = _fobRecord get "vehicleStoreEnabled";
 private _playerUid = getPlayerUID (_access get "player");
 private _deploymentFund = [_playerUid] call FLO_fnc_storeDeploymentFundBalance;
+private _personalBalance = [_sideKey, _playerUid] call FLO_fnc_resourcePersonalBalance;
+private _canUseFactionFunds = [_access get "player"] call FLO_fnc_commandPlayerIsCommanderOrDeputy;
 
 if (!_vehicleStoreEnabled && {_category in FLO_StoreVehicleCategories}) exitWith {
     createHashMapFromArray [
@@ -37,9 +39,12 @@ if (!_vehicleStoreEnabled && {_category in FLO_StoreVehicleCategories}) exitWith
         ["baseType", _baseType],
         ["vehicleStoreEnabled", _vehicleStoreEnabled],
         ["balance", FLO_ResourceBalances get _sideKey],
+        ["personalBalance", _personalBalance],
+        ["canUseFactionFunds", _canUseFactionFunds],
         ["deploymentFund", _deploymentFund],
         ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
-        ["tickets", FLO_TicketBalances get _sideKey]
+        ["tickets", FLO_TicketBalances get _sideKey],
+        ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess]
     ]
 };
 
@@ -59,7 +64,10 @@ createHashMapFromArray [
     ["baseType", _baseType],
     ["vehicleStoreEnabled", _vehicleStoreEnabled],
     ["balance", FLO_ResourceBalances get _sideKey],
+    ["personalBalance", _personalBalance],
+    ["canUseFactionFunds", _canUseFactionFunds],
     ["deploymentFund", _deploymentFund],
     ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
-    ["tickets", FLO_TicketBalances get _sideKey]
+    ["tickets", FLO_TicketBalances get _sideKey],
+    ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess]
 ]

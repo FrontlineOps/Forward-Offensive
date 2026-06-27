@@ -35,7 +35,7 @@ See `LICENSE.md` for the full license terms.
 - Faction-based Store with weapons, gear, kits, support items, and FOB-only vehicle purchases
 - Faction-derived default spawn kits
 - Commander reinforcement ticket purchases from the FOB/COP deployment panel
-- Faction currency and income from controlled territory
+- Personal and faction currency income from controlled territory
 - AO upgrade levels that increase value and defensive strength
 - Ticket-based respawns
 - Friendly FOB/COP respawn network
@@ -92,6 +92,14 @@ Commander/build-authorized players can request AO upgrades remotely from the pan
 The server validates request owner, player life state, side, AO ownership, held state, command authority, max level, pending upgrade state, physical proximity for discount eligibility, and faction balance before spending money or starting the upgrade timer.
 
 ## Store Purchases
+
+Territory income is split by the server every resource tick: 90% of generated side income goes to that side's faction balance, and each active same-side player receives a personal grant equal to 10% of that side income. The 10% personal grant is per player, not divided between players.
+
+Store checkout spends eligible deployment fund first, then personal funds. If a normal player cannot cover the remaining gear cost with personal funds, the checkout is queued for commander/deputy approval and the approved shortfall spends faction funds. Vehicle purchases are always queued for commander/deputy approval unless the buyer is already the commander or deputy.
+
+Only the commander and deputy can spend faction funds from Store approval. Pending approvals are shown in the Store approval panel and are revalidated server-side before gear is applied or vehicle placement records are created.
+
+The client checks carried inventory capacity before submitting packable item checkout lines, so full uniforms, vests, or backpacks reject the checkout before any money is spent. Server checkout still owns catalog, balance, approval, and vehicle authority.
 
 Store-purchased uniforms, vests, backpacks, and vehicles are stripped of inherited class cargo before use. Only gear explicitly bought through the cart is added to player containers, and purchased vehicles spawn with empty cargo inventory while retaining their normal vehicle weapons and turrets.
 

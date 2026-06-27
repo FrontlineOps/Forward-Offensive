@@ -57,7 +57,7 @@ private _snapshot = [];
         _objective get "displayRadius",
         _objective get "level",
         [_objective get "level"] call FLO_fnc_objectiveLevelName,
-        [_objective] call FLO_fnc_objectiveIncomePer15,
+        [_objective] call FLO_fnc_objectiveIncomePer10,
         [_objective] call FLO_fnc_objectiveUpgradeCost,
         FLO_ObjectiveMaxLevel,
         _pendingUpgradeLevel,

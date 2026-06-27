@@ -1,4 +1,4 @@
-params ["_access", "_cart"];
+params ["_access", "_cart", ["_approved", false, [false]], ["_approver", objNull, [objNull]]];
 
 if (!isServer) exitWith {
     createHashMapFromArray [
@@ -32,8 +32,16 @@ private _side = _access get "side";
 private _sideKey = _access get "sideKey";
 private _fob = _access get "fob";
 private _fobRecord = _access get "fobRecord";
-private _playerUid = getPlayerUID (_access get "player");
+private _player = _access get "player";
+private _playerUid = getPlayerUID _player;
 private _deploymentFundRemaining = [_playerUid] call FLO_fnc_storeDeploymentFundBalance;
+private _personalBalance = [_sideKey, _playerUid] call FLO_fnc_resourcePersonalBalance;
+private _buyerCanUseFactionFunds = [_player] call FLO_fnc_commandPlayerIsCommanderOrDeputy;
+private _approvedByLeader = _approved
+    && {!isNull _approver}
+    && {(side group _approver) isEqualTo _side}
+    && {[_approver] call FLO_fnc_commandPlayerIsCommanderOrDeputy};
+private _canUseFactionFunds = _buyerCanUseFactionFunds || {_approvedByLeader};
 private _catalog = [
     _sideKey,
     _access get "factionClass",
@@ -57,6 +65,7 @@ private _total = 0;
 private _deploymentEligibleTotal = 0;
 private _gearEntries = [];
 private _vehicleJobs = [];
+private _checkoutCart = [];
 
 for "_i" from 0 to ((count _cart) - 1) do {
     if (_ok) then {
@@ -103,13 +112,13 @@ for "_i" from 0 to ((count _cart) - 1) do {
                             _message = "Vehicle quantity is too high.";
                         } else {
                             if !(_container in FLO_StoreGearContainers) then {
+                                _ok = false;
+                                _message = "Cart line has invalid container target.";
+                            } else {
+                                if !(_slot in ["", "primary", "handgun", "secondary", "assigned", "uniform", "vest", "backpack", "headgear", "facewear", "binocular"]) then {
                                     _ok = false;
-                                    _message = "Cart line has invalid container target.";
+                                    _message = "Cart line has invalid gear slot.";
                                 } else {
-                                    if !(_slot in ["", "primary", "handgun", "secondary", "assigned", "uniform", "vest", "backpack", "headgear", "facewear", "binocular"]) then {
-                                        _ok = false;
-                                        _message = "Cart line has invalid gear slot.";
-                                    } else {
                                     private _key = format ["%1:%2", _entryKind, toLower _className];
 
                                     if !(_key in _itemIndex) then {
@@ -119,6 +128,14 @@ for "_i" from 0 to ((count _cart) - 1) do {
                                         private _item = _itemIndex get _key;
                                         private _lineTotal = (_item get "priceValue") * _quantity;
                                         _total = _total + _lineTotal;
+
+                                        _checkoutCart pushBack createHashMapFromArray [
+                                            ["className", _item get "className"],
+                                            ["entryKind", _item get "entryKind"],
+                                            ["quantity", _quantity],
+                                            ["container", _container],
+                                            ["slot", _slot]
+                                        ];
 
                                         if ([
                                             _item get "entryKind",
@@ -157,8 +174,8 @@ for "_i" from 0 to ((count _cart) - 1) do {
                                             };
                                         };
                                     };
-                                    };
                                 };
+                            };
                         };
                     };
                 };
@@ -172,9 +189,12 @@ if (!_ok) exitWith {
         ["success", false],
         ["message", _message],
         ["balance", FLO_ResourceBalances get _sideKey],
+        ["personalBalance", _personalBalance],
+        ["canUseFactionFunds", _canUseFactionFunds],
         ["deploymentFund", _deploymentFundRemaining],
         ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
-        ["tickets", FLO_TicketBalances get _sideKey]
+        ["tickets", FLO_TicketBalances get _sideKey],
+        ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess]
     ]
 };
 
@@ -183,23 +203,94 @@ if (_total <= 0) exitWith {
         ["success", false],
         ["message", "Checkout total is invalid."],
         ["balance", FLO_ResourceBalances get _sideKey],
+        ["personalBalance", _personalBalance],
+        ["canUseFactionFunds", _canUseFactionFunds],
         ["deploymentFund", _deploymentFundRemaining],
         ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
-        ["tickets", FLO_TicketBalances get _sideKey]
+        ["tickets", FLO_TicketBalances get _sideKey],
+        ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess]
     ]
 };
 
 private _deploymentFundSpent = (_deploymentFundRemaining min _deploymentEligibleTotal) min _total;
-private _factionTotal = _total - _deploymentFundSpent;
+private _remainingTotal = _total - _deploymentFundSpent;
+private _personalSpent = _remainingTotal min _personalBalance;
+private _factionTotal = _remainingTotal - _personalSpent;
+private _requiresApproval = (_vehicleJobs isNotEqualTo []) || {_factionTotal > 0};
+
+if (_requiresApproval && {!_canUseFactionFunds}) exitWith {
+    private _approval = [
+        _access,
+        _checkoutCart,
+        _total,
+        _deploymentFundSpent,
+        _personalSpent,
+        _factionTotal,
+        count _gearEntries,
+        count _vehicleJobs
+    ] call FLO_fnc_storeQueueApproval;
+
+    createHashMapFromArray [
+        ["success", true],
+        ["approvalPending", true],
+        ["message", format ["Submitted checkout for commander approval. %1 gear lines, %2 vehicles.", count _gearEntries, count _vehicleJobs]],
+        ["balance", FLO_ResourceBalances get _sideKey],
+        ["personalBalance", _personalBalance],
+        ["canUseFactionFunds", _canUseFactionFunds],
+        ["deploymentFund", _deploymentFundRemaining],
+        ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
+        ["deploymentFundSpent", 0],
+        ["personalSpent", 0],
+        ["factionSpent", 0],
+        ["tickets", FLO_TicketBalances get _sideKey],
+        ["spent", 0],
+        ["gearCount", count _gearEntries],
+        ["vehicleCount", count _vehicleJobs],
+        ["pendingApproval", _approval],
+        ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess],
+        ["pendingVehicles", [_access] call FLO_fnc_storePendingVehiclesForAccess]
+    ]
+};
+
+if ((_factionTotal > 0) && {(FLO_ResourceBalances get _sideKey) < _factionTotal}) exitWith {
+    createHashMapFromArray [
+        ["success", false],
+        ["message", format ["Not enough faction currency. Required: %1.", _factionTotal]],
+        ["balance", FLO_ResourceBalances get _sideKey],
+        ["personalBalance", _personalBalance],
+        ["canUseFactionFunds", _canUseFactionFunds],
+        ["deploymentFund", _deploymentFundRemaining],
+        ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
+        ["tickets", FLO_TicketBalances get _sideKey],
+        ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess]
+    ]
+};
+
+if ((_personalSpent > 0) && {!([_sideKey, _playerUid, _personalSpent, "Store checkout"] call FLO_fnc_resourceSpendPersonal)}) exitWith {
+    createHashMapFromArray [
+        ["success", false],
+        ["message", format ["Not enough personal currency. Required: %1.", _personalSpent]],
+        ["balance", FLO_ResourceBalances get _sideKey],
+        ["personalBalance", [_sideKey, _playerUid] call FLO_fnc_resourcePersonalBalance],
+        ["canUseFactionFunds", _canUseFactionFunds],
+        ["deploymentFund", _deploymentFundRemaining],
+        ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
+        ["tickets", FLO_TicketBalances get _sideKey],
+        ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess]
+    ]
+};
 
 if ((_factionTotal > 0) && {!([_side, _factionTotal, "Store checkout"] call FLO_fnc_resourceSpend)}) exitWith {
     createHashMapFromArray [
         ["success", false],
         ["message", format ["Not enough faction currency. Required: %1.", _factionTotal]],
         ["balance", FLO_ResourceBalances get _sideKey],
+        ["personalBalance", [_sideKey, _playerUid] call FLO_fnc_resourcePersonalBalance],
+        ["canUseFactionFunds", _canUseFactionFunds],
         ["deploymentFund", _deploymentFundRemaining],
         ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
-        ["tickets", FLO_TicketBalances get _sideKey]
+        ["tickets", FLO_TicketBalances get _sideKey],
+        ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess]
     ]
 };
 
@@ -229,7 +320,7 @@ private _pendingVehicles = [];
         ["side", _side],
         ["sideKey", _sideKey],
         ["owner", _access get "owner"],
-        ["playerUid", getPlayerUID (_access get "player")],
+        ["playerUid", getPlayerUID _player],
         ["fobNetId", _access get "fobNetId"],
         ["fobId", _fob getVariable ["FLO_FOB_Id", ""]],
         ["createdAt", diag_tickTime]
@@ -258,31 +349,41 @@ if (_gearEntries isNotEqualTo []) then {
     };
 };
 
+private _personalBalanceAfter = [_sideKey, _playerUid] call FLO_fnc_resourcePersonalBalance;
+
 diag_log format [
-    "[FLO][Store] %1 checkout player=%2 total=%3 deployment=%4 faction=%5 gear=%6 pendingVehicles=%7 balance=%8",
+    "[FLO][Store] %1 checkout player=%2 total=%3 deployment=%4 personal=%5 faction=%6 gear=%7 pendingVehicles=%8 factionBalance=%9 personalBalance=%10 approved=%11",
     _sideKey,
-    name (_access get "player"),
+    name _player,
     _total,
     _deploymentFundSpent,
+    _personalSpent,
     _factionTotal,
     count _gearEntries,
     count _pendingVehicles,
-    FLO_ResourceBalances get _sideKey
+    FLO_ResourceBalances get _sideKey,
+    _personalBalanceAfter,
+    _approvedByLeader
 ];
 
 ["storeCheckout"] call FLO_fnc_persistenceScheduleSave;
 
 createHashMapFromArray [
     ["success", true],
+    ["approvalPending", false],
     ["message", format ["Purchased %1 gear lines and %2 vehicles for %3.", count _gearEntries, count _pendingVehicles, _total]],
     ["balance", FLO_ResourceBalances get _sideKey],
+    ["personalBalance", _personalBalanceAfter],
+    ["canUseFactionFunds", _canUseFactionFunds],
     ["deploymentFund", _deploymentFundRemaining],
     ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
     ["deploymentFundSpent", _deploymentFundSpent],
+    ["personalSpent", _personalSpent],
     ["factionSpent", _factionTotal],
     ["tickets", FLO_TicketBalances get _sideKey],
     ["spent", _total],
     ["gearCount", count _gearEntries],
     ["vehicleCount", count _pendingVehicles],
+    ["pendingApprovals", [_access] call FLO_fnc_storePendingApprovalsForAccess],
     ["pendingVehicles", [_access] call FLO_fnc_storePendingVehiclesForAccess]
 ]

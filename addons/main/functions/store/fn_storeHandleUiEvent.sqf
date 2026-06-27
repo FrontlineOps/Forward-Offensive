@@ -18,7 +18,25 @@ switch (_event) do {
         [player, FLO_StoreActiveFobNetId, _data get "category"] remoteExecCall ["FLO_fnc_storeRequestCategory", 2];
     };
     case "store::checkout": {
-        [player, FLO_StoreActiveFobNetId, _data get "items"] remoteExecCall ["FLO_fnc_storeRequestCheckout", 2];
+        private _items = _data get "items";
+        private _capacity = [_items] call FLO_fnc_storeCanReceiveCheckout;
+
+        if !(_capacity get "success") exitWith {
+            ["store::checkout", createHashMapFromArray [
+                ["success", false],
+                ["message", _capacity get "message"]
+            ]] call FLO_fnc_storeUpdateDialog;
+        };
+
+        [player, FLO_StoreActiveFobNetId, _items] remoteExecCall ["FLO_fnc_storeRequestCheckout", 2];
+    };
+    case "store::approval": {
+        [
+            player,
+            FLO_StoreActiveFobNetId,
+            _data get "id",
+            _data get "approved"
+        ] remoteExecCall ["FLO_fnc_storeRequestApprovalDecision", 2];
     };
     case "store::refresh": {
         [player, FLO_StoreActiveFobNetId] remoteExecCall ["FLO_fnc_storeRequestHydrate", 2];

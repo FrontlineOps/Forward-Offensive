@@ -28,7 +28,7 @@ if !(_side in [west, east]) exitWith {
 };
 
 if (!([_player, "fob"] call FLO_fnc_commandPlayerHasAuthority)) exitWith {
-    [false, format ["Only the elected side commander can deploy %1s.", _label]] remoteExecCall ["FLO_fnc_fobReceiveDeployResult", _owner];
+    [false, format ["Only the commander or deputy can deploy %1s.", _label]] remoteExecCall ["FLO_fnc_fobReceiveDeployResult", _owner];
 };
 
 private _sideKey = [_side] call FLO_fnc_resourceSideKey;

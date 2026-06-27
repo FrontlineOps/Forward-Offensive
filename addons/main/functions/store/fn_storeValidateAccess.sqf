@@ -1,4 +1,4 @@
-params ["_player", "_fobNetId"];
+params ["_player", "_fobNetId", ["_enforceRequestOwner", true]];
 
 if (!isServer) exitWith {
     createHashMapFromArray [
@@ -19,11 +19,15 @@ if (isNull _player) exitWith {
 };
 
 private _playerOwner = owner _player;
-if (_requestOwner <= 2) then {
+if (!_enforceRequestOwner) then {
     _requestOwner = _playerOwner;
+} else {
+    if (_requestOwner <= 2) then {
+        _requestOwner = _playerOwner;
+    };
 };
 
-if ((_requestOwner > 2) && {_playerOwner isNotEqualTo _requestOwner}) exitWith {
+if (_enforceRequestOwner && {(_requestOwner > 2) && {_playerOwner isNotEqualTo _requestOwner}}) exitWith {
     diag_log format [
         "[FLO][Store] Rejected spoofed store request player=%1 requestOwner=%2 actualOwner=%3",
         name _player,

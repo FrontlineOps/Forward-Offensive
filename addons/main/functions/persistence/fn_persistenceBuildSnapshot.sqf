@@ -33,6 +33,17 @@ private _resources = [
     ]]
 ];
 
+private _personalBalanceRecords = [];
+
+{
+    _personalBalanceRecords pushBack [
+        ["key", _x],
+        ["balance", _y]
+    ];
+} forEach FLO_ResourcePersonalBalances;
+
+_resources pushBack ["personalBalances", _personalBalanceRecords];
+
 private _tickets = [
     ["revision", FLO_TicketRevision],
     ["balances", [
@@ -212,6 +223,27 @@ private _pendingVehicleRecords = [];
     ];
 } forEach FLO_StorePendingVehicles;
 
+private _pendingApprovalRecords = [];
+
+{
+    _pendingApprovalRecords pushBack [
+        ["id", _x get "id"],
+        ["sideKey", _x get "sideKey"],
+        ["owner", _x get "owner"],
+        ["playerUid", _x get "playerUid"],
+        ["playerName", _x get "playerName"],
+        ["fobNetId", _x get "fobNetId"],
+        ["fobId", _x get "fobId"],
+        ["cart", _x get "cart"],
+        ["total", _x get "total"],
+        ["deploymentFundSpent", _x get "deploymentFundSpent"],
+        ["personalSpent", _x get "personalSpent"],
+        ["factionTotal", _x get "factionTotal"],
+        ["gearCount", _x get "gearCount"],
+        ["vehicleCount", _x get "vehicleCount"]
+    ];
+} forEach FLO_StorePendingApprovals;
+
 private _deploymentFundRecords = [];
 
 {
@@ -223,9 +255,11 @@ private _deploymentFundRecords = [];
 
 private _store = [
     ["pendingVehicleCounter", FLO_StorePendingVehicleCounter],
+    ["pendingApprovalCounter", FLO_StorePendingApprovalCounter],
     ["purchasedVehicleCounter", FLO_StorePurchasedVehicleCounter],
     ["deploymentFunds", _deploymentFundRecords],
-    ["pendingVehicles", _pendingVehicleRecords]
+    ["pendingVehicles", _pendingVehicleRecords],
+    ["pendingApprovals", _pendingApprovalRecords]
 ];
 
 private _vehicleRecords = [];

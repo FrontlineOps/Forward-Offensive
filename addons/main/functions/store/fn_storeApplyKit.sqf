@@ -8,6 +8,8 @@ if (isMultiplayer && {remoteExecutedOwner isNotEqualTo 2}) exitWith {
 
 if ((typeName _gearEntries) isNotEqualTo "ARRAY") exitWith {};
 
+private _failedInventoryAdds = [];
+
 {
     private _targetCategory = _x;
 
@@ -90,7 +92,9 @@ if ((typeName _gearEntries) isNotEqualTo "ARRAY") exitWith {};
             case "ammo";
             case "mines": {
                 for "_i" from 1 to _quantity do {
-                    [player, _className, _container] call FLO_fnc_storeAddInventoryItem;
+                    if !([player, _className, _container] call FLO_fnc_storeAddInventoryItem) then {
+                        _failedInventoryAdds pushBack _className;
+                    };
                 };
             };
             default {
@@ -111,7 +115,9 @@ if ((typeName _gearEntries) isNotEqualTo "ARRAY") exitWith {};
                         };
                         default {
                             for "_i" from 1 to _quantity do {
-                                [player, _className, _container] call FLO_fnc_storeAddInventoryItem;
+                                if !([player, _className, _container] call FLO_fnc_storeAddInventoryItem) then {
+                                    _failedInventoryAdds pushBack _className;
+                                };
                             };
                         };
                     };
@@ -130,7 +136,9 @@ if ((typeName _gearEntries) isNotEqualTo "ARRAY") exitWith {};
                                 player addWeapon _className;
                             } else {
                                 for "_i" from 1 to _quantity do {
-                                    [player, _className, _container] call FLO_fnc_storeAddInventoryItem;
+                                    if !([player, _className, _container] call FLO_fnc_storeAddInventoryItem) then {
+                                        _failedInventoryAdds pushBack _className;
+                                    };
                                 };
                             };
                         };
@@ -141,4 +149,12 @@ if ((typeName _gearEntries) isNotEqualTo "ARRAY") exitWith {};
     } forEach _gearEntries;
 } forEach ["uniforms", "vests", "backpacks", "headgear", "facewear", "primary", "handgun", "secondary", "attachments", "misc", "ammo", "mines"];
 
-["Purchased kit applied.", "success", "Store"] call FLO_fnc_notify;
+if (_failedInventoryAdds isEqualTo []) then {
+    ["Purchased kit applied.", "success", "Store"] call FLO_fnc_notify;
+} else {
+    [
+        format ["Purchased kit applied, but %1 inventory items did not fit.", count _failedInventoryAdds],
+        "warning",
+        "Store"
+    ] call FLO_fnc_notify;
+};
