@@ -9,7 +9,12 @@ if (_patches isEqualTo []) exitWith {
 private _loaded = false;
 
 {
-    if (isClass (configFile >> "CfgPatches" >> _x)) exitWith {
+    private _patchPattern = _x;
+    private _patchIndex = ("true" configClasses (configFile >> "CfgPatches")) findIf {
+        [configName _x, [_patchPattern], "prefix"] call FLO_fnc_storeStringMatchesPatterns
+    };
+
+    if (_patchIndex >= 0) exitWith {
         _loaded = true;
     };
 } forEach _patches;

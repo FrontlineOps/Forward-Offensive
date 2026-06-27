@@ -88,7 +88,7 @@ FLO_StoreFreeItemClasses = [
 ];
 
 FLO_StoreSupportModSources = [
-    ["acm", ["ACM_main"], ["ACM_"], ["ACM_"], ["ACM_"], ["misc", "ammo"]],
+    ["acm", ["ACM_"], ["ACM_"], ["ACM_"], ["ACM_"], ["misc", "ammo"]],
     ["ace", ["ace_main"], ["ace_"], ["ace_", "ace3_"], ["ace_", "ace3_"], ["misc", "ammo"]]
 ];
 
