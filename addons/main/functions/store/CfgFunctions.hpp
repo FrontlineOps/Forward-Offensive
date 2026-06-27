@@ -36,6 +36,7 @@ class Store {
     class storePendingApprovalsForAccess {};
     class storePostInit { postInit = 1; };
     class storePreInit { preInit = 1; };
+    class storeNormalizeRuntimeClass {};
     class storeMagazineCombatTraits {};
     class storePriceAttachment {};
     class storePriceClass {};

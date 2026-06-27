@@ -66,6 +66,7 @@ private _deploymentEligibleTotal = 0;
 private _gearEntries = [];
 private _vehicleJobs = [];
 private _checkoutCart = [];
+private _skippedSavedKitLines = 0;
 
 for "_i" from 0 to ((count _cart) - 1) do {
     if (_ok) then {
@@ -81,9 +82,15 @@ for "_i" from 0 to ((count _cart) - 1) do {
             } else {
                 private _className = _entry get "className";
                 private _entryKind = _entry get "entryKind";
+                private _category = "";
                 private _quantity = 1;
                 private _container = "auto";
                 private _slot = "";
+                private _source = "";
+
+                if ("category" in _entry) then {
+                    _category = _entry get "category";
+                };
 
                 if ("quantity" in _entry) then {
                     _quantity = _entry get "quantity";
@@ -97,10 +104,17 @@ for "_i" from 0 to ((count _cart) - 1) do {
                     _slot = _entry get "slot";
                 };
 
-                if (((typeName _className) isNotEqualTo "STRING") || {((typeName _entryKind) isNotEqualTo "STRING") || {((typeName _quantity) isNotEqualTo "SCALAR") || {((typeName _container) isNotEqualTo "STRING") || {((typeName _slot) isNotEqualTo "STRING")}}}}) then {
+                if ("source" in _entry) then {
+                    _source = _entry get "source";
+                };
+
+                if (((typeName _className) isNotEqualTo "STRING") || {((typeName _entryKind) isNotEqualTo "STRING") || {((typeName _category) isNotEqualTo "STRING") || {((typeName _quantity) isNotEqualTo "SCALAR") || {((typeName _container) isNotEqualTo "STRING") || {((typeName _slot) isNotEqualTo "STRING") || {((typeName _source) isNotEqualTo "STRING")}}}}}}) then {
                     _ok = false;
                     _message = "Cart line has invalid item data.";
                 } else {
+                    _className = [_className] call FLO_fnc_storeNormalizeRuntimeClass;
+                    private _isSavedKitLine = _source isEqualTo "savedKit";
+
                     _quantity = floor _quantity;
 
                     if ((_quantity < 1) || {_quantity > 50}) then {
@@ -122,8 +136,12 @@ for "_i" from 0 to ((count _cart) - 1) do {
                                     private _key = format ["%1:%2", _entryKind, toLower _className];
 
                                     if !(_key in _itemIndex) then {
-                                        _ok = false;
-                                        _message = format ["%1 is not available for this faction.", _className];
+                                        if (_isSavedKitLine && {_entryKind isEqualTo "gear"} && {_category in ["attachments", "misc"]}) then {
+                                            _skippedSavedKitLines = _skippedSavedKitLines + 1;
+                                        } else {
+                                            _ok = false;
+                                            _message = format ["%1 is not available for this faction.", _className];
+                                        };
                                     } else {
                                         private _item = _itemIndex get _key;
                                         private _lineTotal = (_item get "priceValue") * _quantity;
@@ -184,6 +202,12 @@ for "_i" from 0 to ((count _cart) - 1) do {
     };
 };
 
+private _skippedSavedKitMessage = "";
+
+if (_skippedSavedKitLines > 0) then {
+    _skippedSavedKitMessage = format [" Skipped %1 saved-kit extras that are built in, runtime-only, or unavailable.", _skippedSavedKitLines];
+};
+
 if (!_ok) exitWith {
     createHashMapFromArray [
         ["success", false],
@@ -199,9 +223,18 @@ if (!_ok) exitWith {
 };
 
 if ((_total < 0) || {(_gearEntries isEqualTo []) && {_vehicleJobs isEqualTo []}}) exitWith {
+    private _invalidMessage = "Checkout total is invalid.";
+
+    if (_skippedSavedKitLines > 0) then {
+        _invalidMessage = format [
+            "Saved kit has no purchasable available items. Skipped %1 saved-kit extras that are built in, runtime-only, or unavailable.",
+            _skippedSavedKitLines
+        ];
+    };
+
     createHashMapFromArray [
         ["success", false],
-        ["message", "Checkout total is invalid."],
+        ["message", _invalidMessage],
         ["balance", FLO_ResourceBalances get _sideKey],
         ["personalBalance", _personalBalance],
         ["canUseFactionFunds", _canUseFactionFunds],
@@ -233,7 +266,7 @@ if (_requiresApproval && {!_canUseFactionFunds}) exitWith {
     createHashMapFromArray [
         ["success", true],
         ["approvalPending", true],
-        ["message", format ["Submitted checkout for commander approval. %1 gear lines, %2 vehicles.", count _gearEntries, count _vehicleJobs]],
+        ["message", (format ["Submitted checkout for commander approval. %1 gear lines, %2 vehicles.", count _gearEntries, count _vehicleJobs]) + _skippedSavedKitMessage],
         ["balance", FLO_ResourceBalances get _sideKey],
         ["personalBalance", _personalBalance],
         ["canUseFactionFunds", _canUseFactionFunds],
@@ -371,7 +404,7 @@ diag_log format [
 createHashMapFromArray [
     ["success", true],
     ["approvalPending", false],
-    ["message", format ["Purchased %1 gear lines and %2 vehicles for %3.", count _gearEntries, count _pendingVehicles, _total]],
+    ["message", (format ["Purchased %1 gear lines and %2 vehicles for %3.", count _gearEntries, count _pendingVehicles, _total]) + _skippedSavedKitMessage],
     ["balance", FLO_ResourceBalances get _sideKey],
     ["personalBalance", _personalBalanceAfter],
     ["canUseFactionFunds", _canUseFactionFunds],

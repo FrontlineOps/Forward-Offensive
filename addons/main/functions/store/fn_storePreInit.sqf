@@ -87,6 +87,17 @@ FLO_StoreFreeItemClasses = [
     "ace_tourniquet"
 ];
 
+FLO_StoreRuntimeVariantBaseClasses = [
+    "ACRE_PRC343",
+    "ACRE_PRC148",
+    "ACRE_PRC152",
+    "ACRE_PRC77",
+    "ACRE_PRC117F",
+    "ACRE_SEM52SL",
+    "ACRE_SEM70",
+    "ACRE_BF888S"
+];
+
 FLO_StoreSupportModSources = [
     ["acm", ["ACM_"], ["ACM_"], ["ACM_"], ["ACM_"], ["misc", "ammo"]],
     ["ace", ["ace_main"], ["ace_"], ["ace_", "ace3_"], ["ace_", "ace3_"], ["misc", "ammo"]]

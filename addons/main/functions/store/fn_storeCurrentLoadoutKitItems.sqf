@@ -71,6 +71,9 @@ private _fnc_addLine = {
 
     if (((typeName _className) isNotEqualTo "STRING") || {_className isEqualTo ""}) exitWith {};
 
+    _className = [_className] call FLO_fnc_storeNormalizeRuntimeClass;
+    if (_className isEqualTo "") exitWith {};
+
     if (((typeName _container) isNotEqualTo "STRING") || {!(_container in FLO_StoreGearContainers)}) then {
         _container = "auto";
     };

@@ -133,7 +133,7 @@ _freeByContainer set ["backpack", [backpackContainer player, backpack player, "b
 
     private _entryKind = _x getOrDefault ["entryKind", ""];
     private _category = _x getOrDefault ["category", ""];
-    private _className = _x getOrDefault ["className", ""];
+    private _className = [_x getOrDefault ["className", ""]] call FLO_fnc_storeNormalizeRuntimeClass;
 
     if (_entryKind isNotEqualTo "gear") then { continue };
 
@@ -159,7 +159,7 @@ private _message = "";
 
     private _entryKind = _x getOrDefault ["entryKind", ""];
     private _category = _x getOrDefault ["category", ""];
-    private _className = _x getOrDefault ["className", ""];
+    private _className = [_x getOrDefault ["className", ""]] call FLO_fnc_storeNormalizeRuntimeClass;
     private _slot = _x getOrDefault ["slot", ""];
     private _quantity = floor (_x getOrDefault ["quantity", 1]);
     private _container = _x getOrDefault ["container", "auto"];

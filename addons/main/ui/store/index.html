@@ -1800,7 +1800,8 @@
                     priceValue: priceValue,
                     quantity: quantity,
                     container: normalizeContainer(line, line.container),
-                    slot: typeof line.slot === "string" ? line.slot : ""
+                    slot: typeof line.slot === "string" ? line.slot : "",
+                    source: typeof line.source === "string" ? line.source : ""
                 };
             }
 
@@ -2555,7 +2556,9 @@
                     state.cart = [];
 
                     (kit.items || []).forEach(function (line) {
-                        state.cart.push(copyCartLine(line));
+                        var copy = copyCartLine(line);
+                        copy.source = "savedKit";
+                        state.cart.push(copy);
                     });
 
                     renderCart();
@@ -2582,7 +2585,8 @@
                                 category: line.category,
                                 quantity: line.quantity,
                                 container: normalizeContainer(line, line.container),
-                                slot: typeof line.slot === "string" ? line.slot : ""
+                                slot: typeof line.slot === "string" ? line.slot : "",
+                                source: typeof line.source === "string" ? line.source : ""
                             };
                         })
                     });
