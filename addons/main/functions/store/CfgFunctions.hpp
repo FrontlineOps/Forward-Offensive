@@ -25,6 +25,7 @@ class Store {
     class storeCurrentLoadoutKitItems {};
     class storeDeploymentFundBalance {};
     class storeDeploymentFundEligible {};
+    class storeSpendDeploymentFund {};
     class storeFactionUsesVanillaGear {};
     class storeGearVisionTraits {};
     class storeHandleApprovalsUiEvent {};

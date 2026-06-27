@@ -295,36 +295,96 @@ if ((_factionTotal > 0) && {(FLO_ResourceBalances get _sideKey) < _factionTotal}
     ]
 };
 
+private _deploymentFundHadRecord = _playerUid in FLO_StoreDeploymentFunds;
+private _deploymentFundBeforeSpend = _deploymentFundRemaining;
+private _actualDeploymentFundSpent = [_playerUid, _deploymentFundSpent] call FLO_fnc_storeSpendDeploymentFund;
+
+if (_actualDeploymentFundSpent isNotEqualTo _deploymentFundSpent) then {
+    _deploymentFundSpent = _actualDeploymentFundSpent;
+    _deploymentFundRemaining = [_playerUid] call FLO_fnc_storeDeploymentFundBalance;
+    _remainingTotal = _total - _deploymentFundSpent;
+    _personalBalance = [_sideKey, _playerUid] call FLO_fnc_resourcePersonalBalance;
+    _personalSpent = _remainingTotal min _personalBalance;
+    _factionTotal = _remainingTotal - _personalSpent;
+};
+
+if ((_factionTotal > 0) && {!_canUseFactionFunds}) exitWith {
+    if (_deploymentFundHadRecord) then {
+        FLO_StoreDeploymentFunds set [_playerUid, _deploymentFundBeforeSpend];
+    } else {
+        FLO_StoreDeploymentFunds deleteAt _playerUid;
+    };
+
+    createHashMapFromArray [
+        ["success", false],
+        ["message", "Checkout now requires commander approval."],
+        ["balance", FLO_ResourceBalances get _sideKey],
+        ["personalBalance", _personalBalance],
+        ["canUseFactionFunds", _canUseFactionFunds],
+        ["deploymentFund", _deploymentFundBeforeSpend],
+        ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
+        ["tickets", FLO_TicketBalances get _sideKey]
+    ]
+};
+
+if ((_factionTotal > 0) && {(FLO_ResourceBalances get _sideKey) < _factionTotal}) exitWith {
+    if (_deploymentFundHadRecord) then {
+        FLO_StoreDeploymentFunds set [_playerUid, _deploymentFundBeforeSpend];
+    } else {
+        FLO_StoreDeploymentFunds deleteAt _playerUid;
+    };
+
+    createHashMapFromArray [
+        ["success", false],
+        ["message", format ["Not enough faction currency. Required: %1.", _factionTotal]],
+        ["balance", FLO_ResourceBalances get _sideKey],
+        ["personalBalance", _personalBalance],
+        ["canUseFactionFunds", _canUseFactionFunds],
+        ["deploymentFund", _deploymentFundBeforeSpend],
+        ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
+        ["tickets", FLO_TicketBalances get _sideKey]
+    ]
+};
+
 if ((_personalSpent > 0) && {!([_sideKey, _playerUid, _personalSpent, "Store checkout"] call FLO_fnc_resourceSpendPersonal)}) exitWith {
+    if (_deploymentFundHadRecord) then {
+        FLO_StoreDeploymentFunds set [_playerUid, _deploymentFundBeforeSpend];
+    } else {
+        FLO_StoreDeploymentFunds deleteAt _playerUid;
+    };
+
     createHashMapFromArray [
         ["success", false],
         ["message", format ["Not enough personal currency. Required: %1.", _personalSpent]],
         ["balance", FLO_ResourceBalances get _sideKey],
         ["personalBalance", [_sideKey, _playerUid] call FLO_fnc_resourcePersonalBalance],
         ["canUseFactionFunds", _canUseFactionFunds],
-        ["deploymentFund", _deploymentFundRemaining],
+        ["deploymentFund", _deploymentFundBeforeSpend],
         ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
         ["tickets", FLO_TicketBalances get _sideKey]
     ]
 };
 
 if ((_factionTotal > 0) && {!([_side, _factionTotal, "Store checkout"] call FLO_fnc_resourceSpend)}) exitWith {
+    if (_deploymentFundHadRecord) then {
+        FLO_StoreDeploymentFunds set [_playerUid, _deploymentFundBeforeSpend];
+    } else {
+        FLO_StoreDeploymentFunds deleteAt _playerUid;
+    };
+
     createHashMapFromArray [
         ["success", false],
         ["message", format ["Not enough faction currency. Required: %1.", _factionTotal]],
         ["balance", FLO_ResourceBalances get _sideKey],
         ["personalBalance", [_sideKey, _playerUid] call FLO_fnc_resourcePersonalBalance],
         ["canUseFactionFunds", _canUseFactionFunds],
-        ["deploymentFund", _deploymentFundRemaining],
+        ["deploymentFund", _deploymentFundBeforeSpend],
         ["deploymentFundAmount", FLO_StoreDeploymentFundAmount],
         ["tickets", FLO_TicketBalances get _sideKey]
     ]
 };
 
-if (_deploymentFundSpent > 0) then {
-    _deploymentFundRemaining = _deploymentFundRemaining - _deploymentFundSpent;
-    FLO_StoreDeploymentFunds set [_playerUid, _deploymentFundRemaining];
-};
+_deploymentFundRemaining = [_playerUid] call FLO_fnc_storeDeploymentFundBalance;
 
 private _pendingVehicles = [];
 
