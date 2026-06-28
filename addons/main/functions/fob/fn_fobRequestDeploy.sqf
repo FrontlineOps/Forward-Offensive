@@ -39,6 +39,34 @@ if (surfaceIsWater _posAGL) exitWith {
     [false, format ["%1 deployment requires dry land.", _label]] remoteExecCall ["FLO_fnc_fobReceiveDeployResult", _owner];
 };
 
+private _matchPhase = FLO_MatchState get "phase";
+private _blockedObjectiveId = "";
+private _blockedObjectiveName = "";
+private _blockedObjectivePosition = [0, 0, 0];
+private _blockedObjectiveRadius = 0;
+
+if (_matchPhase isEqualTo "frontline") then {
+    _blockedObjectiveId = FLO_MatchState get "plannedObjectiveId";
+    _blockedObjectiveName = FLO_MatchState get "plannedObjectiveName";
+    _blockedObjectivePosition = FLO_MatchState get "plannedObjectivePosition";
+    _blockedObjectiveRadius = FLO_MatchState get "plannedObjectiveRadius";
+};
+
+if (_matchPhase isEqualTo "operation") then {
+    _blockedObjectiveId = FLO_MatchState get "operationObjectiveId";
+    _blockedObjectiveName = FLO_MatchState get "operationObjectiveName";
+    _blockedObjectivePosition = FLO_MatchState get "operationObjectivePosition";
+    _blockedObjectiveRadius = FLO_MatchState get "operationObjectiveRadius";
+};
+
+if (
+    (_blockedObjectiveId isNotEqualTo "") &&
+    {_blockedObjectiveRadius > 0} &&
+    {(_posAGL distance2D _blockedObjectivePosition) <= _blockedObjectiveRadius}
+) exitWith {
+    [false, format ["%1s cannot be deployed inside the active operation AO: %2.", _label, _blockedObjectiveName]] remoteExecCall ["FLO_fnc_fobReceiveDeployResult", _owner];
+};
+
 private _tooClose = false;
 private _sameSideFobCount = 0;
 private _sameSideTypeCount = 0;
