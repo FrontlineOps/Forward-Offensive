@@ -22,6 +22,16 @@ Official public releases may be downloaded and used only for playing Forward Off
 
 See `LICENSE.md` for the full license terms.
 
+## Features
+
+- Persistent PvP campaign state with server-authoritative tickets, economy, objectives, and player progression.
+- Generated territory grid and AO layer for frontline movement, flanking, capture pressure, and strategic map control.
+- Commander, deputy, faction voting, FOB/COP deployment, and side-wide logistics tools for organized team play.
+- Match phase manager with setup, frontline selection, operation cycles, operation-sector scoring, and HTML status UI.
+- Faction store with personal/faction funds, approval workflows, saved kits, vehicle purchasing, and config-derived pricing.
+- Faction-derived default spawn kits, custom respawn handling, and friendly FOB/COP respawn network.
+- Intel, notifications, AO command UI, deployment UI, Store UI, and admin persistence reset tooling.
+
 ## Development
 
 - Addon root: `addons/main`
