@@ -22,27 +22,6 @@ Official public releases may be downloaded and used only for playing Forward Off
 
 See `LICENSE.md` for the full license terms.
 
-## Features
-
-- Persistent 24/7 PvP campaign state
-- Grid-based territory control across the map
-- Major AO system for towns, villages, ports, terminals, capitals, and strategic areas
-- Frontline-focused capture rules
-- AO pressure and assault windows
-- Server-authoritative match phase manager for setup, frontline selection, operation cycles, and campaign-day scoring
-- AO command panel for side-wide held AO upgrades
-- FOB and COP deployment systems
-- Commander voting and faction selection
-- Faction-based Store with weapons, gear, kits, support items, and FOB-only vehicle purchases
-- Faction-derived default spawn kits
-- Commander reinforcement ticket purchases from the FOB/COP deployment panel
-- Personal and faction currency income from controlled territory
-- AO upgrade levels that increase value and defensive strength
-- Ticket-based respawns
-- Friendly FOB/COP respawn network
-- Intel system for searching enemy bodies
-- Notification and announcement framework
-
 ## Development
 
 - Addon root: `addons/main`
@@ -83,53 +62,7 @@ HEMTT project config is included for local addon checks and launch workflow.
 .\.tools\hemtt\hemtt.exe launch
 ```
 
-## Objective and AO Upgrades
-
-The objective system is server-authoritative. Clients receive sanitized objective/grid snapshots for map markers and UI, but the server owns objective state, capture state, upgrade timers, resource spending, and persistence.
-
-`Ctrl+Shift+O` opens the AO command panel from anywhere. The panel lists all friendly held AOs for the player's side, shows level, income, pressure, vulnerability, pending upgrade time, faction balance, remote upgrade price, and in-person upgrade price. The same dialog includes a native Arma map preview: hovering an AO row focuses/highlights that AO, and clicking a friendly held AO on the map selects it in the panel.
-
-Commander/build-authorized players can request AO upgrades remotely from the panel at full price. If the requester is physically inside the selected AO, the server applies the in-person upgrade discount. The current remote formula is `nextLevel * resourceWeight * 1500`, rounded up to the nearest `$100`; the current in-person discount is `25%`.
-
-The server validates request owner, player life state, side, AO ownership, held state, command authority, max level, pending upgrade state, physical proximity for discount eligibility, and faction balance before spending money or starting the upgrade timer.
-
-## Match Flow
-
-The match phase manager is server-authoritative and persists with the rest of the campaign state. It starts each campaign with a 10 minute setup phase, moves into a 10 minute frontline selection phase, then runs one-hour operation cycles. During frontline selection the server picks an upcoming operation objective from generated AO data, favoring areas where WEST and EAST territory meet, frontline objectives, neutral/high-value areas, and objectives that are reasonably balanced between both deployment zones.
-
-When an operation starts, the selected AO is locked into the match state with its initial owner, attacker/defender labels, initial owned cell counts, initial ticket counts, operation-sector objective list, and secondary AO owner baselines. At the end of the operation the server scores that campaign day from primary objective ownership, primary capture swing, secondary AOs held or flipped inside the operation sector, passive player presence inside the sector, territory gained, held AO value, and enemy tickets drained. The result is announced to all players, saved through persistence, and the next campaign day begins from the current saved war state.
-
-Clients receive sanitized match snapshots for future UI use and JIP synchronization, but the server owns phase timing, operation objective selection, scoring, announcements, and persistence.
-
-Players receive a phase announcement when their client receives a new setup, frontline, or operation snapshot, including JIP clients who were not present for the original server phase transition. During frontline selection and active operations, clients draw a bright non-filled map sector ring around the broader operation area. The selected AO remains the operation anchor, but the visible sector is computed from that AO, surrounding grid cells, and nearby WEST/EAST contact edges so it can naturally cover multiple zones or nearby AOs. `Ctrl+Shift+M` opens the Match Flow panel, which shows the current phase, countdown, operation objective, attacker/defender labels, a scoreboard with scoring-source breakdowns, and recent campaign-day results from the server match snapshot.
-
-Match flow tuning is exposed through CBA Addon Options. Server/global settings under `FOOF > Match Flow` control setup duration, frontline selection duration, and operation duration. The defaults are 10 minutes, 10 minutes, and 1 hour. Setup and frontline duration can be set from 0 to 60 minutes; operation duration can be set from 10 minutes to 24 hours.
-
-Server/global settings under `FOOF > Operation Scoring` control the campaign-day scoring weights for holding the operation objective, flipping the objective owner, holding/flipping secondary AOs inside the sector, player-minutes inside the sector, gaining territory cells, held AO value, and enemy tickets drained. If an admin changes the duration for the currently active phase, the server recalculates that phase timer and publishes a fresh match snapshot. Scoring changes are read when the operation is scored, while sector presence score accrues during Phase 2 using the current player-minute setting.
-
-Server/global settings under `FOOF > Operation Sector` control how large the bright operation-sector map ring can become. The sector buffer, minimum radius, and maximum radius are CBA settings; changing any of them during frontline selection or an active operation rebuilds the current sector and publishes a fresh snapshot.
-
-## Store Purchases
-
-Territory income is split by the server every resource tick: 90% of generated side income goes to that side's faction balance, and each active same-side player receives a personal grant equal to 10% of that side income. The 10% personal grant is per player, not divided between players.
-
-Store checkout spends eligible deployment fund first, then personal funds. If a normal player cannot cover the remaining gear cost with personal funds, the checkout is queued for commander/deputy approval and the approved shortfall spends faction funds. Vehicle purchases are always queued for commander/deputy approval unless the buyer is already the commander or deputy.
-
-Only the commander and deputy can spend faction funds from Store approval. Pending approvals are shown in the Store approval panel and are revalidated server-side before gear is applied or vehicle placement records are created.
-
-The client checks carried inventory capacity before submitting packable item checkout lines, so full uniforms, vests, or backpacks reject the checkout before any money is spent. Server checkout still owns catalog, balance, approval, and vehicle authority.
-
-Store-purchased uniforms, vests, backpacks, and vehicles are stripped of inherited class cargo before use. Only gear explicitly bought through the cart is added to player containers, and purchased vehicles spawn with empty cargo inventory while retaining their normal vehicle weapons and turrets. The support item allow-list includes ACE basics such as earplugs, map tools, and range cards when ACE is loaded; basic ACE consumables such as bandages, tourniquets, splints, and earplugs are free.
-
-Store weapon pricing keeps bare rifles cheap, then adds visible price steps for mounted optics, muzzle devices, pointers, grips, and thermal/NV equipment. Underbarrel rifle GLs receive a moderate premium, standalone MGL/HE launchers receive a larger premium, and AMRs/long-range .50 or 12.7mm rifles are priced as powerful infantry weapons without pushing them into vehicle-price territory. Attachments are kept as an internal catalog category for validation and saved kits, but they are not shown as a standalone Store tab. Vehicle pricing scores config-derived protection, transport, logistics, weapon ammo quality, GMG/indirect explosive power, AT/AA/artillery capability, remote or stabilized weapon stations, exposed gunner penalties, and thermal/NV optics so a thermal CROWS MRAP prices above a basic armed car.
-
-## Default Spawn Kits
-
-Fresh deployment and normal respawns receive a default kit from their side's selected faction. The server picks the first usable infantry unit from faction-authored data: `CfgGroups` unit order first, then playable `CfgVehicles` infantry fallback. A candidate only needs to be a valid infantry class with a usable unit loadout.
-
-The chosen unit classname is sent to the owning client through the server-authorized default-kit apply function, which uses Arma's class-based unit loadout support. Persisted player loadouts remain authoritative when restored on reconnect, but death respawns clear the copied persistence-loaded marker and reapply the side default kit.
-
-### Resetting Persistence
+## Resetting Persistence
 
 FOOF persistence lives under the server's `missionProfileNamespace` key for the active world. Deleting profile files while the mission is running can fail because the live server state may save itself again.
 
@@ -146,7 +79,3 @@ From a logged-in admin client debug console:
 ```
 
 Both forms disable persistence, stop the persistence save loop, clear the active save key, flush `missionProfileNamespace`, and notify players when the first argument is `true`. Complete the wipe by restarting the dedicated server process from the host panel. Arma's in-game `#restart` only restarts the mission and can reload stale mission-profile state.
-
-## Known Issues
-
-FOOF is not gameplay-complete yet. Respawn waves, external persistence backends, and the dedicated match-flow HTML UI are still foundation work.
