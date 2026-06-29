@@ -8,19 +8,6 @@ FLO_StorePurchasedVehicleKilledEh = -1;
 FLO_StorePlaceableMagazineCache = createHashMap;
 FLO_StorePlaceableMagazineCacheReady = false;
 FLO_StoreDeploymentFundAmount = 1000;
-FLO_StoreDeploymentFundMaxItemPrice = 650;
-FLO_StoreDeploymentFundCategories = [
-    "primary",
-    "handgun",
-    "uniforms",
-    "vests",
-    "headgear",
-    "facewear",
-    "backpacks",
-    "attachments",
-    "ammo",
-    "misc"
-];
 
 FLO_StoreCategories = [
     ["primary", "Primary"],

@@ -157,8 +157,7 @@ for "_i" from 0 to ((count _cart) - 1) do {
 
                                         if ([
                                             _item get "entryKind",
-                                            _item get "category",
-                                            _item get "priceValue"
+                                            _item get "category"
                                         ] call FLO_fnc_storeDeploymentFundEligible) then {
                                             _deploymentEligibleTotal = _deploymentEligibleTotal + _lineTotal;
                                         };

@@ -36,7 +36,7 @@ if (_image isEqualTo "") then {
 };
 
 private _price = [_className, _category, _entryKind] call FLO_fnc_storePriceClass;
-private _deploymentFundEligible = [_entryKind, _category, _price] call FLO_fnc_storeDeploymentFundEligible;
+private _deploymentFundEligible = [_entryKind, _category] call FLO_fnc_storeDeploymentFundEligible;
 private _includedAttachments = [];
 
 if ((_entryKind isEqualTo "gear") && {_category in ["primary", "handgun", "secondary"]}) then {
