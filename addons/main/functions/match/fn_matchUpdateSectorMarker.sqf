@@ -50,7 +50,7 @@ if (!_validObjective || {!_validPosition} || {!_validRadius}) exitWith {
     _position,
     "ELLIPSE",
     "",
-    "ColorBlue",
+    "ColorYellow",
     1,
     [_radius, _radius],
     "Border",
