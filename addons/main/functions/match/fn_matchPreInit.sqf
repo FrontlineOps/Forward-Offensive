@@ -10,7 +10,6 @@ FLO_MatchSecondaryObjectiveScore = 25;
 FLO_MatchSecondaryCaptureSwingScore = 12;
 FLO_MatchSectorPresenceScorePerPlayerMinute = 1;
 FLO_MatchCellGainScore = 2;
-FLO_MatchObjectiveValueScoreMultiplier = 2;
 FLO_MatchTicketDrainScore = 2;
 
 FLO_MatchSnapshot = createHashMap;
@@ -142,15 +141,6 @@ FLO_MatchOperationSectorMaxRadius = 3400;
     ["Cell Gain Score", "Score per net territory cell gained during the operation."],
     ["FOOF", "Operation Scoring"],
     [0, 50, 2, 0],
-    1
-] call CBA_fnc_addSetting;
-
-[
-    "FLO_MatchObjectiveValueScoreMultiplier",
-    "SLIDER",
-    ["AO Value Score Multiplier", "Multiplier applied to each side's held AO resource value at operation end."],
-    ["FOOF", "Operation Scoring"],
-    [0, 20, 2, 1],
     1
 ] call CBA_fnc_addSetting;
 

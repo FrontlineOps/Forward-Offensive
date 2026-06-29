@@ -25,7 +25,6 @@ class Match {
     class matchScoreCampaignDay {};
     class matchSelectOperationObjective {};
     class matchSendSnapshot {};
-    class matchSideObjectiveValue {};
     class matchSideOwnedCellCount {};
     class matchStartLoop {};
     class matchStartOperation {};

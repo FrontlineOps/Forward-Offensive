@@ -83,14 +83,6 @@ private _eastCellGainScore = (_eastCellDelta max 0) * FLO_MatchCellGainScore;
 _westScore = _westScore + _westCellGainScore;
 _eastScore = _eastScore + _eastCellGainScore;
 
-private _westObjectiveValue = [west] call FLO_fnc_matchSideObjectiveValue;
-private _eastObjectiveValue = [east] call FLO_fnc_matchSideObjectiveValue;
-private _westObjectiveValueScore = round (_westObjectiveValue * FLO_MatchObjectiveValueScoreMultiplier);
-private _eastObjectiveValueScore = round (_eastObjectiveValue * FLO_MatchObjectiveValueScoreMultiplier);
-
-_westScore = _westScore + _westObjectiveValueScore;
-_eastScore = _eastScore + _eastObjectiveValueScore;
-
 private _westTicketsDrained = ((FLO_MatchState get "operationInitialWestTickets") - (FLO_TicketBalances get "WEST")) max 0;
 private _eastTicketsDrained = ((FLO_MatchState get "operationInitialEastTickets") - (FLO_TicketBalances get "EAST")) max 0;
 private _westTicketDrainScore = _eastTicketsDrained * FLO_MatchTicketDrainScore;
@@ -142,10 +134,6 @@ createHashMapFromArray [
     ["eastCellDelta", _eastCellDelta],
     ["westCellGainScore", _westCellGainScore],
     ["eastCellGainScore", _eastCellGainScore],
-    ["westObjectiveValue", _westObjectiveValue],
-    ["eastObjectiveValue", _eastObjectiveValue],
-    ["westObjectiveValueScore", _westObjectiveValueScore],
-    ["eastObjectiveValueScore", _eastObjectiveValueScore],
     ["westTicketsDrained", _westTicketsDrained],
     ["eastTicketsDrained", _eastTicketsDrained],
     ["westTicketDrainScore", _westTicketDrainScore],
