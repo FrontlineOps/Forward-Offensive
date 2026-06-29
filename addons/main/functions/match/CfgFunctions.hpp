@@ -10,6 +10,7 @@ class Match {
     class matchBuildOperationSector {};
     class matchBuildSnapshot {};
     class matchClientInit {};
+    class matchDeploymentBlockedArea {};
     class matchFinalizeCampaignDay {};
     class matchHandleUiEvent {};
     class matchInitServer {};

@@ -39,32 +39,13 @@ if (surfaceIsWater _posAGL) exitWith {
     [false, format ["%1 deployment requires dry land.", _label]] remoteExecCall ["FLO_fnc_fobReceiveDeployResult", _owner];
 };
 
-private _matchPhase = FLO_MatchState get "phase";
-private _blockedObjectiveId = "";
-private _blockedObjectiveName = "";
-private _blockedObjectivePosition = [0, 0, 0];
-private _blockedObjectiveRadius = 0;
-
-if (_matchPhase isEqualTo "frontline") then {
-    _blockedObjectiveId = FLO_MatchState get "plannedObjectiveId";
-    _blockedObjectiveName = FLO_MatchState get "plannedObjectiveName";
-    _blockedObjectivePosition = FLO_MatchState get "plannedObjectivePosition";
-    _blockedObjectiveRadius = FLO_MatchState get "plannedObjectiveRadius";
-};
-
-if (_matchPhase isEqualTo "operation") then {
-    _blockedObjectiveId = FLO_MatchState get "operationObjectiveId";
-    _blockedObjectiveName = FLO_MatchState get "operationObjectiveName";
-    _blockedObjectivePosition = FLO_MatchState get "operationObjectivePosition";
-    _blockedObjectiveRadius = FLO_MatchState get "operationObjectiveRadius";
-};
+private _blockedArea = [FLO_MatchState] call FLO_fnc_matchDeploymentBlockedArea;
 
 if (
-    (_blockedObjectiveId isNotEqualTo "") &&
-    {_blockedObjectiveRadius > 0} &&
-    {(_posAGL distance2D _blockedObjectivePosition) <= _blockedObjectiveRadius}
+    ("objectiveId" in _blockedArea) &&
+    {(_posAGL distance2D (_blockedArea get "position")) <= (_blockedArea get "radius")}
 ) exitWith {
-    [false, format ["%1s cannot be deployed inside the active operation AO: %2.", _label, _blockedObjectiveName]] remoteExecCall ["FLO_fnc_fobReceiveDeployResult", _owner];
+    [false, format ["%1s cannot be deployed inside the Match Flow operation sector: %2.", _label, _blockedArea get "objectiveName"]] remoteExecCall ["FLO_fnc_fobReceiveDeployResult", _owner];
 };
 
 private _tooClose = false;

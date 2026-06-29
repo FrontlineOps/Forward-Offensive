@@ -16,6 +16,7 @@ private _objectiveIncome = 0;
 private _tickets = 0;
 private _resourceSnapshot = missionNamespace getVariable ["FLO_ResourceSnapshot", []];
 private _ticketSnapshot = missionNamespace getVariable ["FLO_TicketSnapshot", createHashMap];
+private _matchSnapshot = missionNamespace getVariable ["FLO_MatchSnapshot", createHashMap];
 
 {
     if ((_x isEqualType []) && {count _x >= 6} && {(_x # 0) isEqualTo _sideKey}) exitWith {
@@ -62,6 +63,15 @@ if ("sideKey" in FLO_CommandSnapshot) then {
 };
 
 private _pos = getPosATL player;
+private _blockedArea = [_matchSnapshot] call FLO_fnc_matchDeploymentBlockedArea;
+private _insideMatchOperationSector = ("objectiveId" in _blockedArea) && {(_pos distance2D (_blockedArea get "position")) <= (_blockedArea get "radius")};
+private _blockedObjectiveName = "";
+private _blockedRadius = 0;
+
+if (_insideMatchOperationSector) then {
+    _blockedObjectiveName = _blockedArea get "objectiveName";
+    _blockedRadius = _blockedArea get "radius";
+};
 
 createHashMapFromArray [
     ["sideKey", _sideKey],
@@ -69,6 +79,9 @@ createHashMapFromArray [
     ["grid", mapGridPosition player],
     ["alive", alive player],
     ["onWater", surfaceIsWater _pos],
+    ["insideMatchOperationSector", _insideMatchOperationSector],
+    ["matchOperationSectorName", _blockedObjectiveName],
+    ["matchOperationSectorRadius", _blockedRadius],
     ["hasAuthority", [player, "fob"] call FLO_fnc_commandPlayerHasAuthority],
     ["playerIsCommander", _playerIsCommander],
     ["factionName", _factionName],

@@ -930,6 +930,10 @@
                     return "Deployment requires dry land.";
                 }
 
+                if (snapshot.insideMatchOperationSector) {
+                    return "Cannot deploy inside Match Flow operation sector: " + (snapshot.matchOperationSectorName || "Active Operation") + ".";
+                }
+
                 return "";
             }
 
