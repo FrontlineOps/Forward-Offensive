@@ -27,7 +27,7 @@ See `LICENSE.md` for the full license terms.
 - Persistent PvP campaign state with server-authoritative tickets, economy, objectives, and player progression.
 - Generated territory grid and AO layer for frontline movement, flanking, capture pressure, and strategic map control.
 - Commander, deputy, faction voting, AO-aware FOB/COP deployment, and side-wide logistics tools for organized team play.
-- Match phase manager with setup, frontline selection, winner-driven initiative, operation-sector scoring, and HTML status UI.
+- Match phase manager with setup, frontline selection, winner-driven initiative, operation-sector scoring, operation-day rewards, and HTML status UI.
 - Faction store with personal/faction funds, approval workflows, saved kits, vehicle purchasing, and config-derived pricing.
 - Faction-derived default spawn kits, custom respawn handling, and friendly FOB/COP respawn network.
 - Intel, notifications, AO command UI, deployment UI, Store UI, and admin persistence reset tooling.
@@ -57,6 +57,10 @@ See `LICENSE.md` for the full license terms.
 - Dev test mission: `missions/FOOF_Test.Altis`
 
 Gameplay systems should subscribe to CBA `FLO_event*` events instead of adding their own raw Bohemia mission event handlers. The only raw mission event adapter should live in `addons/main/functions/events/`. UI display input handlers may still use Arma display handlers where that is the correct UI API.
+
+## Runtime Configuration
+
+CBA settings expose match phase timers, operation sector radius limits, scoring weights, and operation-day winner rewards. Winner rewards can grant tickets and free AO upgrade credits; free AO upgrade credits are spent before faction funds when a commander or deputy upgrades a held AO.
 
 ## Building and Testing
 

@@ -164,6 +164,10 @@ private _deploymentRecords = [];
 } forEach keys FLO_DeploymentZones;
 
 private _objectives = [
+    ["freeUpgradeCredits", [
+        ["WEST", FLO_ObjectiveFreeUpgradeCredits get "WEST"],
+        ["EAST", FLO_ObjectiveFreeUpgradeCredits get "EAST"]
+    ]],
     ["cells", _cellRecords],
     ["levels", _objectiveLevelRecords],
     ["deploymentZones", _deploymentRecords]

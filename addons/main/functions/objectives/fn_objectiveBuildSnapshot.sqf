@@ -70,7 +70,9 @@ private _snapshot = [];
         round (_objective get "pressureEast"),
         [_objective get "vulnerableSide"] call FLO_fnc_objectiveSideKey,
         round (((_objective get "vulnerableExpiresAt") - diag_tickTime) max 0),
-        [_objective, true] call FLO_fnc_objectiveUpgradeCost
+        [_objective, true] call FLO_fnc_objectiveUpgradeCost,
+        FLO_ObjectiveFreeUpgradeCredits get "WEST",
+        FLO_ObjectiveFreeUpgradeCredits get "EAST"
     ];
 } forEach _objectiveIds;
 

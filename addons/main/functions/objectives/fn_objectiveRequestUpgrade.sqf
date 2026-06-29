@@ -77,8 +77,9 @@ if (_pendingLevel > 0) exitWith {
 
 private _inPerson = (_player distance2D (_objective get "position")) <= ((_objective get "displayRadius") + FLO_ObjectiveInPersonUpgradeExtraRadius);
 private _cost = [_objective, _inPerson] call FLO_fnc_objectiveUpgradeCost;
+private _freeUpgradeUsed = [_side, format ["AO upgrade %1 to level %2", _objectiveId, _level + 1]] call FLO_fnc_objectiveSpendFreeUpgradeCredit;
 
-if !([_side, _cost, format ["AO upgrade %1 to level %2", _objectiveId, _level + 1]] call FLO_fnc_resourceSpend) exitWith {
+if (!_freeUpgradeUsed && {!([_side, _cost, format ["AO upgrade %1 to level %2", _objectiveId, _level + 1]] call FLO_fnc_resourceSpend)}) exitWith {
     [format ["Not enough faction balance. Required: $%1.", _cost], "warning"] call _notify;
 };
 
@@ -91,14 +92,15 @@ _objective set ["pendingUpgradeStartedAt", _startedAt];
 _objective set ["pendingUpgradeCompleteAt", _startedAt + _duration];
 
 diag_log format [
-    "[FLO][Objective] %1 started AO upgrade %2 to level %3 cost=%4 balance=%5 duration=%6 mode=%7",
+    "[FLO][Objective] %1 started AO upgrade %2 to level %3 cost=%4 balance=%5 duration=%6 mode=%7 payment=%8",
     _sideKey,
     _objectiveId,
     _newLevel,
-    _cost,
+    [_cost, 0] select _freeUpgradeUsed,
     FLO_ResourceBalances get _sideKey,
     _duration,
-    ["remote", "in-person"] select _inPerson
+    ["remote", "in-person"] select _inPerson,
+    ["faction", "free-credit"] select _freeUpgradeUsed
 ];
 
 [false, [], [_objectiveId]] call FLO_fnc_objectivePublishSnapshot;
@@ -106,10 +108,11 @@ diag_log format [
 
 [
     format [
-        "%1 upgrade to Level %2 - %3 started.",
+        "%1 upgrade to Level %2 - %3 started.%4",
         _objective get "name",
         _newLevel,
-        [_newLevel] call FLO_fnc_objectiveLevelName
+        [_newLevel] call FLO_fnc_objectiveLevelName,
+        ["", " Free upgrade credit used."] select _freeUpgradeUsed
     ],
     "success"
 ] call _notify;

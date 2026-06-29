@@ -820,13 +820,24 @@
                 node("results").innerHTML = results.slice().reverse().map(function (result) {
                     var winner = result.winner || "DRAW";
                     var winnerClass = clsForSide(winner);
+                    var rewards = [];
+                    var ticketReward = points(result.winnerTicketReward);
+                    var freeUpgradeReward = points(result.winnerFreeUpgradeReward);
+
+                    if (ticketReward > 0) {
+                        rewards.push(String(ticketReward) + " tickets");
+                    }
+
+                    if (freeUpgradeReward > 0) {
+                        rewards.push(String(freeUpgradeReward) + " free AO upgrades");
+                    }
 
                     return "<details class=\"result-entry\">" +
                         "<summary class=\"result-row\">" +
                         "<div class=\"result-day\">Day " + (result.day || "--") + "</div>" +
                         "<div class=\"result-main\">" +
                             "<div class=\"result-obj\">" + (result.objectiveName || "Unknown objective") + "</div>" +
-                            "<div class=\"result-score\">WEST " + (result.westScore || 0) + " / EAST " + (result.eastScore || 0) + "</div>" +
+                            "<div class=\"result-score\">WEST " + (result.westScore || 0) + " / EAST " + (result.eastScore || 0) + (rewards.length ? " / REWARD " + rewards.join(" + ") : "") + "</div>" +
                         "</div>" +
                         "<div class=\"" + winnerClass + "\">" + sideName(winner) + "</div>" +
                         "</summary>" +

@@ -67,7 +67,7 @@
 
         .meta {
             display: grid;
-            grid-template-columns: 86px 116px;
+            grid-template-columns: 86px 116px 108px;
             gap: 8px;
         }
 
@@ -325,6 +325,10 @@
                     <div class="label">Balance</div>
                     <div class="meta-value amber" id="balance">$0</div>
                 </div>
+                <div class="meta-box">
+                    <div class="label">Free Upgrades</div>
+                    <div class="meta-value green" id="freeUpgrades">0</div>
+                </div>
             </div>
             <button class="close" id="close" type="button">X</button>
         </div>
@@ -543,7 +547,7 @@
                         sub.textContent = (area.pressureState || "Rear") + " / " + (area.levelName || "Level");
 
                         cost.className = "row-cost";
-                        cost.textContent = (area.nearby ? "Local " : "Remote ") + money(area.upgradeCost);
+                        cost.textContent = area.freeUpgrade ? "Free Credit" : ((area.nearby ? "Local " : "Remote ") + money(area.upgradeCost));
 
                         level.className = "row-level";
                         level.textContent = "L" + String(area.level || 0);
@@ -592,16 +596,20 @@
                 text("income", money(area.incomePer10) + " / 10 min");
                 text("remoteCost", area.level >= area.maxLevel ? "Max" : money(area.remoteUpgradeCost));
                 text("localCost", area.level >= area.maxLevel ? "Max" : money(area.inPersonUpgradeCost));
-                text("cost", area.level >= area.maxLevel ? "Max" : money(area.upgradeCost));
+                text("cost", area.level >= area.maxLevel ? "Max" : (area.freeUpgrade ? "Free" : money(area.upgradeCost)));
                 text("pressure", (area.pressureState || "Rear") + " - " + String(area.attackerPressure || 0) + " / " + String(area.pressureThreshold || 100));
                 text("vulnerable", area.vulnerableRemaining > 0 ? ((area.vulnerableSide || "Enemy") + " " + duration(area.vulnerableRemaining)) : "Stable");
 
                 updateStatus();
 
                 if (area.canUpgrade) {
-                    hint = area.nearby ?
-                        ("Local upgrade discount active: " + String(discount) + "% off. Faction balance: " + money(currentPayload.balance)) :
-                        ("Remote upgrade uses full price. Move to this AO for " + String(discount) + "% off. Faction balance: " + money(currentPayload.balance));
+                    if (area.freeUpgrade) {
+                        hint = "Free AO upgrade credit available. Faction balance will not be spent.";
+                    } else {
+                        hint = area.nearby ?
+                            ("Local upgrade discount active: " + String(discount) + "% off. Faction balance: " + money(currentPayload.balance)) :
+                            ("Remote upgrade uses full price. Move to this AO for " + String(discount) + "% off. Faction balance: " + money(currentPayload.balance));
+                    }
                 } else {
                     hint = area.upgradeReason || "Upgrade unavailable.";
                 }
@@ -613,6 +621,7 @@
             function render() {
                 text("side", currentPayload.playerSide || "NONE");
                 text("balance", money(currentPayload.balance));
+                text("freeUpgrades", String(Math.max(0, Math.floor(Number(currentPayload.freeUpgradeCredits) || 0))));
                 renderList();
                 renderDetail();
             }

@@ -13,6 +13,7 @@ if (_playerSide in [west, east]) then {
 };
 
 private _balance = 0;
+private _freeUpgradeCredits = 0;
 
 {
     if ((_x isEqualType []) && {(count _x) >= 3} && {(_x # 0) isEqualTo _playerSideKey}) exitWith {
@@ -61,8 +62,18 @@ private _nearbyHeldId = "";
         ["_pressureEast", 0],
         ["_vulnerableSideKey", "NONE"],
         ["_vulnerableRemaining", 0],
-        "_inPersonUpgradeCost"
+        "_inPersonUpgradeCost",
+        ["_westFreeUpgradeCredits", 0],
+        ["_eastFreeUpgradeCredits", 0]
     ];
+
+    if (_playerSideKey isEqualTo "WEST") then {
+        _freeUpgradeCredits = _westFreeUpgradeCredits;
+    };
+
+    if (_playerSideKey isEqualTo "EAST") then {
+        _freeUpgradeCredits = _eastFreeUpgradeCredits;
+    };
 
     if ((_ownerKey isEqualTo _playerSideKey) && {_objectiveState isEqualTo "held"}) then {
         private _ownerName = switch (_ownerKey) do {
@@ -99,6 +110,8 @@ private _nearbyHeldId = "";
 
         private _isNearby = (player distance2D _position) <= (_displayRadius + FLO_ObjectiveInPersonUpgradeExtraRadius);
         private _upgradeCost = [_remoteUpgradeCost, _inPersonUpgradeCost] select _isNearby;
+        private _usesFreeUpgrade = _freeUpgradeCredits > 0;
+        private _displayUpgradeCost = [_upgradeCost, 0] select _usesFreeUpgrade;
         private _upgradeReason = "";
         private _upgradeStatus = "";
 
@@ -115,7 +128,7 @@ private _nearbyHeldId = "";
                 if (!_hasAuthority) then {
                     _upgradeReason = "Commander or delegated build authority required.";
                 } else {
-                    if (_balance < _upgradeCost) then {
+                    if (!_usesFreeUpgrade && {_balance < _upgradeCost}) then {
                         _upgradeReason = format ["Not enough faction balance. Required: $%1.", _upgradeCost];
                     };
                 };
@@ -125,7 +138,7 @@ private _nearbyHeldId = "";
         private _canUpgrade = (_level < _maxLevel) &&
             {_pendingUpgradeLevel <= 0} &&
             {_hasAuthority} &&
-            {_balance >= _upgradeCost};
+            {_usesFreeUpgrade || {_balance >= _upgradeCost}};
 
         private _area = createHashMapFromArray [
             ["id", _objectiveId],
@@ -136,11 +149,14 @@ private _nearbyHeldId = "";
             ["level", _level],
             ["levelName", _levelName],
             ["incomePer10", _incomePer10],
-            ["upgradeCost", _upgradeCost],
+            ["upgradeCost", _displayUpgradeCost],
+            ["actualUpgradeCost", _upgradeCost],
             ["remoteUpgradeCost", _remoteUpgradeCost],
             ["inPersonUpgradeCost", _inPersonUpgradeCost],
             ["maxLevel", _maxLevel],
             ["balance", _balance],
+            ["freeUpgrade", _usesFreeUpgrade],
+            ["freeUpgradeCredits", _freeUpgradeCredits],
             ["canUpgrade", _canUpgrade],
             ["upgradeReason", _upgradeReason],
             ["upgradeStatus", _upgradeStatus],
@@ -183,6 +199,7 @@ private _payload = createHashMapFromArray [
     ["activeId", _selectedId],
     ["playerSide", _playerSideKey],
     ["balance", _balance],
+    ["freeUpgradeCredits", _freeUpgradeCredits],
     ["discountPercent", round ((1 - FLO_ObjectiveInPersonUpgradeCostMultiplier) * 100)],
     ["objectives", _areas]
 ];

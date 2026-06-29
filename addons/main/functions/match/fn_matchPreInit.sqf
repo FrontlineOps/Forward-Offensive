@@ -11,6 +11,8 @@ FLO_MatchSecondaryCaptureSwingScore = 12;
 FLO_MatchSectorPresenceScorePerPlayerMinute = 1;
 FLO_MatchCellGainScore = 2;
 FLO_MatchTicketDrainScore = 2;
+FLO_MatchWinnerTicketReward = 5;
+FLO_MatchWinnerFreeUpgradeReward = 1;
 
 FLO_MatchSnapshot = createHashMap;
 FLO_MatchLastAnnouncedPhaseKey = "";
@@ -150,5 +152,23 @@ FLO_MatchOperationSectorMaxRadius = 3400;
     ["Ticket Drain Score", "Score per enemy ticket drained during the operation."],
     ["FOOF", "Operation Scoring"],
     [0, 20, 2, 1],
+    1
+] call CBA_fnc_addSetting;
+
+[
+    "FLO_MatchWinnerTicketReward",
+    "SLIDER",
+    ["Winner Ticket Reward", "Respawn tickets awarded to the side that wins an operation day."],
+    ["FOOF", "Operation Rewards"],
+    [0, 100, 5, 0],
+    1
+] call CBA_fnc_addSetting;
+
+[
+    "FLO_MatchWinnerFreeUpgradeReward",
+    "SLIDER",
+    ["Winner Free AO Upgrades", "Free AO upgrade credits awarded to the side that wins an operation day."],
+    ["FOOF", "Operation Rewards"],
+    [0, 10, 1, 0],
     1
 ] call CBA_fnc_addSetting;

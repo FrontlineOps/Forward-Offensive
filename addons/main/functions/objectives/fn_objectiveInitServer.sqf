@@ -18,6 +18,10 @@ FLO_ObjectivePublicationsSent = 0;
 FLO_ObjectiveSystemRunning = false;
 FLO_ObjectiveLoopHandle = -1;
 FLO_ObjectiveLastDiagnostics = createHashMap;
+FLO_ObjectiveFreeUpgradeCredits = createHashMapFromArray [
+    ["WEST", 0],
+    ["EAST", 0]
+];
 
 FLO_ObjectiveUpdateInterval = 5;
 FLO_ObjectiveSnapshotHeartbeat = 30;

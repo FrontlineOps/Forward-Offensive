@@ -174,6 +174,12 @@ if ("match" in _snapshot) then {
 if ("objectives" in _snapshot) then {
     private _objectives = createHashMapFromArray (_snapshot get "objectives");
 
+    if ("freeUpgradeCredits" in _objectives) then {
+        private _freeUpgradeCredits = createHashMapFromArray (_objectives get "freeUpgradeCredits");
+        FLO_ObjectiveFreeUpgradeCredits set ["WEST", (_freeUpgradeCredits get "WEST") max 0];
+        FLO_ObjectiveFreeUpgradeCredits set ["EAST", (_freeUpgradeCredits get "EAST") max 0];
+    };
+
     if ("cells" in _objectives) then {
         {
             private _record = createHashMapFromArray _x;

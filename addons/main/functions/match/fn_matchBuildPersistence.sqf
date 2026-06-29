@@ -15,6 +15,8 @@ private _dayResults = [];
         ["secondaryObjectiveCount", _x get "secondaryObjectiveCount"],
         ["winner", _x get "winner"],
         ["nextOffensiveSide", _x get "nextOffensiveSide"],
+        ["winnerTicketReward", _x get "winnerTicketReward"],
+        ["winnerFreeUpgradeReward", _x get "winnerFreeUpgradeReward"],
         ["westScore", _x get "westScore"],
         ["eastScore", _x get "eastScore"],
         ["westPrimaryObjectiveScore", _x get "westPrimaryObjectiveScore"],

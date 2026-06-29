@@ -4,6 +4,7 @@ class Objective {
     class objectiveApplyGridSnapshot {};
     class objectiveApplySnapshot {};
     class objectiveAddAreaWebEventHandler {};
+    class objectiveAddFreeUpgradeCredits {};
     class objectiveAnchorCaptureAllowed {};
     class objectiveAreaClientInit {};
     class objectiveAreaWebAction {};
@@ -61,6 +62,7 @@ class Objective {
     class objectiveSendFullSnapshot {};
     class objectiveSideKey {};
     class objectiveStartLoop {};
+    class objectiveSpendFreeUpgradeCredit {};
     class objectiveToggleAreaDialog {};
     class objectiveUpdateAreaDialog {};
     class objectiveUpdateAreaMap {};
